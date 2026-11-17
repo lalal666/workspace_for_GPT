@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>低功耗随手贴传感器节点 · 产品研发目标与确认清单 v1.2</title>
+<style>
+:root{
+  --bg:#F5F7FA; --card:#FFFFFF; --ink:#111827; --ink2:#374151; --ink3:#6B7280;
+  --line:#E5E7EB; --line2:#EDF0F4;
+  --primary:#173B6C; --primary2:#2A5D9E; --accent:#0E7490;
+  --p0:#B42318; --p0bg:#FEF3F2;
+  --p1:#B54708; --p1bg:#FFFAEB;
+  --p2:#475467; --p2bg:#F2F4F7;
+  --ok:#067647; --okbg:#ECFDF3;
+  --blue:#175CD3; --bluebg:#EFF8FF;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei","PingFang SC","Hiragino Sans GB",sans-serif;
+  font-size:14.5px;line-height:1.75;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1120px;margin:0 auto;padding:0 28px 72px}
+
+.hero{background:linear-gradient(135deg,#173B6C 0%,#22548F 55%,#0E7490 100%);color:#fff;padding:42px 0 36px}
+.hero .wrap{padding-bottom:0}
+.eyebrow{font-size:12px;letter-spacing:2.5px;text-transform:uppercase;opacity:.75;margin-bottom:12px}
+.hero h1{font-size:27px;font-weight:700;letter-spacing:.3px;line-height:1.35}
+.hero h2{font-size:15px;font-weight:400;opacity:.85;margin-top:9px}
+.meta{display:flex;flex-wrap:wrap;gap:26px;margin-top:22px;font-size:12.5px;opacity:.9}
+.meta span b{display:block;font-size:11px;opacity:.7;font-weight:400;letter-spacing:1px;margin-bottom:2px}
+
+nav.toc{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);margin-bottom:30px}
+nav.toc .wrap{display:flex;gap:4px;overflow-x:auto;padding:0 28px;scrollbar-width:none}
+nav.toc .wrap::-webkit-scrollbar{display:none}
+nav.toc a{padding:13px 12px;font-size:13px;color:var(--ink3);text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent;transition:.15s}
+nav.toc a:hover{color:var(--primary);border-bottom-color:var(--primary2)}
+nav.toc a.hi{color:var(--p0);font-weight:700}
+
+section{margin-bottom:40px;scroll-margin-top:60px}
+h3.sec{font-size:20px;font-weight:700;color:var(--primary);padding-bottom:10px;border-bottom:2px solid var(--primary);margin-bottom:18px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+h3.sec small{font-size:12px;font-weight:400;color:var(--ink3);letter-spacing:.5px}
+h4.sub{font-size:15.5px;font-weight:700;color:var(--ink);margin:24px 0 11px;padding-left:11px;border-left:3px solid var(--accent)}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px 22px;margin-bottom:14px}
+
+table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin:11px 0 16px}
+thead th{background:#F0F4F9;color:var(--primary);font-weight:700;font-size:12.5px;text-align:left;padding:10px 12px;border-bottom:1px solid #DCE4EE;letter-spacing:.3px;white-space:nowrap}
+tbody td{padding:9px 12px;border-bottom:1px solid var(--line2);vertical-align:top;color:var(--ink2)}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:nth-child(even){background:#FCFDFE}
+tbody td b{color:var(--ink)}
+td.num{font-family:ui-monospace,Consolas,monospace;text-align:right;white-space:nowrap}
+code{background:#EEF2F7;color:#1F4E79;padding:1px 6px;border-radius:4px;font-family:ui-monospace,Consolas,monospace;font-size:12px}
+
+.b{display:inline-block;font-size:10.5px;font-weight:700;padding:1px 7px;border-radius:4px;letter-spacing:.5px;vertical-align:middle;line-height:1.7;white-space:nowrap}
+.p0{background:var(--p0bg);color:var(--p0);border:1px solid #FDA29B}
+.p1{background:var(--p1bg);color:var(--p1);border:1px solid #FEDF89}
+.p2{background:var(--p2bg);color:var(--p2);border:1px solid #D0D5DD}
+.new{background:var(--bluebg);color:var(--blue);border:1px solid #B2DDFF}
+.done{background:var(--okbg);color:var(--ok);border:1px solid #A6F4C5}
+
+/* 需求条目：三段式 */
+.rq{border:1px solid var(--line);border-left:3px solid var(--primary2);border-radius:0 8px 8px 0;margin-bottom:10px;background:#fff;padding:12px 16px}
+.rq .hd{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:6px}
+.rq .id{font-family:ui-monospace,Consolas,monospace;font-size:11.5px;font-weight:700;color:#fff;background:var(--primary2);padding:1px 7px;border-radius:4px}
+.rq .tt{font-weight:700;font-size:14px;color:var(--ink);flex:1;min-width:150px}
+.rq p{font-size:13.5px;color:var(--ink2);margin-bottom:4px}
+.rq p:last-child{margin-bottom:0}
+.kv{font-weight:700;color:var(--primary);margin-right:3px}
+.kv.a{color:var(--accent)}
+.kv.g{color:var(--ok)}
+.kv.r{color:var(--p0)}
+
+.cal{border-radius:8px;padding:14px 18px;margin:14px 0;font-size:13.5px;line-height:1.7}
+.cal b.t{display:block;margin-bottom:5px;font-size:13.5px}
+.cal.red{background:var(--p0bg);border-left:4px solid var(--p0);color:#7A271A}
+.cal.amber{background:var(--p1bg);border-left:4px solid #DC6803;color:#7A2E0E}
+.cal.blue{background:var(--bluebg);border-left:4px solid var(--blue);color:#194185}
+.cal.green{background:var(--okbg);border-left:4px solid var(--ok);color:#054F31}
+.cal.gray{background:#F9FAFB;border-left:4px solid #98A2B3;color:#344054}
+
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(166px,1fr));gap:13px;margin:14px 0}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:9px;padding:15px 17px}
+.kpi .n{font-size:24px;font-weight:700;color:var(--primary);line-height:1.1;font-family:ui-monospace,Consolas,monospace}
+.kpi .n small{font-size:12.5px;font-weight:400;color:var(--ink3);margin-left:3px}
+.kpi .l{font-size:12.5px;color:var(--ink3);margin-top:6px;line-height:1.5}
+
+.flow{display:flex;align-items:center;gap:0;flex-wrap:wrap;margin:14px 0;font-size:12.5px}
+.flow .n2{background:#fff;border:1px solid #CFDCEA;border-radius:7px;padding:8px 12px;color:var(--primary);font-weight:600}
+.flow .ar{color:#9DB2CC;margin:0 6px;font-size:15px}
+.flow .n2.hot{border-color:#F5B5AE;background:var(--p0bg);color:var(--p0)}
+
+/* 确认项 */
+.qi{border:1px solid var(--line);border-radius:9px;overflow:hidden;margin-bottom:11px;background:#fff}
+.qi .qh{display:flex;align-items:center;gap:10px;padding:10px 15px;background:#FAFBFD;border-bottom:1px solid var(--line2);flex-wrap:wrap}
+.qi .qn{font-family:ui-monospace,Consolas,monospace;font-size:12px;font-weight:700;color:#fff;background:var(--p0);padding:1px 8px;border-radius:4px}
+.qi.t2 .qn{background:var(--p1)}
+.qi.t3 .qn{background:#475467}
+.qi .qt{font-weight:700;font-size:14px;flex:1;min-width:180px}
+.qi .qb{padding:12px 15px}
+.qi .qb p{font-size:13.5px;color:var(--ink2);margin-bottom:6px}
+.qi .qb p:last-child{margin-bottom:0}
+.qi .rec{background:var(--okbg);border-left:3px solid var(--ok);padding:8px 12px;border-radius:0 5px 5px 0;font-size:13px;color:#054F31;margin-top:8px}
+.qi .rec b{color:var(--ok)}
+
+footer{border-top:1px solid var(--line);margin-top:44px;padding:22px 0;font-size:12px;color:var(--ink3);text-align:center}
+
+@media print{
+  nav.toc{display:none}
+  body{background:#fff;font-size:10.5pt}
+  .hero{background:#173B6C !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .rq,.qi,.card,section{page-break-inside:avoid}
+}
+@media(max-width:720px){
+  .wrap{padding:0 16px 56px}
+  .hero h1{font-size:20px}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Product Requirement &amp; Confirmation List</div>
+    <h1>低功耗随手贴传感器节点<br>产品研发目标与确认清单</h1>
+    <h2>微光能量获取 · 蓝牙接入澜潮网络第二级 · 面向产品研发中心总监</h2>
+    <div class="meta">
+      <span><b>版本</b>v1.2（定稿版，待评审）</span>
+      <span><b>编制</b>曾总</span>
+      <span><b>日期</b>2026-11-15</span>
+      <span><b>需求条目</b>9 类 / 38 条原始要求</span>
+      <span><b>待确认</b>10 项（决策 4 / 技术 3 / 口径 3）</span>
+    </div>
+  </div>
+</header>
+
+<nav class="toc">
+  <div class="wrap">
+    <a href="#s0">一页速览</a>
+    <a href="#s1">系统基线</a>
+    <a href="#s2">能源与功耗</a>
+    <a href="#s3">通信与网络</a>
+    <a href="#s4">时间与事件</a>
+    <a href="#s5">可靠性与安全</a>
+    <a href="#s6">品类需求</a>
+    <a href="#s7" class="hi">待确认清单</a>
+    <a href="#s8">测试验收</a>
+    <a href="#s9">里程碑分工</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<!-- ============ 一页速览 ============ -->
+<section id="s0">
+  <h3 class="sec">一页速览 <small>给总监的 90 秒版本</small></h3>
+
+  <div class="kpis">
+    <div class="kpi"><div class="n">9.8<small>mAh</small></div><div class="l">50F 超容可用能量<br>（3.5→2.6V @3.3V）</div></div>
+    <div class="kpi"><div class="n">300<small>μAh</small></div><div class="l">50lux 光照 10h<br>日补给量</div></div>
+    <div class="kpi"><div class="n">8<small>个 / 1s</small></div><div class="l">父节点承载 8 个 LPN<br>并发 8 个 1s 内送达</div></div>
+    <div class="kpi"><div class="n">2<small>小时</small></div><div class="l">心跳周期<br>（不允许 6h）</div></div>
+  </div>
+
+  <div class="card">
+    <h4 class="sub" style="margin-top:0">三个核心判断</h4>
+    <p><span class="kv">判断一 · 能量不是瓶颈，但余量与照度强相关。</span>50lux 下日补给 300μAh，单红外类日均耗 127μAh（余量 58%），双鉴与遥控类日均耗 266μAh（<b>余量仅 11%，临界</b>）。所以"5 年"不能是单一承诺，必须写成"<b>照度 × 触发频次</b>"的条件性指标。</p>
+    <p><span class="kv">判断二 · 时钟精度不构成障碍，但依赖一个必须写进协议的前提。</span>休眠用内部 RC（±0.03% = 300ppm），2h 会漂 2.16 秒——看似严重，但<b>只要事件发生后 1s 内完成校时，漂移仅 0.3ms，远优于 100ms 要求</b>。因此"事件发生时打戳、唤醒后立即校时倒推"这个机制必须写死在协议里，不能靠"睡前校准的绝对时间"。</p>
+    <p><span class="kv">判断三 · 架构可以简化，只剩一条需求依赖"唤醒广播"。</span>面板已明确不需要云端控制（云端控制灯直接到灯），所以原本担心的面板体验问题不存在。目前仅<b>红外遥控类的"30–60s 云端响应"</b>依赖父节点唤醒能力——若这一条可以降级，整个架构不必开发唤醒广播，能省掉一块复杂度和节点接收窗功耗。</p>
+  </div>
+
+  <div class="cal red">
+    <b class="t">最需要先看的一条</b>
+    <b>Q1：红外遥控类的"云端指令 30–60s 响应"是否必须？</b>全局心跳是 2h，靠心跳取件最坏等 2h。要满足 30–60s 只能靠父节点唤醒广播。这是<b>唯一</b>还依赖唤醒能力的需求，如果它可以降级（电池供电按心跳周期响应，仅 USB 供电时 30s），架构能简化一大块。详见第七节。
+  </div>
+</section>
+
+<!-- ============ 系统基线 ============ -->
+<section id="s1">
+  <h3 class="sec">一、系统基线 <small>全部设计与验收的共同基准</small></h3>
+
+  <div class="flow">
+    <div class="n2">微光板<br><span style="font-size:10.5px;color:#6B7280">50–500lux</span></div><div class="ar">→</div>
+    <div class="n2">50F 锂超容<br><span style="font-size:10.5px;color:#6B7280">3.5V 满</span></div><div class="ar">→</div>
+    <div class="n2">切换 @2.6V<br><span style="font-size:10.5px;color:#6B7280">兜底</span></div><div class="ar">→</div>
+    <div class="n2">400mAh 一次锂电<br><span style="font-size:10.5px;color:#6B7280">不可充</span></div><div class="ar">→</div>
+    <div class="n2">LPN 节点<br><span style="font-size:10.5px;color:#6B7280">BLE</span></div><div class="ar">→</div>
+    <div class="n2 hot">父节点<br><span style="font-size:10.5px">CCO / STA</span></div><div class="ar">→</div>
+    <div class="n2">L1 网络</div><div class="ar">→</div>
+    <div class="n2">云端</div>
+  </div>
+
+  <table>
+    <thead><tr><th style="width:120px">类别</th><th style="width:230px">参数</th><th style="width:170px">数值</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td rowspan="6"><b>能源</b></td><td>备用电池</td><td><b>400 mAh 一次锂电（不可充）</b></td><td class="wrapcell">定位为<b>应急储备</b>，非日常能源；仅在超容低于 2.6V 时接入</td></tr>
+      <tr><td>储能</td><td><b>50F 锂超容</b></td><td class="wrapcell">3.5V 满充 / 2.6V 切电池 / 2.5V 保护下限；漏电约 2μA</td></tr>
+      <tr><td>超容可用能量</td><td><b>137 J ≈ 9.8 mAh@3.3V</b></td><td class="wrapcell">½·C·(3.5²−2.6²)，效率 85% 折算。<b>是"日级缓冲"，不是周级储备</b></td></tr>
+      <tr><td>微光输入</td><td><b>50lux→30μA<br>100lux→60μA<br>500lux→300μA</b></td><td class="wrapcell">均为 3.3V 输出。安装环境下限：<b>≥50lux、≥10h/天</b></td></tr>
+      <tr><td>日补给量</td><td><b>300 / 600 / 3000 μAh</b></td><td class="wrapcell">对应 50 / 100 / 500 lux，10 小时光照</td></tr>
+      <tr><td>峰值电流</td><td><b>已验证满足</b></td><td class="wrapcell">超容 ESR 无实质影响，BLE 芯片 2V 以下才复位，余量充足</td></tr>
+
+      <tr><td rowspan="2"><b>计算</b></td><td>Flash 分区（512K）</td><td><b>176K 程序<br>176K 备份<br>40K 差分<br>120K 数据</b></td><td class="wrapcell">LPN 程序 &lt;80K；<b>整包缓存可行但每次只能 1 份</b>；亦可 1K 分包传输</td></tr>
+      <tr><td>运行环境</td><td>裸机，无 OS</td><td class="wrapcell">—</td></tr>
+
+      <tr><td rowspan="3"><b>时钟</b></td><td>休眠时钟</td><td><b>内部 32K RC，±0.03%（300ppm）</b></td><td class="wrapcell">2h 漂移 2.16s，<b>不能用于维持绝对时间</b>；事件须即时校时</td></tr>
+      <tr><td>运行时钟</td><td><b>外部 24M 晶振，±20ppm</b></td><td class="wrapcell">唤醒后通信与计时使用</td></tr>
+      <tr><td>授时</td><td><b>网络授时，非 LPN ≤20ms<br>LPN 跟父节点同步</b></td><td class="wrapcell">系统要求事件时间戳精度 <b>100ms</b>；不需要 RTC</td></tr>
+
+      <tr><td rowspan="3"><b>网络</b></td><td>父节点容量</td><td><b>逻辑 8 个 LPN</b></td><td class="wrapcell">任意非低功耗节点（CCO / STA）可作父节点</td></tr>
+      <tr><td>并发能力</td><td><b>8 个同刻上报，1s 内送达</b></td><td class="wrapcell">瓶颈在父节点接收上下文与去重，不在带宽</td></tr>
+      <tr><td>接入鉴权</td><td><b>白名单</b></td><td class="wrapcell">编码规则 + 二维码 + 全球唯一 MAC；App 扫码登记，云端校验，非法节点拒入</td></tr>
+
+      <tr><td rowspan="2"><b>运行</b></td><td>心跳周期</td><td><b>2 小时</b></td><td class="wrapcell">有电情况下固定，不允许 6h；低电量降级时可拉长并上报</td></tr>
+      <tr><td>通信方式</td><td><b>不保持连接</b></td><td class="wrapcell">定时唤醒或事件唤醒后才与父节点通信</td></tr>
+
+      <tr><td><b>形态</b></td><td>产品形态</td><td><b>全部为随手贴</b></td><td class="wrapcell">面板外观近 86 盒但<b>纯无线、不接市电</b>；全部产品均带硬开关（运输模式切断超容与电池）</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============ 能源 ============ -->
+<section id="s2">
+  <h3 class="sec">二、能源与功耗 <small>原第 7 章</small></h3>
+
+  <h4 class="sub">2.1 能源平衡总账</h4>
+  <p>测算前提：休眠基流 2μA + 超容漏电 2μA；心跳 2h（20mA×50ms）；日均事件 50 次（20mA×100ms）；雷达占空比 5mA×2s×50 次；红外发射 100mA×0.5s×10 次。<span style="color:#B42318">标注为估算，待实测校准。</span></p>
+
+  <table>
+    <thead><tr><th style="width:160px">品类</th><th>日均耗电<br>μAh/天</th><th>完全无光<br>可持续</th><th>50lux<br>补给 300</th><th>100lux<br>补给 600</th><th>500lux<br>补给 3000</th></tr></thead>
+    <tbody>
+      <tr><td><b>单红外</b></td><td class="num">≈127</td><td class="num">6.9 年</td><td><span class="b done">余 58%</span></td><td><span class="b done">余 79%</span></td><td><span class="b done">余 96%</span></td></tr>
+      <tr><td><b>照度+温湿度</b></td><td class="num">≈121</td><td class="num">7.2 年</td><td><span class="b done">余 60%</span></td><td><span class="b done">余 80%</span></td><td><span class="b done">余 96%</span></td></tr>
+      <tr><td><b>双鉴（红+24G）</b></td><td class="num">≈266</td><td class="num">3.3 年</td><td><span class="b p1">余 11% 临界</span></td><td><span class="b done">余 56%</span></td><td><span class="b done">余 91%</span></td></tr>
+      <tr><td><b>红外遥控+温湿度</b></td><td class="num">≈266</td><td class="num">3.3 年</td><td><span class="b p1">余 11% 临界</span></td><td><span class="b done">余 56%</span></td><td><span class="b done">余 91%</span></td></tr>
+      <tr><td><b>面板开关</b></td><td class="num">≈127</td><td class="num">6.9 年</td><td><span class="b done">余 58%</span></td><td><span class="b done">余 79%</span></td><td><span class="b done">余 96%</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="cal amber">
+    <b class="t">双鉴与遥控类不能装在 50lux 以下</b>
+    余量仅 11%。按 100lux（补 600μAh）测算触发频次敏感性：50 次/天 → 266μAh（余 56%）；150 次/天 → 588μAh（<b>临界</b>）；200 次/天 → 749μAh（<b>赤字</b>，每天净亏 150μAh）。<br>
+    <b>结论：这两类的临界点约 150 次/天。超过后开始消耗电池，而电池是不可充的一次锂电，一旦开始消耗就不可逆。</b>
+  </div>
+
+  <h4 class="sub">2.2 电池口径修正（因电池不可充）</h4>
+  <div class="cal green">
+    <b class="t">"5 年寿命"应重新表述</b>
+    电池是<b>应急储备</b>而非日常能源：正常点位（≥100lux）由微光自持，电池几乎不动，5 年仅自放电约 5%。所以"5 年"的正确验收口径是——<br>
+    <b>① 正常点位：5 年内电池消耗 ≤20%（含自放电与偶发切换）</b><br>
+    <b>② 异常点位（长期无光）：单红外/照度/面板 6.9–7.2 年，双鉴/遥控 3.3 年</b><br>
+    ②这个数就是"点位失效后的兜底时间"，可用于客户沟通与运维巡检周期设定。因为电池不可充，<b>兜底时间用完设备就彻底失效，必须更换</b>——这也意味着"长期靠电池运行"必须是<b>可监控的告警</b>，不能等到没电才发现。
+  </div>
+
+  <div class="rq">
+    <div class="hd"><span class="id">2.2.1</span><span class="tt">双电量探测</span><span class="b p0">P0</span></div>
+    <p><span class="kv">要求：</span>可探测电池电量与储能电容电量。</p>
+    <p><span class="kv a">约定：</span>超容按 <code>SOC ≈ (V²−Vmin²)/(Vmax²−Vmin²)</code> 估算（按 V² 而非 V 折算能量）；带载 ESR 压降需断载采样或电流补偿。一次锂电放电平台平坦，采用"电压 + 温度补偿 + 累计电荷"组合模型。</p>
+    <p><span class="kv g">验收：</span>超容 SOC 误差 ≤±8%；电池电量误差 ≤±10%（0℃/25℃/45℃）；能识别并上报当前供电来源（微光/超容/电池）。</p>
+  </div>
+
+  <div class="rq">
+    <div class="hd"><span class="id">2.2.2</span><span class="tt">低电量分级降级</span><span class="b p0">P0</span></div>
+    <p><span class="kv">要求：</span>电量低时自动进入更低功耗状态，尽量延长传感工作时间。</p>
+    <p><span class="kv a">约定：</span>按超容电压分五级，每级动作固定可测：</p>
+    <table style="margin:6px 0 0">
+      <thead><tr><th>等级</th><th>判据</th><th>降级动作</th><th>红线（不可降）</th></tr></thead>
+      <tbody>
+        <tr><td><b>L0 正常</b></td><td>超容 &gt;3.3V 或收支平衡</td><td>全功能</td><td>—</td></tr>
+        <tr><td><b>L1 关注</b></td><td>3.0–3.3V</td><td>关闭雷达主动扫描（保留触发后双鉴）· 关非必要指示</td><td>告警上报、入网保活</td></tr>
+        <tr><td><b>L2 节能</b></td><td>2.8–3.0V</td><td>心跳拉长至 3–4h（并上报实际周期）· 事件聚合 · 降发射功率</td><td>告警上报</td></tr>
+        <tr><td><b>L3 生存</b></td><td>2.6–2.8V</td><td>心跳 6–8h · 关闭雷达 · 仅保留核心传感 · 上报电量告警</td><td>告警上报、电量告警</td></tr>
+        <tr><td><b>L4 濒死</b></td><td>&lt;2.6V 已切电池且电池 &lt;10%</td><td>仅心跳 + 告警</td><td>低电量告警、最后一次心跳</td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top:6px"><span class="kv g">验收：</span>超容 3.5V→2.5V 全程，各级动作与恢复符合矩阵，无振荡（回差 100mV）；降级期间告警零丢失；心跳拉长时云端显示实际周期而非误判断线。</p>
+  </div>
+
+  <div class="rq">
+    <div class="hd"><span class="id">2.2.3</span><span class="tt">超容 ↔ 电池切换</span><span class="b p0">P0</span></div>
+    <p><span class="kv">要求：</span>超容 &lt;2.6V 由微能量芯片自动切至电池；2.5V 为超容保护下限。</p>
+    <p><span class="kv a">约定：</span>① 切换不得引起 MCU 复位；若无法避免，时间基准、事件缓存、运行状态必须完整保留。② 反向切换需回差（建议回升至 3.0V 才切回），避免 2.6V 附近反复抖动。③ <b>切换事件必须上报</b>——这是识别"采光不足/安装位置错"的直接证据。④ 切至电池后不立即降到底，按电池电量独立分级（电池仍有 400mAh，可支撑一段）。</p>
+    <p><span class="kv g">验收：</span>遮光使超容降至 2.6V，功能连续、事件零丢失、产生"切至电池"事件；恢复光照回升 3.0V 切回并产生事件；正常光照 24h 内切换 ≤1 次。</p>
+  </div>
+
+  <div class="rq">
+    <div class="hd"><span class="id">2.2.4</span><span class="tt">照度门槛与选址规范</span><span class="b p0">P0</span></div>
+    <p><span class="kv">要求：</span>安装位置 ≥50lux、每天光照 ≥10h。</p>
+    <p><span class="kv a">约定：</span>① 出具照度-采集功率实测曲线（建议补 200/300/800/1000lux 点位，现有 50/100/500 三点不够）。② 给出场景矩阵：靠窗办公、普通办公、教室、走廊、楼梯间、地下车库、封闭机房 → 逐场景标注"可自持 / 需电池兜底 / 不适用"。③ <b>App 内置照度检测功能</b>，施工时现场测量，低于门槛直接告警——这是把选址错误挡在安装阶段的最有效手段。</p>
+    <p><span class="kv g">验收：</span>6 点照度实测曲线 + 7 类场景结论表；App 照度检测判定准确；冷启动时间实测（建议 ≤10min@500lux）并写入安装指南。</p>
+  </div>
+
+  <div class="rq">
+    <div class="hd"><span class="id">2.2.5</span><span class="tt">电池更换与存储磨损</span><span class="b p1">P1</span></div>
+    <p><span class="kv">要求：</span>电池为一次性纽扣锂电。</p>
+    <p><span class="kv a">约定：</span>① 现场可更换，<b>更换后不得需要重新扫码配网</b>（身份与配置存非易失区）。② 更换后 30s 内恢复工作并自动回连。③ 电池仓防反接与密封；UN38.3 运输认证。④ 120K 数据区需给出分区表（升级包缓存 &lt;80K + 事件缓存 + 日志 + 配置），明确冲突时的抢占规则，事件缓存保留最小固定配额（建议 8–12K，可存 200+ 条）。</p>
+    <p><span class="kv g">验收：</span>更换电池后 30s 恢复、配置不丢、无需重新配网；升级中大量事件到达时不死机不丢告警；加速写入测试后存储无坏块。</p>
+  </div>
+</section>
+
+<!-- ============ 通信 ============ -->
+<section id="s3">
+  <h3 class="sec">三、通信与网络 <small>原第 1 章（1.1–1.12）</small></h3>
+
+  <div class="rq">
+    <div class="hd"><span class="id">3.1</span><span class="tt">父节点资格与容量</span><span class="b p0">P0</span></div>
+    <p><span class="kv">要求：</span>任意非低功耗节点（含 CCO 与 STA）可作父节点，逻辑最大 8 个 LPN；并发 8 个，同刻上报可在 1s 内完成传递。</p>
+    <p><span class="kv a">约定：</span>① LPN 不得担任父节点（避免级联休眠导致时延不可控）。② 第 9 个节点请求接入直接拒绝并回告"父节点已满"。③ 云端可见每个父节点当前挂载数（x/8）。④ 去重采用"事件 ID + 设备 ID"双键——8 并发下真正要防的是重复而非带宽。</p>
+    <p><span class="kv g">验收：</span>挂满 8 个 LPN 全部可寻址、可下发、可升级；8 节点同刻上报 1s 内 100% 送达、无丢帧无重复；第 9 个接入被正确拒绝。</p>
+  </div>
+
+  <div class="rq">
+    <div class="hd"><span class="id">3.2</span><span class="tt">远程配置与升级</span><span class="b p0">P0</span></div>
+    <p><span class="kv">要求：</span>可远程配置、升级。</p>
+    <p><span class="kv a">约定：</span>① <b>升级前预检</b>：超容电压、信号质量、是否处于事件高发时段，不达标拒绝并回告原因（低电量强升是变砖主因）。② 差分优先（40K 差分区已具备）。③ 断点续传 + 回滚（176K 备份区已具备）。④ 固件签名验签，拒绝未签名包与降级包。⑤ 升级期间事件继续缓存，完成后补报。⑥ 升级窗口可配（仅光照充足/低事件时段）。⑦ 批量灰度、可暂停、可回退、结果追踪到单设备。</p>
+    <p><span class="kv g">验收：</span>超容 2.6V 临界时发起升级能正确拒绝；中途断电重启后恢复可用且版本可辨识；批量升级可灰度可中止。</p>
+  </div>
+
+  <div class="rq">
+    <div class="hd"><span class="id">3.3</span><span class="tt">文件传输（固件 / 策略 / 码库）</span><span class="b p0">P0</span></div>
+    <p><span class="kv">要求：</span>父节点开辟缓存区接收完整文件，等节点唤醒时传输；多目标（含同类型全部节点）需全部完成才算完成，未完成则告知失败节点地址；超时（5min 无分包 / 目标节点 2 个休眠周期未连成功）通知失败并允许新传输。</p>
+    <p><span class="kv a">约定：</span>① 数据区 120K、LPN 包 &lt;80K，<b>整包缓存仅 1 份</b>——所以 8 个同型号升级必须"<b>缓存 1 份 + 广播/分包分发</b>"，绝不能按节点数叠加。② 分包 1K + 分包 CRC16 + 整包 CRC32，单包重传 ≤3 次。③ 单节点传输时长 ≤3min。④ 同一父节点同时只处理 1 个文件任务。⑤ 单节点 4h（2 个心跳）未连成功判该节点失败，<b>但整体任务继续处理其他节点</b>，不必整批失败。</p>
+    <p><span class="kv g">验收：</span>1 份固件对 8 个同型号节点批量升级全成功、缓存仅占 1 份；断链可续传；超时后收到失败节点清单且缓存正确释放。</p>
+  </div>
+
+  <div class="rq">
+    <div class="hd"><span class="id">3.4</span><span class="tt">事件上报与确认</span><span class="b p0">P0</span></div>
+    <p><span class="kv">要求：</span>事件触发后实时上报云端，1s 内完成与父节点确认，未成功可重报；父节点确保事件接收后 10s 内到达云端。</p>
+    <p><span class="kv a">约定：</span>① 时延预算：LPN→父节点 ≤1s · 父节点→CCO ≤2s（跳数 ≤3）· CCO→云 ≤3s · 留 4s 余量。② 重传随机退避（避免 8 节点同步重传碰撞），超限转本地缓存。③ 父节点与云端两级幂等去重。④ <b>1s 指标须按 8 并发最恶劣条件验收</b>，不是单节点独测。</p>
+    <p><span class="kv g">验收：</span>成功率 ≥99.9%，P95 ≤3s、P99 ≤10s；8 并发下 1s 内确认率 100%；父节点失联时事件进缓存，恢复后 60s 内补报完成。</p>
+  </div>
+
+  <div class="rq">
+    <div class="hd"><span class="id">3.5</span><span class="tt">本地联动广播</span><span class="b p0">P0</span></div>
+    <p><span class="kv">要求：</span>联动事件触发后发起广播直接通知关联设备，同时通知父节点完成确认；有明确目标/组地址时由父节点确认到达。</p>
+    <p><span class="kv a">约定：</span>① 随机延时窗口 0–200ms + 重传退避，控制碰撞。② 接收端按事件 ID 在时间窗内只执行一次（防连续触发）。③ <b>纯广播无法确认到达</b>，需明确兜底（是否同时上报云端由云端二次下发）。④ 跳数 ≤4。⑤ 联动与告警共用信道，需定义优先级。⑥ 帧级完整性见 5.2。</p>
+    <p><span class="kv g">验收：</span>同空间 20 节点并发联动，目标 100% 收到且仅执行 1 次；触发到目标动作 ≤300ms。</p>
+  </div>
+
+  <div class="rq">
+    <div class="hd"><span class="id">3.6</span><span class="tt">入网与心跳</span><span class="b p0">P0</span></div>
+    <p><span class="kv">要求：</span>首次入网或离网后入网均上报云端；入网后维持心跳，周期 2h（不允许 6h）；父节点监控离线。</p>
+    <p><span class="kv a">约定：</span>① 心跳三职责：保活 + 取下行队列 + 校时，缺一不可。② 低电量降级时心跳可拉长至 3–8h，但<b>云端须显示实际周期</b>，避免误判离线。③ 连续丢 3 个心跳判离线（=6h）。④ 父节点自身离线时，其子节点应标记"<b>状态未知</b>"而非"离线"，避免误告警。</p>
+    <p><span class="kv g">验收：</span>断电后 3 个心跳周期内标记离线并告警；心跳拉长时云端显示实际周期；父节点离线时子节点显示"状态未知"。</p>
+  </div>
+
+  <div class="rq">
+    <div class="hd"><span class="id">3.7</span><span class="tt">授时同步</span><span class="b p0">P0</span></div>
+    <p><span class="kv">要求：</span>节点通过心跳与父节点握手时同时获得授时更新；系统要求事件时间戳精度 100ms。</p>
+    <p><span class="kv a">约定：</span>核心是<b>打戳机制</b>——事件发生时用本地时基（内部 RC）记 t_local，唤醒后立即校时取得 (T_sync, t_sync_local)，再倒推 <code>t_utc = T_sync − (t_sync_local − t_local)</code>。<b>RC 精度 300ppm，2h 漂 2.16s，但事件到校时仅 1s 内，漂移仅 0.3ms，完全满足 100ms。</b>因此不必选高精度晶振，但必须做到"每次事件唤醒立即校时"，不能依赖"睡前校准的绝对时间"。详见 4.1。</p>
+    <p><span class="kv g">验收：</span>事件时间戳偏差 ≤100ms（P99）；连续 7 天按 2h 心跳运行，节点与父节点时间偏差 ≤2.2s（仅影响定时策略执行时刻，不影响事件时间戳）。</p>
+  </div>
+
+  <div class="rq">
+    <div class="hd"><span class="id">3.8</span><span class="tt">父节点下行缓存与转发</span><span class="b p0">P0</span></div>
+    <p><span class="kv">要求：</span>父节点解析并缓存云端下发消息，至少 3 条；缓存满通知云端等待；超时（超过 2 个心跳周期未成功转发）释放并通知失败；成功则通知成功（需节点回复的，父节点只转发节点回复）；非单播需完成所有子节点传递，未完成告知失败节点。</p>
+    <p><span class="kv a">约定：</span>① <b>超时不能统一按 2 个心跳</b>（=4h），否则一条指令等 4h 才判失败。按优先级分流：<b>紧急</b>（控制/告警解除）30s 内投递、<b>普通</b>（参数配置）下次心跳取、<b>批量</b>（码库/升级）走 3.3 流程。② 缓存容量明确为<b>每子节点 3 条、父节点总池 24 条</b>。③ 失败原因码四类可区分：节点长期未唤醒 / 电量不足 / 校验失败 / 缓存满。④ 同一设备指令保序且幂等。</p>
+    <p><span class="kv g">验收：</span>节点休眠期间下发 5 条混合优先级指令，紧急指令 30s 内执行（若 Q1 确认需要唤醒能力），普通指令下次心跳后按序执行且无重复；缓存满时云端收到明确回告。</p>
+  </div>
+
+  <div class="rq">
+    <div class="hd"><span class="id">3.9</span><span class="tt">路由记录、父节点重选、失联重入网</span><span class="b p1">P1</span></div>
+    <p><span class="kv">要求：</span>云端记录 LPN 的父节点确保寻址正确；节点自动寻父，通信差可请求变更，新父节点超限直接拒绝；超 3 个心跳未握手则重新寻父入网。</p>
+    <p><span class="kv a">约定：</span>① 双向映射 + <b>变更事件化</b>（记录时间、原因、旧父节点、RSSI，用于定位"为什么这个设备老掉线"）。② 候选排序须包含<b>负载率（已挂数/8）</b>，否则节点全挤在信号最好的那个，第 9 个就被拒。③ 切换阈值（RSSI &lt;−85dBm 持续 3 次）+ 最小切换间隔（1h）防抖。④ 重入网需随机退避，防父节点重启后 8 个子节点同时重入引发风暴；重入后立即补报缓存事件。⑤ 重入网需重新校验白名单（设备身份不变，无需重新扫码）。</p>
+    <p><span class="kv g">验收：</span>换父节点后云端路由 ≤1 个心跳周期更新；屏蔽当前父节点，3 个心跳周期内完成切换且事件零丢失、24h 内切换 ≤1 次；父节点重启 8 子节点同时重入无风暴、全部恢复。</p>
+  </div>
+
+  <div class="rq">
+    <div class="hd"><span class="id">3.10</span><span class="tt">上行断链缓存与补传</span><span class="b new">补充</span><span class="b p0">P0</span></div>
+    <p><span class="kv r">为什么补：</span>原要求只定义了"云端→节点"的下行缓存，未定义"节点→云端"上行中断时的事件保全。</p>
+    <p><span class="kv a">约定：</span>① 节点本地事件缓存至环形区（建议 ≥200 条），满则覆盖最旧并计数。② 父节点在上行中断时缓存子节点上报，建议 ≥200 条 / ≥24h。③ 恢复后按时间顺序补传，携带原始时间戳，云端按时间戳入库不打乱时序。④ 补传限速，避免 8 子节点同时补传造成风暴。</p>
+    <p><span class="kv g">验收：</span>父节点断网 24h 后恢复，期间全部事件 60s 内补报完成，时间戳偏差 ≤100ms，无重复无丢失。</p>
+  </div>
+
+  <div class="rq">
+    <div class="hd"><span class="id">3.11</span><span class="tt">密集部署信道策略与地址规范</span><span class="b p1">P1</span></div>
+    <p><span class="kv">要求：</span>电表箱等场景多个父节点集中安装。</p>
+    <p><span class="kv a">约定：</span>① 相邻父节点使用不同广播信道（2.4G 仅 37/38/39 三个）。② 按设备 ID 哈希分配上报时隙。③ 发现阶段大功率、建立关系后降功率（缩小干扰半径）。④ 需在协议冻结前定死：组地址规划（对齐既有 32 个 group-ID 槽位）、位置码规则、广播/组播/单播位域划分、MAC 与业务 ID 映射。</p>
+    <p><span class="kv g">验收：</span>相邻 6 个父节点 × 各 8 节点 = 48 节点密集环境，成功率 ≥99%、P95 ≤5s；地址规划文档评审通过、1000 设备无 ID 冲突。</p>
+  </div>
+</section>
+
+<!-- ============ 时间 ============ -->
+<section id="s4">
+  <h3 class="sec">四、时间与事件 <small>原第 8 章</small></h3>
+
+  <div class="rq">
+    <div class="hd"><span class="id">4.1</span><span class="tt">事件时间戳（100ms 精度）</span><span class="b p0">P0</span></div>
+    <p><span class="kv">要求：</span>所有需上报的传感事件必须自带发生时间戳，系统精度要求 100ms。</p>
+    <div class="cal blue" style="margin:8px 0">
+      <b class="t">机制必须写死，否则精度会串</b>
+      休眠用内部 RC（±0.03% / 300ppm），2h 漂移 2.16s。因此<b>不能用"睡前校准的绝对时间 + 计时偏移"来推算事件时间</b>，误差会是秒级。<br>
+      正确做法：<b>事件发生时仅记录本地 tick → 唤醒后 1s 内完成校时 → 用 (T_sync, t_sync) 与事件 tick 倒推绝对时间</b>。此路径下漂移仅 0.3ms。<br>
+      <b>这条是本节唯一的技术关键点，需在协议文档中明确写死，避免研发理解成"上报时打戳"。</b>
+    </div>
+    <p><span class="kv a">约定：</span>① 时间基准统一 UTC，时区由云端处理。② 冷启动（硬开关打开）后时间无效，此期间事件须标注"时间不可信"并携带相对时基，由云端换算。③ 原始发生时间在本地缓存→父节点缓存→云端入库全过程不可被上报时间覆盖。</p>
+    <p><span class="kv g">验收：</span>断网 24h 期间事件恢复后补报，时间戳与实际发生偏差 ≤100ms；冷启动期间事件带标记且云端能正确换算。</p>
+  </div>
+
+  <div class="rq">
+    <div class="hd"><span class="id">4.2</span><span class="tt">上报频率可配与事件聚合</span><span class="b p1">P1</span></div>
+    <p><span class="kv">要求：</span>上报频率可配置，允许多次事件后统一上报。</p>
+    <p><span class="kv a">约定：</span>① 聚合窗口可配（如 30s 内多次触发合并为一条，携带次数与首末时间，<b>保留计数而非丢事件</b>）。② <b>告警类事件不得聚合</b>。③ 聚合后可能乱序，云端按时间戳重排。④ 窗口与低电量降级联动（低电时窗口放大）。</p>
+    <p><span class="kv g">验收：</span>1 分钟内触发 10 次，按配置窗口正确合并为 N 条且总计数为 10；告警事件不被聚合。</p>
+  </div>
+
+  <div class="rq">
+    <div class="hd"><span class="id">4.3</span><span class="tt">本地事件存储</span><span class="b p0">P0</span></div>
+    <p><span class="kv">要求：</span>本地至少存 16 条最近事件。</p>
+    <p><span class="kv a">约定：</span>16 条是最低要求，按 120K 数据区实际可支持<b>≥200 条</b>（每条 64B 约 12K），断链补传与升级期间都需要更大缓冲。环形缓冲、掉电不丢、掉电瞬间写入原子性、磨损均衡（环形 + 写合并）。</p>
+    <p><span class="kv g">验收：</span>连续产生 250 条后断电，重启可读出最近 200+ 条且顺序正确；断电瞬间不产生半条脏数据。</p>
+  </div>
+
+  <div class="rq">
+    <div class="hd"><span class="id">4.4</span><span class="tt">告警事件体系</span><span class="b p0">P0</span></div>
+    <p><span class="kv">要求：</span>告警与解除告警需上报；覆盖电量告警、传感器故障告警（传感值异常、多次读写与初始化失败、能耗异常）、通信告警等。</p>
+    <p><span class="kv a">约定：</span>建立统一码表（建议 <code>E-类别-编号</code>），全产品线共用，云端/App/售后文档统一引用。等级分紧急/重要/一般，<b>等级决定通道</b>（紧急走唤醒，普通等心跳）。同一告警持续期间限制重复次数（30min 最多 1 次），状态变化立即报。除原要求外需补充以下项，因电池不可充而更关键：</p>
+    <table style="margin:6px 0 0">
+      <thead><tr><th>类别</th><th>告警项</th><th>触发条件</th><th>需配对解除</th></tr></thead>
+      <tbody>
+        <tr><td rowspan="4"><b>能源</b></td><td>超容电量低</td><td>3.0 / 2.8 / 2.6V 三级</td><td>是（回升 100mV）</td></tr>
+        <tr><td>电池电量低</td><td>30% / 15% / 5%</td><td>是</td></tr>
+        <tr><td><b>供电来源切换</b></td><td>超容 ↔ 电池</td><td>否（事件型，必报）</td></tr>
+        <tr><td><b>长期靠电池运行</b></td><td>连续 N 天未切回超容</td><td>是（<b>选址问题的核心信号</b>）</td></tr>
+        <tr><td rowspan="4"><b>传感器</b></td><td>传感值异常</td><td>超量程 / 长时间无变化</td><td>是</td></tr>
+        <tr><td>初始化失败</td><td>累计 N 次</td><td>是</td></tr>
+        <tr><td>读写失败</td><td>连续 N 次</td><td>是</td></tr>
+        <tr><td>能耗异常</td><td>实测电流偏离基线</td><td>是</td></tr>
+        <tr><td rowspan="3"><b>通信</b></td><td>父节点失联</td><td>3 个心跳无握手（6h）</td><td>是</td></tr>
+        <tr><td>频繁重选父节点</td><td>单位时间 ≥N 次</td><td>是</td></tr>
+        <tr><td>父节点已满</td><td>接入被拒</td><td>否（事件型）</td></tr>
+        <tr><td><b>设备</b></td><td>异常复位</td><td>非正常复位原因</td><td>否（事件型）</td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top:6px"><span class="kv g">验收：</span>逐项注入故障，告警与解除均正确上报且能配对；码表评审通过并被三方统一引用。</p>
+  </div>
+
+  <div class="rq">
+    <div class="hd"><span class="id">4.5</span><span class="tt">掉电重启后的时间与策略恢复</span><span class="b p1">P1</span></div>
+    <p><span class="kv">要求：</span>因无 RTC，硬开关关断或深放电后时间丢失。</p>
+    <p><span class="kv a">约定：</span>① 重启后<b>立即尝试授时</b>（不等 2h 心跳），期间时间相关策略标记"暂停"。② 时间未恢复前<b>不执行定时类策略</b>，避免在错误时间开灯/开空调。③ 时间恢复后对错过的策略窗口做补偿判定（是否补执行，需产品定义）。④ 硬开关打开属典型冷启动场景，需与施工流程配合。</p>
+    <p><span class="kv g">验收：</span>硬开关关断 1h 后打开，1 个心跳周期内完成校时；校时前不产生错误动作；校时后策略恢复正常。</p>
+  </div>
+</section>
+
+<!-- ============ 可靠性安全 ============ -->
+<section id="s5">
+  <h3 class="sec">五、可靠性与安全 <small>原第 9 章（1 条）+ 补充</small></h3>
+
+  <div class="rq">
+    <div class="hd"><span class="id">5.1</span><span class="tt">通信失败复位与自恢复</span><span class="b p0">P0</span></div>
+    <p><span class="kv">要求：</span>多次通信失败要复位，不能永远死在失联状态。</p>
+    <p><span class="kv a">约定：</span>① 三层看门狗：硬件 WDT（兜底）/ 协议栈级 / 应用级。② <b>分级恢复</b>：先重连 → 再重启射频 → 再软复位 → 最后硬复位，不一上来就整机复位（会丢时间与缓存）。③ 复位原因记录并上报。④ 复位后自动回连、恢复配置、补报缓存、重新校时。⑤ 复位风暴防护：单位时间超限则进低频模式并告警。⑥ <b>低电压下先判断可用能量，不足则进入最低功耗等待充电，避免"复位→启动耗电→再复位"死循环</b>。</p>
+    <p><span class="kv g">验收：</span>注入射频异常/任务卡死/掉电/低电压，均 60s 内自恢复并上报原因；连续 100 次异常注入无死机；低电压下无复位死循环。</p>
+  </div>
+
+  <div class="rq">
+    <div class="hd"><span class="id">5.2</span><span class="tt">帧级完整性与防重放</span><span class="b p0">P0</span></div>
+    <p><span class="kv">要求：</span>网络已具备白名单（编码规则 + 二维码 + 唯一 MAC + App 扫码登记 + 云端校验，非法节点拒入）。</p>
+    <p><span class="kv r">需补充的原因：</span>白名单解决"<b>谁能入网</b>"，但不解决"<b>已入网设备的帧被伪造或重放</b>"——MAC 是明文，可以被抄。在园区、医院、多租户写字楼场景，抄一个合法 MAC 就能伪造开灯或解除告警指令。</p>
+    <p><span class="kv a">约定：</span>① 关键帧（联动、控制、告警解除）携带基于设备密钥的 MIC。② 帧内带单调序列号 + 时间窗防重放。③ 密钥与白名单登记流程绑定（扫码时下发），云端管理。④ 固件签名并防降级（拒绝旧版本号）。⑤ 计算开销评估：轻量 MIC 在 μs 级，对功耗无实质影响。</p>
+    <p><span class="kv g">验收：</span>用合法 MAC 但错误密钥伪造联动帧被 100% 拒绝；重放历史帧被丢弃；签名不符的固件被拒。</p>
+  </div>
+
+  <div class="rq">
+    <div class="hd"><span class="id">5.3</span><span class="tt">故障自诊断与现场日志</span><span class="b p1">P1</span></div>
+    <p><span class="kv">要求：</span>设备装在墙上，拆装成本高，现场必须能定位问题。</p>
+    <p><span class="kv a">约定：</span>① 本地保留最近 N 条运行日志（状态变迁、错误码、复位原因）。② <b>支持手机本地读取，无需拆机</b>。③ 一键自检：传感、电量、通信、存储四类，App 给出可视结果。</p>
+    <p><span class="kv g">验收：</span>现场故障设备通过手机 60s 内导出诊断信息；一键自检覆盖 4 类并给出明确结论。</p>
+  </div>
+
+  <div class="rq">
+    <div class="hd"><span class="id">5.4</span><span class="tt">隐私合规（存在检测类）</span><span class="b p2">P2</span></div>
+    <p><span class="kv a">约定：</span>红外+雷达仅输出"有人/无人"状态位，<b>不采集影像、不提取生物特征、不做身份关联</b>。对外材料（规格书/包装/App/投标文件）口径一致。</p>
+    <p><span class="kv g">验收：</span>技术方案明确数据字段清单（仅状态位 + 时间戳）；对外材料统一。</p>
+  </div>
+</section>
+
+<!-- ============ 品类 ============ -->
+<section id="s6">
+  <h3 class="sec">六、品类需求 <small>原第 2–6 章</small></h3>
+
+  <h4 class="sub">6.1 单红外人体移动传感</h4>
+  <div class="rq">
+    <div class="hd"><span class="id">6.1.1</span><span class="tt">感应距离可配置</span><span class="b p0">P0</span></div>
+    <p><span class="kv a">约定：</span>范围 <b>2–8m，3–4 档</b>；明确视场角（水平/垂直）。指标：<b>检测率 ≥95%</b>（标准人体横向通过）、<b>误报率 ≤1 次/24h</b>（静态环境）。</p>
+    <p><span class="kv g">验收：</span>各档位达检测率；7×24h 静态环境误报 ≤7 次。</p>
+  </div>
+  <div class="rq">
+    <div class="hd"><span class="id">6.1.2</span><span class="tt">随时触发唤醒并发联动</span><span class="b p0">P0</span></div>
+    <p><span class="kv a">约定：</span>唤醒稳定 ≤100ms；休眠电流 ≤5μA（含漏电）；触发到联动帧发出 ≤300ms；连续触发防抖 1s。</p>
+    <p><span class="kv g">验收：</span>触发到目标设备动作 ≤300ms（P95）；休眠电流符合预算；连续触发不重复联动。</p>
+  </div>
+  <div class="rq">
+    <div class="hd"><span class="id">6.1.3</span><span class="tt">温度补偿</span><span class="b p1">P1</span></div>
+    <p><span class="kv a">约定：</span>PIR 在环境温度接近人体温度时灵敏度显著下降，夏季易出现"人走过不亮灯"。需温度补偿或双元探测设计，35–40℃ 高温单独验证。</p>
+    <p><span class="kv g">验收：</span>25℃ 与 38℃ 检测率差异 ≤10 个百分点。</p>
+  </div>
+
+  <h4 class="sub">6.2 红外 + 24G 人体存在雷达 双鉴</h4>
+  <div class="rq">
+    <div class="hd"><span class="id">6.2.1</span><span class="tt">双鉴逻辑与快速开/快速关</span><span class="b p0">P0</span></div>
+    <p><span class="kv">要求：</span>红外触发唤醒系统并快速开灯，雷达启动双鉴，双鉴失败快速关。</p>
+    <p><span class="kv a">约定：</span>① 红外触发 → 立即开灯（≤300ms），同时启动雷达。② <b>双鉴确认窗口 3–5s</b>（可配）：窗口内雷达确认有人 → 进保持态；未确认 → 快速关。③ <b>保持时间 30s–5min</b>（可配），期间红外再触发则重置。④ 快速关建议渐暗（300ms 淡出），避免"闪一下黑"。</p>
+    <p><span class="kv g">验收：</span>人快速通过 → 亮灯并在双鉴窗口后关闭；人停留 → 持续保持；时序误差 ≤±20%。</p>
+  </div>
+  <div class="rq">
+    <div class="hd"><span class="id">6.2.2</span><span class="tt">雷达扫描延迟与周期</span><span class="b p0">P0</span></div>
+    <p><span class="kv a">约定：</span>延迟 0–60s 可配、扫描周期 1–10s、单次扫描时长、默认值、下发路径。<b>"交互完成"需定义清楚</b>：是"完成开灯动作"还是"事件已上报确认"——后者要等通信往返，对功耗影响更大。</p>
+    <p><span class="kv g">验收：</span>各档参数生效，实测时序偏差 ≤10%；默认值满足 SLA 且不超功耗预算。</p>
+  </div>
+  <div class="rq">
+    <div class="hd"><span class="id">6.2.3</span><span class="tt">中途红外复查与计时重置</span><span class="b p1">P1</span></div>
+    <p><span class="kv a">约定：</span>有人状态中途被红外唤醒时雷达不启动双鉴、扫描延迟重置；重置<b>也应重置保持时间</b>（否则人在空间内移动会提前关灯）；需设重置次数上限防能耗超标。</p>
+    <p><span class="kv g">验收：</span>持续有人活动 30min 灯光不中断；重置达上限时行为符合定义且不误关灯。</p>
+  </div>
+  <div class="rq">
+    <div class="hd"><span class="id">6.2.4</span><span class="tt">"有人→无人"反转可靠性（最难一条）</span><span class="b p0">P0</span></div>
+    <p><span class="kv a">约定：</span>① 静止检测能力：静坐办公、静卧场景能否持续判有人（呼吸微动），需明确最小可检测体动与对应距离。② 无人判定时间 30–120s 可配 + 去抖（连续 N 次扫描均无人才判无人）。③ 场景矩阵：办公工位静止 / 会议静坐 / 沙发躺卧 / 睡眠 / 空置静态。</p>
+    <p><span class="kv g">验收：</span><b>误判无人率 ≤1%/小时</b>（真人静止被判无人）；<b>误判有人率 ≤2%/24h</b>（无人却保持开灯）。5 类场景各连续测试 8h 出具报告。</p>
+  </div>
+  <div class="rq">
+    <div class="hd"><span class="id">6.2.5</span><span class="tt">低电量雷达自适应 + 参数远程可调</span><span class="b p0">P0</span></div>
+    <p><span class="kv a">约定：</span>① 雷达占空比随电量自动调整，<b>须与 2.2.2 降级矩阵合并成一张表</b>，避免两套逻辑打架。取舍顺序：<b>优先关闭"雷达主动扫描"，保留"红外触发后的单次双鉴"</b>——后者关系到误开灯，是体验底线。② 灵敏度、探测区域、<b>屏蔽区</b>（排除窗帘/绿植/风扇/空调出风口）支持远程配置。</p>
+    <p><span class="kv g">验收：</span>超容 3.5V→2.5V 过程中雷达占空比单调下降且符合矩阵；低电量下不出现"无人却常亮"；远程配置生效并持久化。</p>
+  </div>
+  <div class="rq">
+    <div class="hd"><span class="id">6.2.6</span><span class="tt">安装约束（需写入安装指南）</span><span class="b p1">P1</span></div>
+    <p><span class="kv a">约定：</span>避免正对金属面、避免紧贴玻璃、避免正对空调出风口与摆动物、明确离地高度与俯角要求。<b>这些不写清，现场误报率会失控，且无法归因。</b></p>
+    <p><span class="kv g">验收：</span>按规范安装的设备误报率达标；违规安装时可通过屏蔽区配置改善。</p>
+  </div>
+
+  <h4 class="sub">6.3 红外遥控 + 温湿度</h4>
+  <div class="rq">
+    <div class="hd"><span class="id">6.3.1</span><span class="tt">定周期交互与响应速度</span><span class="b p0">P0</span></div>
+    <p><span class="kv">要求：</span>定周期与父节点交互，周期可配；响应云端指令 30s–60s。</p>
+    <div class="cal amber" style="margin:8px 0">
+      <b class="t">这条与 2h 心跳冲突，是本次唯一的架构取舍点</b>
+      靠心跳取件最坏等 2h。<b>要满足 30–60s 只能靠父节点唤醒广播</b>。见 Q1——若这条可降级，架构不必开发唤醒广播。
+    </div>
+    <p><span class="kv a">约定：</span>周期范围、周期与响应速度换算关系、周期长短对功耗的对照表；USB 供电时是否缩短心跳（见 6.3.5）。</p>
+    <p><span class="kv g">验收：</span>按 Q1 确认后的口径验收（唤醒广播就绪则 ≤30s；否则 ≤2h 心跳周期）。</p>
+  </div>
+  <div class="rq">
+    <div class="hd"><span class="id">6.3.2</span><span class="tt">红外码库可配置</span><span class="b p0">P0</span></div>
+    <p><span class="kv a">约定：</span>① 本地容量 ≥64 组（需核算数据区占用）。② 格式支持 NEC/RC5/RC6/自定义，<b>建议支持现场学习</b>（用原遥控器学习，否则长尾品牌覆盖不了）。③ 下发走 3.3 文件通道（1 份缓存 + 分包）。④ 明确匹配机制（按品牌型号自动匹配还是逐个试码），定义 App 交互流程。</p>
+    <p><span class="kv g">验收：</span>码库下发生效；现场学习成功率 ≥90%；覆盖品牌清单评审通过。</p>
+  </div>
+  <div class="rq">
+    <div class="hd"><span class="id">6.3.3</span><span class="tt">温湿度自动控空调</span><span class="b p1">P1</span></div>
+    <p><span class="kv a">约定：</span>阈值 + <b>回差</b> + <b>最小动作间隔</b>（否则空调频繁启停）；手动操作优先于自动策略；自动策略生效时段；传感器故障时停用自动并告警。</p>
+    <p><span class="kv g">验收：</span>阈值附近波动时不频繁启停（每小时动作数可配）；手动后自动策略按定义让位。</p>
+  </div>
+  <div class="rq">
+    <div class="hd"><span class="id">6.3.4</span><span class="tt">空调状态机同步（红外单向的经典坑）</span><span class="b p0">P0</span></div>
+    <p><span class="kv r">为什么必须补：</span>红外是<b>单向</b>的，发出去不知道空调是否收到、当前什么状态。用户用原遥控器调过温度后，后续自动策略会全部错乱（"以为开着其实关着"）。</p>
+    <p><span class="kv a">约定：</span>① 本地维护虚拟状态（开关/模式/温度/风速）+ <b>状态置信度</b>（可信/存疑）。② <b>每次控制发完整状态帧</b>而非增量指令——这是行业通用做法，因为无法感知用户的原遥控器操作。③ 红外无 ACK，每次指令重发 2–3 次。④ 状态存疑时先发一次全量帧再动作。</p>
+    <p><span class="kv g">验收：</span>用原遥控器改变状态后，自动策略仍正确动作（不出现反向操作）；连续 100 次自动控制无失败（真实空调实测）。</p>
+  </div>
+  <div class="rq">
+    <div class="hd"><span class="id">6.3.5</span><span class="tt">USB 供电模式识别</span><span class="b p1">P1</span></div>
+    <p><span class="kv a">约定：</span>自动识别供电来源并切换模式（USB：心跳缩短、响应 ≤30s；电池/微光：省电优先），云端上报当前模式；明确 USB 时是否给超容充电、充电热管理。</p>
+    <p><span class="kv g">验收：</span>插拔后 5s 内切换并在云端可见；USB 模式响应 ≤30s；拔掉后回落省电模式。</p>
+  </div>
+
+  <h4 class="sub">6.4 光照度 + 温湿度</h4>
+  <div class="rq">
+    <div class="hd"><span class="id">6.4.1</span><span class="tt">照度响应 10s 量级</span><span class="b p0">P0</span></div>
+    <p><span class="kv a">约定：</span>采用"<b>变化量触发 + 周期兜底</b>"而非纯定时采样：变化超阈值（±20% 或 ±50lux）立即上报，否则按较长周期上报。功耗核算：每 10s 采样一次约 12μAh/天，占 50lux 补给的 4%，可接受。</p>
+    <p><span class="kv g">验收：</span>照度突变（开灯）后 10s 内上报；稳定环境下冗余上报 ≤N 次/小时。</p>
+  </div>
+  <div class="rq">
+    <div class="hd"><span class="id">6.4.2</span><span class="tt">温湿度分钟级响应</span><span class="b p1">P1</span></div>
+    <p><span class="kv a">约定：</span>周期 1–30min；上报阈值（温度 ≥0.5℃ 或湿度 ≥3%RH）；精度 ±0.3℃/±3%RH；<b>自热补偿</b>（传感器自身发热导致读数偏高，需布局隔离或软件补偿）。</p>
+    <p><span class="kv g">验收：</span>与标准仪器比对，温度 ≤±0.5℃、湿度 ≤±5%RH；周期可配且生效。</p>
+  </div>
+  <div class="rq">
+    <div class="hd"><span class="id">6.4.3</span><span class="tt">目标控制值配置 + 照度标定</span><span class="b p0">P0</span></div>
+    <p><span class="kv">要求：</span>可配置当前照度、温度作为目标控制值。</p>
+    <p><span class="kv a">约定：</span>① 这是<b>现场调试功能</b>（施工时站到工位按一下，把当下照度记为期望值）：触发方式（App/按键）、是否固化到云端、多传感器场景以哪个为准。② <b>照度标定必须做</b>：传感器读的是它自己位置的光，不是工作面照度，两者可能差几倍。需明确推荐安装高度与朝向、现场标定流程（照度计实测工作面写入修正系数）、余弦修正、上报原始值+修正值两个字段。</p>
+    <p><span class="kv g">验收：</span>按下"以此为基准"后目标值正确写入并云端可见；<b>按规范安装并标定后，读数与工作面实测偏差 ≤±15%</b>；修正系数可云端查看修改。</p>
+  </div>
+
+  <h4 class="sub">6.5 面板开关（纯无线随手贴）</h4>
+  <div class="cal green">
+    <b class="t">架构已明确，此前的担忧不成立</b>
+    面板<b>不需要云端控制</b>，只有配置与升级的下行需求；日常为心跳唤醒与按键唤醒的上行需求；<b>云端控制灯时直接到灯，不经过面板转发</b>。因此面板不存在"云控要等 2h"的问题，其心跳仍为 2h，纯电池兜底 6.9 年。
+  </div>
+
+  <div class="rq">
+    <div class="hd"><span class="id">6.5.1</span><span class="tt">按键基础操作</span><span class="b p0">P0</span></div>
+    <p><span class="kv a">约定：</span>上键单击开 / 下键单击关 / 上长按亮度加 / 下长按亮度减。需定义：长按触发时间（400–600ms）、调光步进曲线（匀速/加速）、调光上下限、去抖时间、长按结束到停调的延迟。这些需产品定标准并做手感验收。</p>
+    <p><span class="kv g">验收：</span>按键响应 ≤100ms；调光线性度符合定义；1000 次按键无漏响应/误响应。</p>
+  </div>
+  <div class="rq">
+    <div class="hd"><span class="id">6.5.2</span><span class="tt">双击操作与时序取舍</span><span class="b p0">P0</span></div>
+    <p><span class="kv">要求：</span>上键双击进入自动，下键双击临时高亮（医院）。</p>
+    <p><span class="kv r">隐藏问题：</span>系统无法预知用户"单击后还会不会再击一次"。若单击立即开灯，用户双击时会先开灯再进自动，出现"闪一下"的错误动作。</p>
+    <p><span class="kv a">约定：</span>方案 A（低延迟优先）：单击立即执行，双击追加，代价是双击时有一次多余动作。方案 B（准确优先）：单击延迟 250–300ms 等双击窗口，代价是开灯延迟 0.3s。<b>建议开/关用 A，需要严格无副作用的场景用 B 并允许按场景配置。</b>另需定义临时高亮持续时间（医院如 10min）与结束回落行为。见 Q8。</p>
+    <p><span class="kv g">验收：</span>单击/双击/长按 1000 次混合测试识别准确率 ≥99%；按选定口径验证无双击多余动作。</p>
+  </div>
+  <div class="rq">
+    <div class="hd"><span class="id">6.5.3</span><span class="tt">手动优先与手动状态有效期</span><span class="b p0">P0</span></div>
+    <p><span class="kv">要求：</span>开关的人工指令高于自动策略：开关开即视为手动开，不再执行自动；调光后也不再自动调光。</p>
+    <p><span class="kv a">约定：</span><b>"不再自动"必须有期限</b>，否则自动策略永久失效、节能率归零。有效期可配（2h / 4h / 到下次定时切换 / 永久），需产品定默认值。手动态必须上报云端（否则云端算的能耗与节能率与现场不符）。另需定义解除条件与多人操作时的优先级。</p>
+    <p><span class="kv g">验收：</span>手动开灯后自动策略在有效期内不动作；超期后恢复；手动状态云端可见。</p>
+  </div>
+  <div class="rq">
+    <div class="hd"><span class="id">6.5.4</span><span class="tt">双击进自动后重取照度基准</span><span class="b p0">P0</span></div>
+    <p><span class="kv">要求：</span>双击进自动后，若是恒照度场景，需重新获取照度数据作为目标照度。</p>
+    <p><span class="kv a">约定：</span><b>照度来源已明确</b>——恒照度照明场景一定部署了同组的"随手贴光照度+温湿度"传感器（不在面板上）。因此路径为：<b>面板经本地联动向同组照度节点取当前照度</b>，不依赖云端（云端查询需数秒到数分钟，不适合"双击即生效"）。<br>需补：① 取数超时（建议 500ms）与降级行为（取不到时保持当前亮度还是用上次基准）。② <b>目标照度语义必须定义</b>：是"当前实测值"还是"预设标准值"——两者完全不同。</p>
+    <p><span class="kv g">验收：</span>双击后 2s 内完成照度获取并进入恒照度控制；照度节点离线时按定义降级且不报错闪断。</p>
+  </div>
+  <div class="rq">
+    <div class="hd"><span class="id">6.5.5</span><span class="tt">无源面板的专属约束</span><span class="b p1">P1</span></div>
+    <p><span class="kv a">约定：</span>① 无强电、无持续供电，指示灯/背光全部计入 4μA 级基流预算，需重新审定背光方案。② <b>装机位置照度风险</b>：面板常装在门口/墙边，夜间走廊可能低于 50lux，需评估连日阴天是否导致电量不足。③ 按键即唤醒，是面板最大单次能耗来源。④ <b>按键到灯具的本地联动不得依赖网络</b>，否则断网时按了不亮，用户无法接受。⑤ 掉电恢复策略（恢复断电前亮度/默认/保持关灯，医院与消防可能有强制要求）。</p>
+    <p><span class="kv g">验收：</span>模拟"门口 30lux + 日均 20 次按键"连续 30 天，超容不低于 2.8V；断网条件下按键本地联动正常；断电 1h 恢复后按定义策略执行。</p>
+  </div>
+</section>
+
+<!-- ============ 确认清单 ============ -->
+<section id="s7">
+  <h3 class="sec">七、待确认清单 <small>建议逐条过，当场给结论</small></h3>
+
+  <p>共 10 项，分三类。第一类是<b>需要总监拍板</b>的取舍；第二类是<b>需要研发/硬件给结论</b>的技术问题；第三类是<b>需要产品定义口径</b>的细节。</p>
+
+  <h4 class="sub" style="border-left-color:#B42318">第一类 · 需要拍板（4 项）</h4>
+
+  <div class="qi">
+    <div class="qh"><span class="qn">Q1</span><span class="qt">红外遥控类"云端指令 30–60s 响应"是否必须？</span><span class="b p0">最高优先</span></div>
+    <div class="qb">
+      <p><b>背景：</b>全局心跳 2h，靠心跳取件最坏等 2h。要满足 30–60s 只能靠<b>父节点唤醒广播</b>（节点在心跳间隙保留极短接收窗，或专用唤醒前导）。<b>这是目前唯一还依赖唤醒能力的需求</b>——面板已明确不需要云控，其他品类都是上行事件为主。</p>
+      <p><b>两个选项：</b><br>
+      ① <b>保留 30–60s</b>：需开发唤醒广播能力，增加节点接收窗功耗与协议复杂度，且必须在 M0 验证芯片是否支持。<br>
+      ② <b>降级</b>：电池/微光供电时响应时间 = 心跳周期（≤2h），仅 USB 供电时 30s（此时有持续供电，可缩短心跳）。</p>
+      <p><b>影响的连带项：</b>若选 ②，3.8 下行缓存中的"紧急消息 30s 投递"、4.4 告警的"紧急走唤醒"也要同步调整；整体架构可省掉一块。</p>
+      <div class="rec"><b>建议选 ②。</b>理由：红外遥控本质是慢速场景（空调温控、场景切换），用户对 2h 响应不敏感；而唤醒广播要付出节点常开短接收窗的功耗代价，与"5 年寿命"目标直接冲突。若产品侧确认"遥控类必须实时"，则需要为该品类单独定义更高的功耗预算。</div>
+    </div>
+  </div>
+
+  <div class="qi">
+    <div class="qh"><span class="qn">Q2</span><span class="qt">双鉴/遥控类的"5 年"如何承诺？</span><span class="b p0">P0</span></div>
+    <div class="qb">
+      <p><b>背景：</b>50lux 补给 300μAh，这两类耗 266μAh，<b>余量仅 11%</b>；触发 150 次/天即临界，200 次/天开始赤字。完全无光时电池只能撑 3.3 年且不可充。</p>
+      <p><b>选项：</b>① 单一承诺"5 年"（风险高，任意点位都可能不达标）；② 条件性承诺"<b>≥100lux 且日均 ≤150 次触发 → 5 年</b>"，低于此条件按矩阵下调；③ 不承诺年限，只承诺"微光自持率"。</p>
+      <div class="rec"><b>建议选 ②</b>，并把二维矩阵（照度 × 触发频次）写进规格书。这一条直接决定销售报价与客户预期管理，建议由您亲自定口径。</div>
+    </div>
+  </div>
+
+  <div class="qi">
+    <div class="qh"><span class="qn">Q3</span><span class="qt">帧级完整性保护（MIC）是否本期做？</span><span class="b p0">P0</span></div>
+    <div class="qb">
+      <p><b>背景：</b>白名单只校验身份，不校验帧。MAC 明文可抄，抄到就能伪造联动指令或解除告警。</p>
+      <p><b>成本评估：</b>轻量 MIC 在 μs 级，对功耗无实质影响；开发量集中在协议层，不涉及硬件改动。</p>
+      <div class="rec"><b>建议本期做。</b>园区、医院、多租户写字楼场景下，"邻居能开我的灯"是不可接受的；而成本几乎可以忽略。若本期不做，至少要预留密钥字段与帧格式，避免后期改帧导致全线升级。</div>
+    </div>
+  </div>
+
+  <div class="qi">
+    <div class="qh"><span class="qn">Q4</span><span class="qt">恒照度场景的照度节点是否作为必配项？</span><span class="b p0">P0</span></div>
+    <div class="qb">
+      <p><b>背景：</b>面板双击进自动需取照度，照度来自同组的随手贴照度传感器（面板不集成）。因此"有恒照度场景 = 必须有同组照度节点"。</p>
+      <p><b>需要确认：</b>① 是否将此写入方案设计规范与报价清单（每个恒照度区域至少 1 个照度节点）。② 若客户不愿意增加节点，是否有降级方案（如面板按上次基准或预设值运行）。</p>
+      <div class="rec"><b>建议：</b>写入规范并作为报价必含项。同时定义降级方案：照度节点离线时，面板保持当前亮度并在云端产生"恒照度基准缺失"告警。</div>
+    </div>
+  </div>
+
+  <h4 class="sub" style="border-left-color:#B54708">第二类 · 需技术结论（3 项）</h4>
+
+  <div class="qi t2">
+    <div class="qh"><span class="qn">Q5</span><span class="qt">内部 RC ±0.03% 的温度适用范围？</span><span class="b p1">硬件确认</span></div>
+    <div class="qb">
+      <p><b>背景：</b>事件时间戳精度依赖"事件后 1s 内校时"——按 ±0.03%（300ppm）算，1s 漂 0.3ms，完全满足 100ms。但 ±0.03% 通常是 25℃ 指标，<b>RC 振荡器的温度系数在全温区可能大得多</b>（部分情况下一两个数量级）。</p>
+      <p><b>需确认：</b>-10℃～+55℃ 全温区下的实际精度；若全温区劣化到 ±0.3%（3000ppm），1s 漂 3ms，<b>仍然满足 100ms</b>，所以结论不变，但需把这个数据写进文档，避免测试阶段才发现。</p>
+      <div class="rec"><b>建议：</b>由硬件提供全温区 RC 精度数据；按最坏值复核"事件→校时 1s"路径的时间误差。若全温区精度劣于 ±3%（30000ppm，1s 漂 30ms）才需要干预。</div>
+    </div>
+  </div>
+
+  <div class="qi t2">
+    <div class="qh"><span class="qn">Q6</span><span class="qt">事件打戳机制的实现确认</span><span class="b p1">研发确认</span></div>
+    <div class="qb">
+      <p><b>需确认的实现：</b>事件发生时只记录本地 tick（不换算绝对时间）；唤醒后 1s 内完成与父节点校时，取得 (T_sync, t_sync)；用 <code>t_utc = T_sync − (t_sync − t_event_tick)</code> 倒推。</p>
+      <p><b>需要研发明确：</b>① 唤醒到校时完成的实测耗时（必须 &lt;1s，正好与 3.4 的 1s 确认要求重合）。② 若某次事件因通信失败未能在 1s 内校时，事件时间戳如何处理（建议标记"精度降级"，用上次校时的漂移估计补偿）。</p>
+      <div class="rec"><b>建议：</b>把该机制写进协议文档与嵌入式设计文档，作为验收项；测试需专门验证"1s 内未完成校时"的降级路径。</div>
+    </div>
+  </div>
+
+  <div class="qi t2">
+    <div class="qh"><span class="qn">Q7</span><span class="qt">雷达与休眠的实测参数</span><span class="b p1">硬件/研发提供</span></div>
+    <div class="qb">
+      <p><b>背景：</b>第六章全部能量结论基于假设值，需实测替换，否则双鉴类的寿命承诺无法签字。</p>
+      <p><b>需提供：</b>① 24G 雷达工作电流与占空比模式（现按 5mA 估）。② 休眠基流实测值（现按 2μA 估，另加漏电 2μA）。③ BLE 单次事件通信的电量与时长（现按 20mA×100ms 估）。④ 红外发射管电流与单次时长（现按 100mA×0.5s 估）。⑤ 典型点位日均触发次数分布（寿命矩阵的第二维）。</p>
+      <div class="rec"><b>提示：</b>若雷达实际电流为 20–30mA（而非 5mA），双鉴类的能量结论会反转，需重新评估该品类是否可行。这是当前最大的数据缺失风险。</div>
+    </div>
+  </div>
+
+  <h4 class="sub" style="border-left-color:#475467">第三类 · 需产品定义口径（3 项）</h4>
+
+  <div class="qi t3">
+    <div class="qh"><span class="qn">Q8</span><span class="qt">面板按键双击/单击的时序取舍</span><span class="b p2">产品定义</span></div>
+    <div class="qb">
+      <p><b>必须选一个：</b>方案 A（单击立即执行，双击时会有一次多余动作）或方案 B（单击延迟 300ms 等双击窗口，开灯有延迟）。</p>
+      <div class="rec"><b>建议：</b>开/关用 A（即时性对体验更重要），需要严格无副作用的场景（如医院临时高亮）单独用 B 并允许按场景配置。</div>
+    </div>
+  </div>
+
+  <div class="qi t3">
+    <div class="qh"><span class="qn">Q9</span><span class="qt">手动状态的默认有效期</span><span class="b p2">产品定义</span></div>
+    <div class="qb">
+      <p><b>必须定一个默认值：</b>"不再执行自动策略"如果永久有效，节能率会归零；如果太短，用户会觉得"我设的亮度又被改了"。</p>
+      <div class="rec"><b>建议默认 4h</b>，并提供 2h / 到下次定时切换 / 永久 三档可选。手动态必须上报云端。</div>
+    </div>
+  </div>
+
+  <div class="qi t3">
+    <div class="qh"><span class="qn">Q10</span><span class="qt">告警码表与"目标照度"语义</span><span class="b p2">产品定义</span></div>
+    <div class="qb">
+      <p><b>两件事：</b>① 告警码表需统一制定（<code>E-类别-编号</code>），全产品线共用，云端/App/售后文档统一引用——否则五个品类各写一套，后期无法统一处理。② 恒照度的"目标照度"到底指"当前实测值"还是"预设标准值"，两者语义完全不同，需在 PRD 中写清。</p>
+      <div class="rec"><b>建议：</b>目标照度定义为"施工现场以当前实测值作为基准，可被云端预设标准值覆盖"，并在物模型中区分 <code>target_lux_source</code>（measured / preset）字段。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 测试 ============ -->
+<section id="s8">
+  <h3 class="sec">八、测试与验收 <small>工装是关键路径</small></h3>
+
+  <div class="cal amber">
+    <b class="t">排期提示</b>
+    这套产品的测试<b>不是靠现有实验室能做的</b>。可编程光源、超容充放电模拟、μA 级功耗分析、场景测试间的<b>采购与搭建周期往往比研发还长</b>，建议 M0 就启动，与研发并行。
+  </div>
+
+  <h4 class="sub">8.1 必需工装</h4>
+  <table>
+    <thead><tr><th style="width:170px">工装</th><th>用途</th><th style="width:160px">关键参数</th><th style="width:70px">优先级</th></tr></thead>
+    <tbody>
+      <tr><td><b>可编程光源箱</b></td><td class="wrapcell">0–2000lux 可调，标定微光采集曲线与照度传感；验证 50lux 门槛</td><td>照度可编程、均匀性好</td><td><span class="b p0">P0</span></td></tr>
+      <tr><td><b>可编程源表</b></td><td class="wrapcell">模拟 50F 超容充放电曲线（3.5V→2.6V 缓降）、电压跌落、电池内阻</td><td>支持大容性负载、μA 级测量</td><td><span class="b p0">P0</span></td></tr>
+      <tr><td><b>超容测试夹具</b></td><td class="wrapcell">真实 50F 超容充放、漏电、ESR、循环寿命</td><td>可测 ESR 与漏电</td><td><span class="b p0">P0</span></td></tr>
+      <tr><td><b>功耗分析仪</b></td><td class="wrapcell">各状态电流实测，输出功耗预算表</td><td>nA–mA 动态范围、高采样率</td><td><span class="b p0">P0</span></td></tr>
+      <tr><td><b>并发测试架</b></td><td class="wrapcell">8 并发验证、6 父节点 × 8 节点密集场景</td><td>≥50 台同时供电与监控</td><td><span class="b p0">P0</span></td></tr>
+      <tr><td><b>场景测试间</b></td><td class="wrapcell">雷达/红外场景化测试（工位静止、躺卧、会议）</td><td>可布置家具、控温湿度</td><td><span class="b p0">P0</span></td></tr>
+      <tr><td><b>高低温试验箱</b></td><td class="wrapcell">温度对电池、PIR、雷达、<b>RC 精度</b>的影响</td><td>-10℃ ~ +55℃</td><td><span class="b p0">P0</span></td></tr>
+      <tr><td><b>照度计（计量级）</b></td><td class="wrapcell">照度标定与工作面比对</td><td>需校准证书</td><td><span class="b p0">P0</span></td></tr>
+      <tr><td>射频屏蔽箱</td><td class="wrapcell">隔离测试、灵敏度与功率标定</td><td>2.4G 屏蔽效能达标</td><td><span class="b p1">P1</span></td></tr>
+      <tr><td>网络损伤仪</td><td class="wrapcell">断链、丢包、时延抖动</td><td>可编排故障场景</td><td><span class="b p1">P1</span></td></tr>
+    </tbody>
+  </table>
+
+  <h4 class="sub">8.2 必须覆盖的测试类型</h4>
+  <table>
+    <thead><tr><th style="width:140px">类型</th><th>关键场景</th><th style="width:200px">判定要点</th></tr></thead>
+    <tbody>
+      <tr><td><b>能量平衡</b></td><td class="wrapcell">6 个照度点 × 3 个触发频次（50/150/300 次/天）</td><td>输出寿命二维矩阵与照度门槛表</td></tr>
+      <tr><td><b>超容特性</b></td><td class="wrapcell">满充→2.5V 全放电、漏电、ESR、1000 次循环</td><td>SOC 误差、ESR 变化、容量衰减 ≤20%</td></tr>
+      <tr><td><b>电源与切换</b></td><td class="wrapcell">电压缓降、切换抖动、电池拔出、深放电</td><td>无复位或状态完整；事件零丢失；无复位死循环</td></tr>
+      <tr><td><b>8 并发</b></td><td class="wrapcell">8 节点同刻上报、同时联动、满载拒绝第 9 个</td><td>1s 内 100% 送达；无丢帧无重复</td></tr>
+      <tr><td><b>密集干扰</b></td><td class="wrapcell">6 父节点 × 8 节点 = 48 节点邻区</td><td>成功率 ≥99%、P95 ≤5s</td></tr>
+      <tr><td><b>时间精度</b></td><td class="wrapcell">7 天 × 2h 心跳；高低温 RC 漂移；冷启动校时；<b>1s 内未校时的降级路径</b></td><td>事件时间戳偏差 ≤100ms（P99）</td></tr>
+      <tr><td><b>断链恢复</b></td><td class="wrapcell">父节点掉电、L1 中断、云端维护 24h</td><td>补传完整、时序正确、无重复</td></tr>
+      <tr><td><b>算法场景</b></td><td class="wrapcell">静止办公/会议/躺卧/快速通过/多人/宠物 × 高低温</td><td>误判无人 ≤1%/h；误判有人 ≤2%/24h</td></tr>
+      <tr><td><b>安全渗透</b></td><td class="wrapcell">伪造 MAC 入网、伪造联动帧、重放、恶意固件、降级攻击</td><td>全部被拒并告警</td></tr>
+      <tr><td><b>升级异常</b></td><td class="wrapcell">中断电/断链/包损坏/版本不匹配/低电量拒绝</td><td>可恢复，无变砖</td></tr>
+      <tr><td><b>长周期</b></td><td class="wrapcell">72h 压力 + 30 天不间断 + 面板"门口 30lux + 日均 20 次按键"模拟</td><td>无泄漏、无死机、超容不低于 2.8V</td></tr>
+      <tr><td><b>结构环境</b></td><td class="wrapcell">背胶剥离、高低温循环、跌落、硬开关耐久</td><td>符合结构可靠性标准</td></tr>
+    </tbody>
+  </table>
+
+  <h4 class="sub">8.3 核心验收指标</h4>
+  <table>
+    <thead><tr><th style="width:230px">指标</th><th style="width:180px">目标值</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>休眠基流</td><td>≤4 μA（含漏电 2μA）</td><td>寿命测算输入，需实测替换假设</td></tr>
+      <tr><td>超容充放电循环</td><td>≥1000 次，容量衰减 ≤20%</td><td>5 年日常充放</td></tr>
+      <tr><td>正常点位电池消耗</td><td>5 年内 ≤20%</td><td><b>新的寿命验收口径</b>（电池不可充）</td></tr>
+      <tr><td>事件端到端时延</td><td>P95 ≤3s / P99 ≤10s</td><td>Class A 品类</td></tr>
+      <tr><td>8 并发确认率</td><td>1s 内 100%</td><td>硬指标</td></tr>
+      <tr><td>事件上报成功率</td><td>≥99.9%</td><td>含重传</td></tr>
+      <tr><td>本地联动时延</td><td>≤300ms</td><td>触发到目标动作</td></tr>
+      <tr><td>离线判定时间</td><td>≤3 个心跳（6h）</td><td>2h 心跳</td></tr>
+      <tr><td><b>事件时间戳偏差</b></td><td><b>≤100 ms（P99）</b></td><td>依赖"事件后 1s 内校时"</td></tr>
+      <tr><td>本地事件存储</td><td>≥200 条，掉电不丢</td><td>原要求 16 条为下限</td></tr>
+      <tr><td>误判无人率（雷达）</td><td>≤1%/小时</td><td>真人静止被判无人</td></tr>
+      <tr><td>误判有人率（雷达）</td><td>≤2%/24h</td><td>无人却保持开灯</td></tr>
+      <tr><td>红外误报率</td><td>≤1 次/24h</td><td>静态环境</td></tr>
+      <tr><td>照度读数偏差</td><td>≤±15%</td><td>标定后与工作面实测比对</td></tr>
+      <tr><td>父节点承载</td><td>逻辑 8 / 并发 8</td><td>—</td></tr>
+      <tr><td>升级失败可恢复率</td><td>100%（无变砖）</td><td>176K 备份区保障</td></tr>
+      <tr><td>电池更换后恢复</td><td>≤30s，无需重新配网</td><td>—</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============ 里程碑 ============ -->
+<section id="s9">
+  <h3 class="sec">九、里程碑与分工 <small>按团队切分</small></h3>
+
+  <h4 class="sub">9.1 里程碑与出口准则</h4>
+  <table>
+    <thead><tr><th style="width:64px">阶段</th><th style="width:220px">交付物</th><th>出口准则（不满足不进下一阶段）</th><th style="width:100px">主责</th></tr></thead>
+    <tbody>
+      <tr><td><b>M0</b><br>架构冻结</td><td class="wrapcell">Q1–Q10 结论<br>能量预算框架<br>测试工装采购清单</td><td class="wrapcell">10 项确认全部有结论并签字；<b>Q1（唤醒广播取舍）必须有明确结论</b>，因为它决定协议复杂度；工装已下单</td><td>架构 + 总监</td></tr>
+      <tr><td><b>M1</b><br>协议与物模型冻结</td><td class="wrapcell">通信协议（帧格式/缓存/优先级/时延预算/<b>打戳机制</b>）<br>设备物模型<br>告警码表<br>组地址与位置码</td><td class="wrapcell">协议评审通过；物模型与平台对齐；帧格式此后不再变更</td><td>协议 + 平台</td></tr>
+      <tr><td><b>M2</b><br>功耗与能量验证</td><td class="wrapcell">功耗预算表（实测）<br>寿命二维矩阵<br>照度门槛表<br>超容充放电与切换验证</td><td class="wrapcell">实测参数替换全部假设值；照度门槛明确；切换无状态丢失</td><td>硬件 + 测试</td></tr>
+      <tr><td><b>M3</b><br>系统联调</td><td class="wrapcell">时延报告（含 8 并发）<br>时间精度报告<br>断链恢复报告<br>升级回滚验证<br>安全测试报告</td><td class="wrapcell">SLA 达标；100ms 时间精度达标；断链零丢失；无变砖；渗透通过</td><td>研发 + 测试</td></tr>
+      <tr><td><b>M4</b><br>规模与场景验证</td><td class="wrapcell">48 节点密集测试<br>算法场景测试<br>30 天长稳<br>面板低照度 30 天模拟</td><td class="wrapcell">密集场景达标；算法指标达标；30 天无死机；面板超容 ≥2.8V</td><td>测试</td></tr>
+      <tr><td><b>M5</b><br>小批试产</td><td class="wrapcell">施工 SOP（含照度检测流程）<br>认证证书<br>FAE 培训材料</td><td class="wrapcell">现场安装 50 台无阻塞；认证齐全；FAE 可独立交付</td><td>产品 + 交付</td></tr>
+    </tbody>
+  </table>
+
+  <h4 class="sub">9.2 任务分工</h4>
+  <table>
+    <thead><tr><th style="width:80px">团队</th><th style="width:250px">任务</th><th>交付</th><th style="width:66px">优先级</th></tr></thead>
+    <tbody>
+      <tr><td rowspan="4"><b>产品</b></td><td>定"5 年"承诺口径</td><td class="wrapcell">照度 × 触发频次二维矩阵，作为规格书与销售话术依据（Q2）</td><td><span class="b p0">P0</span></td></tr>
+      <tr><td>定低电量降级矩阵</td><td class="wrapcell">五级矩阵，全品类共用（2.2.2）</td><td><span class="b p0">P0</span></td></tr>
+      <tr><td>定告警码表 + 目标照度语义</td><td class="wrapcell">统一码表；target_lux_source 字段定义（Q10）</td><td><span class="b p0">P0</span></td></tr>
+      <tr><td>定选址与安装规范</td><td class="wrapcell">含照度门槛、雷达朝向、照度高度、面板位置；施工 SOP 含现场照度检测</td><td><span class="b p0">P0</span></td></tr>
+      <tr><td rowspan="3"><b>硬件</b></td><td>RC 全温区精度数据</td><td class="wrapcell">-10~55℃ 实测，复核打戳精度（Q5）</td><td><span class="b p0">P0</span></td></tr>
+      <tr><td>微光采集实测曲线</td><td class="wrapcell">6 点照度功率曲线 + 冷启动时间（2.2.4）</td><td><span class="b p0">P0</span></td></tr>
+      <tr><td>雷达/休眠/发射实测参数</td><td class="wrapcell">替换全部假设值（Q7）</td><td><span class="b p0">P0</span></td></tr>
+      <tr><td rowspan="3"><b>协议</b></td><td>帧格式 + 下行优先级 + 缓存</td><td class="wrapcell">三级优先级、24 条总池、失败原因码（3.8）</td><td><span class="b p0">P0</span></td></tr>
+      <tr><td>上行断链缓存 + 文件传输</td><td class="wrapcell">补传限速；1 份缓存多目标分发（3.3/3.10）</td><td><span class="b p0">P0</span></td></tr>
+      <tr><td>路由与父节点重选</td><td class="wrapcell">负载率排序、防抖、对账（3.9）</td><td><span class="b p1">P1</span></td></tr>
+      <tr><td rowspan="3"><b>嵌入式</b></td><td>低功耗状态机与唤醒管理</td><td class="wrapcell">实测 ≤4μA；降级矩阵实现</td><td><span class="b p0">P0</span></td></tr>
+      <tr><td>时间同步与打戳换算</td><td class="wrapcell">事件 tick 记录 → 1s 内校时 → 倒推；漂移降级标记（Q6）</td><td><span class="b p0">P0</span></td></tr>
+      <tr><td>事件存储 + 看门狗</td><td class="wrapcell">200 条环形缓冲、原子写、120K 分区；三层看门狗、低电压防死循环</td><td><span class="b p0">P0</span></td></tr>
+      <tr><td rowspan="3"><b>算法</b></td><td>双鉴与存在检测</td><td class="wrapcell">双鉴窗口、静止检测、两项误判率达标（6.2）</td><td><span class="b p0">P0</span></td></tr>
+      <tr><td>空调状态机</td><td class="wrapcell">全量状态帧 + 状态置信度（6.3.4）</td><td><span class="b p0">P0</span></td></tr>
+      <tr><td>照度标定与恒照度闭环</td><td class="wrapcell">修正系数、目标值获取、控制收敛（6.4.3/6.5.4）</td><td><span class="b p0">P0</span></td></tr>
+      <tr><td rowspan="2"><b>云端</b></td><td>物模型 + 设备影子 + 指令状态</td><td class="wrapcell">能源类属性、desired/reported、排队/下发/确认/超时四态</td><td><span class="b p0">P0</span></td></tr>
+      <tr><td>拓扑 / 批量 / 固件仓库 / 选址分析</td><td class="wrapcell">容量 x/8 可视；灰度与回滚；<b>自持率与"长期靠电池"识别</b></td><td><span class="b p0">P0</span></td></tr>
+      <tr><td><b>安全</b></td><td>白名单运维 + 帧级 MIC</td><td class="wrapcell">增删流程、密钥绑定、防重放、固件验签（5.2）</td><td><span class="b p0">P0</span></td></tr>
+      <tr><td rowspan="2"><b>测试</b></td><td>工装搭建 + 能量二维矩阵 + 8 并发 + 时间精度</td><td class="wrapcell">光源箱/源表/超容夹具/功耗仪/并发架/场景间；寿命矩阵与门槛表；100ms 精度报告</td><td><span class="b p0">P0</span></td></tr>
+      <tr><td>电源异常 / 算法场景 / 安全 / 长稳</td><td class="wrapcell">异常注入方案；5 类人体场景；渗透报告；30 天报告</td><td><span class="b p0">P0</span></td></tr>
+    </tbody>
+  </table>
+
+  <h4 class="sub">9.3 建议推进节奏</h4>
+  <div class="card">
+    <p><span class="kv">第一步：</span>先单独确认 <b>Q1（唤醒广播取舍）</b>。这一条决定协议复杂度和节点功耗预算，其他都排在它后面。若选"降级"，可直接省掉唤醒广播的整套开发。</p>
+    <p><span class="kv">第二步：</span>Q2/Q3/Q4 三个决策项一并过——分别对应销售话术、安全投入、方案报价，都是商务层面的取舍，适合由您一次定完。</p>
+    <p><span class="kv">第三步：</span>Q5/Q7 交给硬件，Q6 交给研发，Q8/Q9/Q10 交给产品。这三组是并行工作项，不阻塞架构。</p>
+    <p><span class="kv">第四步：</span>测试工装与研发并行启动。<b>工装不要等样机，先买先搭</b>，否则样机出来测不了。</p>
+    <p style="margin-bottom:0"><span class="kv">第五步：</span>M1 协议冻结后，五个品类并行开发，共用系统底座，不再各自重复讨论通信与功耗问题。</p>
+  </div>
+</section>
+
+<footer>
+  <p>低功耗随手贴传感器节点 · 产品研发目标与确认清单 v1.2</p>
+  <p style="margin-top:6px">本文档基于原始 9 类 38 条要求整理，所有能源与寿命数据为参数估算值，需实测校准后以实测值为准。</p>
+</footer>
+
+</div>
+</body>
+</html>

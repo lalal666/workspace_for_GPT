@@ -1,0 +1,4 @@
+interface:
+  display_name: "澜潮负荷端智能硬件 PRD"
+  short_description: "编写和评审澜潮负荷端智能硬件 PRD，贯通云端、小程序、终端硬件与固件"
+  default_prompt: "用 $lanchao-load-iot-prd 根据当前项目资料编写或评审智能硬件 PRD，标出跨端行为、验收条件和关键待决事项。"

@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>T8 灯事件物模型定义 v1.6</title>
+<style>
+  :root{
+    --ink:#1a1d21; --ink-2:#4a5058; --ink-3:#767d87;
+    --line:#e2e6ec; --line-2:#eef1f5;
+    --bg:#ffffff; --bg-soft:#f7f9fc;
+    --pri:#185FA5; --pri-soft:#E6F1FB; --pri-deep:#0C447C;
+    --amb:#BA7517; --amb-soft:#FAEEDA;
+    --red:#A32D2D; --red-soft:#FCEBEB;
+    --grn:#3B6D11; --grn-soft:#EAF3DE;
+    --gry:#5F5E5A; --gry-soft:#F1EFE8;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; padding:0 24px 80px;
+    background:var(--bg); color:var(--ink);
+    font-family:"PingFang SC","Microsoft YaHei","Hiragino Sans GB",-apple-system,sans-serif;
+    font-size:14px; line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:940px; margin:0 auto;}
+
+  /* ── 封面 ── */
+  header{padding:56px 0 28px; border-bottom:2px solid var(--ink);}
+  .eyebrow{font-size:12px; letter-spacing:.18em; color:var(--pri); font-weight:600; text-transform:uppercase; margin-bottom:14px;}
+  h1{margin:0 0 10px; font-size:30px; line-height:1.3; font-weight:600; letter-spacing:-.01em;}
+  .sub{font-size:15px; color:var(--ink-2); margin:0 0 26px; font-weight:400;}
+  .meta{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:8px; overflow:hidden;}
+  .meta div{background:var(--bg-soft); padding:12px 14px;}
+  .meta dt{font-size:11px; color:var(--ink-3); letter-spacing:.05em; margin-bottom:4px;}
+  .meta dd{margin:0; font-size:13px; font-weight:500; color:var(--ink);}
+  .stamp{display:inline-block; padding:1px 8px; border-radius:4px; background:var(--amb-soft); color:var(--amb); font-size:12px; font-weight:600;}
+
+  /* ── 目录 ── */
+  .toc{margin:34px 0 10px; padding:22px 26px; background:var(--bg-soft); border:1px solid var(--line); border-radius:10px;}
+  .toc h2{margin:0 0 14px; font-size:13px; letter-spacing:.1em; color:var(--ink-3); font-weight:600;}
+  .toc ol{margin:0; padding:0; list-style:none; display:grid; grid-template-columns:1fr 1fr; gap:7px 32px;}
+  .toc li{font-size:13px;}
+  .toc a{color:var(--ink-2); text-decoration:none; display:flex; gap:10px;}
+  .toc a:hover{color:var(--pri);}
+  .toc .n{color:var(--ink-3); font-variant-numeric:tabular-nums; min-width:20px;}
+
+  /* ── 章节 ── */
+  section{margin-top:52px;}
+  h2.sec{font-size:20px; font-weight:600; margin:0 0 6px; padding-bottom:12px; border-bottom:1px solid var(--line); letter-spacing:-.01em;}
+  h2.sec .n{color:var(--pri); margin-right:12px; font-variant-numeric:tabular-nums;}
+  h3{font-size:15px; font-weight:600; margin:30px 0 10px; color:var(--ink);}
+  h3::before{content:""; display:inline-block; width:3px; height:13px; background:var(--pri); margin-right:9px; vertical-align:-1px; border-radius:2px;}
+  h4{font-size:13.5px; font-weight:600; margin:20px 0 8px; color:var(--ink-2);}
+  p{margin:10px 0; color:var(--ink-2);}
+  .lead{font-size:14.5px; color:var(--ink); margin-top:14px;}
+  ul,ol{margin:10px 0; padding-left:22px; color:var(--ink-2);}
+  li{margin:5px 0;}
+  strong{color:var(--ink); font-weight:600;}
+  code{font-family:"Cascadia Mono",Consolas,"SF Mono",monospace; font-size:12.5px; background:var(--bg-soft); border:1px solid var(--line); border-radius:4px; padding:1px 5px; color:var(--pri-deep); white-space:nowrap;}
+
+  /* ── 表格 ── */
+  .tw{overflow-x:auto; margin:18px 0; border:1px solid var(--line); border-radius:8px;}
+  table{width:100%; border-collapse:collapse; font-size:13px;}
+  thead th{
+    background:var(--bg-soft); color:var(--ink); font-weight:600; text-align:left;
+    padding:10px 12px; border-bottom:1.5px solid var(--line); white-space:nowrap; font-size:12.5px;
+  }
+  tbody td{padding:9px 12px; border-bottom:1px solid var(--line-2); vertical-align:top; color:var(--ink-2);}
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:hover td{background:#fbfcfe;}
+  td.c,th.c{text-align:center;}
+  tbody td code{white-space:nowrap;}
+
+  /* ── 分级标签 ── */
+  .tag{display:inline-block; padding:0 7px; border-radius:4px; font-size:11.5px; font-weight:600; line-height:19px; white-space:nowrap;}
+  .p0{background:var(--red-soft); color:var(--red);}
+  .p1{background:var(--amb-soft); color:var(--amb);}
+  .p2{background:var(--pri-soft); color:var(--pri-deep);}
+  .p3{background:var(--gry-soft); color:var(--gry);}
+  .opt{background:var(--grn-soft); color:var(--grn); font-size:11px;}
+
+  /* ── 提示块 ── */
+  .note{border-left:3px solid var(--pri); background:var(--pri-soft); padding:14px 18px; border-radius:0 8px 8px 0; margin:18px 0;}
+  .note.warn{border-left-color:var(--amb); background:var(--amb-soft);}
+  .note.risk{border-left-color:var(--red); background:var(--red-soft);}
+  .note .t{font-size:12px; font-weight:600; letter-spacing:.06em; margin-bottom:6px; display:block;}
+  .note .t{color:var(--pri);}
+  .note.warn .t{color:var(--amb);}
+  .note.risk .t{color:var(--red);}
+  .note p{margin:5px 0; color:var(--ink-2); font-size:13px;}
+
+  /* ── 指标卡 ── */
+  .kpi{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:20px 0;}
+  .kpi div{border:1px solid var(--line); border-radius:8px; padding:14px 16px; background:var(--bg);}
+  .kpi .v{font-size:22px; font-weight:600; color:var(--pri-deep); line-height:1.2; font-variant-numeric:tabular-nums;}
+  .kpi .u{font-size:11px; color:var(--ink-3); margin-top:4px;}
+  .kpi .l{font-size:12px; color:var(--ink-2); margin-top:8px; padding-top:8px; border-top:1px solid var(--line-2);}
+
+  footer{margin-top:64px; padding-top:22px; border-top:1px solid var(--line); font-size:12px; color:var(--ink-3); display:flex; justify-content:space-between;}
+
+  @media print{
+    body{padding:0; font-size:11pt;}
+    section{page-break-inside:avoid;}
+    .toc{page-break-after:always;}
+    h2.sec{page-break-after:avoid;}
+    .tw{page-break-inside:avoid;}
+  }
+  @media(max-width:720px){
+    .meta{grid-template-columns:1fr 1fr;}
+    .toc ol{grid-template-columns:1fr;}
+    .kpi{grid-template-columns:1fr 1fr;}
+    h1{font-size:23px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">澜潮科技 · 物模型规范</div>
+  <h1>T8 灯事件物模型定义</h1>
+  <p class="sub">全量事件上报云端 —— 事件分类、事件码、数据结构、上报 QoS 与资源预算</p>
+  <dl class="meta">
+    <div><dt>文档版本</dt><dd>v1.6</dd></div>
+    <div><dt>状态</dt><dd><span class="stamp">评审中</span></dd></div>
+    <div><dt>适用产品</dt><dd>T8 IoT 灯</dd></div>
+    <div><dt>日期</dt><dd>2026-11-16</dd></div>
+  </dl>
+</header>
+
+<nav class="toc">
+  <h2>目录</h2>
+  <ol>
+    <li><a href="#s1"><span class="n">1</span><span>范围与能力基线</span></a></li>
+    <li><a href="#s2"><span class="n">2</span><span>事件分类总览</span></a></li>
+    <li><a href="#s3"><span class="n">3</span><span>事件码表（A–J 域）</span></a></li>
+    <li><a href="#s4"><span class="n">4</span><span>事件对象数据模型</span></a></li>
+    <li><a href="#s5"><span class="n">5</span><span>上报模式与配置分类</span></a></li>
+    <li><a href="#s6"><span class="n">6</span><span>时间基准与事件时间戳</span></a></li>
+    <li><a href="#s7"><span class="n">7</span><span>Flash 缓存与补报</span></a></li>
+    <li><a href="#s8"><span class="n">8</span><span>带宽与流量预算</span></a></li>
+    <li><a href="#s9"><span class="n">9</span><span>风险与待决事项</span></a></li>
+    <li><a href="#s10"><span class="n">10</span><span>附录：命名规范</span></a></li>
+  </ol>
+</nav>
+
+<!-- ══════════ 1 ══════════ -->
+<section id="s1">
+  <h2 class="sec"><span class="n">1</span>范围与能力基线</h2>
+  <p class="lead">本文定义 T8 灯作为澜潮异构树形 IoT 网络终端节点时，向云平台上报的<b>全量事件集合</b>及其数据结构、优先级与传输约束。适用于固件开发、云平台物模型建模、FAE 现场排障三方的统一口径。</p>
+
+  <h3>1.1 能力基线</h3>
+  <p>事件的取值范围完全由硬件能力决定，先把基线钉死，避免后续建模反复：</p>
+  <div class="tw">
+  <table>
+    <thead><tr><th style="width:110px">类别</th><th style="width:230px">能力项</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td rowspan="7"><b>必选</b></td><td>Sub-G 双频段选配</td><td>上行主通道：470–510 MHz（国内）或 868 MHz（出口），<b>均受占空比约束</b></td></tr>
+      <tr><td>2.4G 无线</td><td>本地泛洪组播联动，跳数 ≤4</td></tr>
+      <tr><td>5.8G 雷达</td><td>人体存在 / 微动检测，事件量最大来源</td></tr>
+      <tr><td>PWM 恒流驱动</td><td>增量式 PID 调光，可读占空比与故障状态</td></tr>
+      <tr><td>本地策略引擎</td><td>32 个 group-ID 槽位，多群组并发</td></tr>
+      <tr><td>无独立 RTC 芯片</td><td>20 ppm 晶振时基，入网授时（节点间误差 &lt;20 ms），见第 6 章</td></tr>
+      <tr><td>大电容后备（掉电保持约 3 s）</td><td>掉电后通信主控短暂维持，用于锁存断电时刻与写 Flash 快照，见 6.4</td></tr>
+      <tr><td rowspan="3"><b>可选</b></td><td>计量（U/I/P/E）</td><td>带计量版本才产生 E 域事件</td></tr>
+      <tr><td>光照度感知</td><td>产生 F 域事件</td></tr>
+      <tr><td>防拆检测</td><td>产生 H 域防拆事件</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>1.2 Sub-G 双频段选配</h3>
+  <p>上行频段按项目选配，两者在功率限值、<b>发射占空比</b>、传播特性上完全不同，事件上报的突发整形必须按实际选配频段核算（详见 8.5）。</p>
+  <div class="tw">
+  <table>
+    <thead><tr><th style="width:110px">频段</th><th style="width:180px">适用场景</th><th>合规属性</th></tr></thead>
+    <tbody>
+      <tr><td><b>470–510 MHz</b></td><td>国内项目，民用计量仪表</td><td>微功率短距离设备，功率与发射时长受公告约束</td></tr>
+      <tr><td><b>868 MHz</b></td><td>出口 / 欧洲 ISM</td><td>按子频段分档占空比限值</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="note warn">
+    <span class="t">建模前提</span>
+    <p>可选能力项在事件码表中标记为 <span class="opt">可选</span>。云端物模型须支持按设备 SKU 裁剪事件集，避免无计量版本产生空事件。</p>
+    <p><b>频段不得硬编码：</b>帧长、发射配额、重传间隔等参数须从频段配置区读取，同一份固件应能通过配置适配两个频段，避免维护两份分支。</p>
+  </div>
+</section>
+
+<!-- ══════════ 2 ══════════ -->
+<section id="s2">
+  <h2 class="sec"><span class="n">2</span>事件分类总览</h2>
+  <p>按<b>事件源</b>划分为 10 个域，每域独立分配事件码段。域划分与固件模块一一对应，便于定位责任模块。</p>
+  <div class="tw">
+  <table>
+    <thead><tr><th style="width:60px">域</th><th style="width:150px">名称</th><th style="width:70px">码段</th><th style="width:60px" class="c">数量</th><th>核心关注点</th></tr></thead>
+    <tbody>
+      <tr><td class="c"><code>A</code></td><td>生命周期</td><td><code>0x01xx</code></td><td class="c">11</td><td>入网、复位、角色变更、OTA 全过程</td></tr>
+      <tr><td class="c"><code>B</code></td><td>电源与硬件</td><td><code>0x02xx</code></td><td class="c">10</td><td>掉电快照、驱动故障、过温</td></tr>
+      <tr><td class="c"><code>C</code></td><td>照明控制</td><td><code>0x03xx</code></td><td class="c">9</td><td>开关/调光/场景 + 触发源溯源</td></tr>
+      <tr><td class="c"><code>D</code></td><td>雷达感应</td><td><code>0x04xx</code></td><td class="c">7</td><td>边沿上报 + 计数聚合，误触发分析</td></tr>
+      <tr><td class="c"><code>E</code></td><td>计量能耗</td><td><code>0x05xx</code></td><td class="c">5</td><td>冻结电量、功率越限 <span class="opt">可选</span></td></tr>
+      <tr><td class="c"><code>F</code></td><td>环境感知</td><td><code>0x06xx</code></td><td class="c">2</td><td>光照度越界 <span class="opt">可选</span></td></tr>
+      <tr><td class="c"><code>G</code></td><td>通信与网络</td><td><code>0x07xx</code></td><td class="c">6</td><td>链路质量、路由可达性</td></tr>
+      <tr><td class="c"><code>H</code></td><td>安全</td><td><code>0x08xx</code></td><td class="c">5</td><td>鉴权、固件校验、防拆</td></tr>
+      <tr><td class="c"><code>I</code></td><td>策略引擎</td><td><code>0x09xx</code></td><td class="c">6</td><td>策略生效/冲突/时间失步挂起</td></tr>
+      <tr><td class="c"><code>J</code></td><td>运维诊断</td><td><code>0x0Axx</code></td><td class="c">5</td><td>心跳、离线、诊断、日志拉取</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- ══════════ 3 ══════════ -->
+<section id="s3">
+  <h2 class="sec"><span class="n">3</span>事件码表</h2>
+  <p>每域一张表，字段含义：<b>码</b> 为 16 bit 事件码；<b>载荷</b> 为事件附加信息，长度上限 24 B；<b>级别</b> 对应第 5 章 QoS。</p>
+
+  <h3>3.1 A 域 — 生命周期</h3>
+  <div class="tw">
+  <table>
+    <thead><tr><th style="width:88px">码</th><th style="width:150px">事件码</th><th style="width:140px">名称</th><th>载荷字段</th><th style="width:56px" class="c">级别</th></tr></thead>
+    <tbody>
+      <tr><td><code>0x0101</code></td><td><code>EVT_LC_BOOT</code></td><td>上电启动</td><td><code>boot_id</code>, <code>fw_ver</code>, <code>reset_cause</code></td><td class="c"><span class="tag p0">P0</span></td></tr>
+      <tr><td><code>0x0102</code></td><td><code>EVT_LC_RESET</code></td><td>运行中复位</td><td><code>reset_cause</code>, <code>uptime_before</code></td><td class="c"><span class="tag p0">P0</span></td></tr>
+      <tr><td><code>0x0103</code></td><td><code>EVT_LC_JOIN_OK</code></td><td>入网成功</td><td><code>parent_id</code>, <code>depth</code>, <code>rssi</code>, <code>role</code></td><td class="c"><span class="tag p0">P0</span></td></tr>
+      <tr><td><code>0x0104</code></td><td><code>EVT_LC_JOIN_FAIL</code></td><td>入网失败</td><td><code>fail_code</code>, <code>retry_cnt</code></td><td class="c"><span class="tag p0">P0</span></td></tr>
+      <tr><td><code>0x0105</code></td><td><code>EVT_LC_LEAVE</code></td><td>退网 / 被踢出</td><td><code>reason</code>, <code>operator</code></td><td class="c"><span class="tag p0">P0</span></td></tr>
+      <tr><td><code>0x0106</code></td><td><code>EVT_LC_PARENT_CHG</code></td><td>父节点切换</td><td><code>old_parent</code>, <code>new_parent</code>, <code>why</code></td><td class="c"><span class="tag p0">P0</span></td></tr>
+      <tr><td><code>0x0107</code></td><td><code>EVT_LC_ROLE_CHG</code></td><td>角色变更</td><td><code>old_role</code>, <code>new_role</code>（L1↔L2 降级/晋升）</td><td class="c"><span class="tag p0">P0</span></td></tr>
+      <tr><td><code>0x0108</code></td><td><code>EVT_LC_FW_CHG</code></td><td>固件版本变更</td><td><code>old_ver</code>, <code>new_ver</code></td><td class="c"><span class="tag p0">P0</span></td></tr>
+      <tr><td><code>0x0109</code></td><td><code>EVT_LC_FAC_RST</code></td><td>出厂重置</td><td><code>operator</code>, <code>ts</code></td><td class="c"><span class="tag p0">P0</span></td></tr>
+      <tr><td><code>0x010A</code></td><td><code>EVT_LC_TIME_SYNC</code></td><td>时间同步</td><td><code>result</code>, <code>jump_ms</code>, <code>source</code></td><td class="c"><span class="tag p1">P1</span></td></tr>
+      <tr><td><code>0x010B</code></td><td><code>EVT_LC_CFG_APPLY</code></td><td>配置生效</td><td><code>cfg_id</code>, <code>result</code></td><td class="c"><span class="tag p1">P1</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>3.2 B 域 — 电源与硬件</h3>
+  <div class="tw">
+  <table>
+    <thead><tr><th style="width:88px">码</th><th style="width:150px">事件码</th><th style="width:140px">名称</th><th>载荷字段</th><th style="width:56px" class="c">级别</th></tr></thead>
+    <tbody>
+      <tr><td><code>0x0201</code></td><td><code>EVT_PWR_OFF</code></td><td>掉电快照</td><td><code>vin</code>, <code>uptime</code>, <code>last_evt_seq</code></td><td class="c"><span class="tag p0">P0</span></td></tr>
+      <tr><td><code>0x0202</code></td><td><code>EVT_PWR_ON</code></td><td>上电恢复</td><td><code>off_duration</code>（由 boot 侧推算）, <code>vin</code></td><td class="c"><span class="tag p0">P0</span></td></tr>
+      <tr><td><code>0x0203</code></td><td><code>EVT_PWR_UV</code></td><td>欠压</td><td><code>vin</code>, <code>threshold</code></td><td class="c"><span class="tag p0">P0</span></td></tr>
+      <tr><td><code>0x0204</code></td><td><code>EVT_PWR_OV</code></td><td>过压</td><td><code>vin</code>, <code>threshold</code></td><td class="c"><span class="tag p0">P0</span></td></tr>
+      <tr><td><code>0x0205</code></td><td><code>EVT_PWR_DRV_OPEN</code></td><td>驱动开路</td><td><code>channel</code>, <code>vout</code></td><td class="c"><span class="tag p0">P0</span></td></tr>
+      <tr><td><code>0x0206</code></td><td><code>EVT_PWR_DRV_SHORT</code></td><td>驱动短路</td><td><code>channel</code>, <code>iout</code></td><td class="c"><span class="tag p0">P0</span></td></tr>
+      <tr><td><code>0x0207</code></td><td><code>EVT_PWR_OT_WARN</code></td><td>过温预警</td><td><code>temp</code>, <code>threshold</code></td><td class="c"><span class="tag p1">P1</span></td></tr>
+      <tr><td><code>0x0208</code></td><td><code>EVT_PWR_OT_PROT</code></td><td>过温保护 / 降额</td><td><code>temp</code>, <code>derate_pct</code></td><td class="c"><span class="tag p0">P0</span></td></tr>
+      <tr><td><code>0x0209</code></td><td><code>EVT_PWR_SELFTEST</code></td><td>自检结果</td><td><code>item</code>, <code>result</code></td><td class="c"><span class="tag p1">P1</span></td></tr>
+      <tr><td><code>0x020A</code></td><td><code>EVT_PWR_WDT</code></td><td>看门狗复位</td><td><code>wdt_cnt</code>, <code>pc</code></td><td class="c"><span class="tag p0">P0</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="note">
+    <span class="t">B 域已具备掉电上报能力</span>
+    <p>T8 配置大电容，掉电后通信主控可维持约 <b>3 s</b>。<b><code>t_off</code> 在跌落瞬间即被硬件中断锁存（&lt;5 ms），随后写入 Flash</b>——因此断电时刻是设备<b>实测</b>而非云端推断，与上电后回填的 <code>t_on</code> 相减即可精确得到断电时长（误差 &lt;1 s）。注意：3 s 只够「必达地落盘 + 尽力地上报一次」，不可承诺上报成功。时序预算见 6.4。</p>
+  </div>
+
+  <h3>3.3 C 域 — 照明控制</h3>
+  <div class="tw">
+  <table>
+    <thead><tr><th style="width:88px">码</th><th style="width:150px">事件码</th><th style="width:140px">名称</th><th>载荷字段</th><th style="width:56px" class="c">级别</th></tr></thead>
+    <tbody>
+      <tr><td><code>0x0301</code></td><td><code>EVT_LGT_ON</code></td><td>开灯</td><td><code>src</code>（本地策略/云端/组播/手动/雷达）, <code>level</code>, <code>scene_id</code></td><td class="c"><span class="tag p1">P1</span></td></tr>
+      <tr><td><code>0x0302</code></td><td><code>EVT_LGT_OFF</code></td><td>关灯</td><td><code>src</code>, <code>hold_ms</code>（本次保持时长）</td><td class="c"><span class="tag p1">P1</span></td></tr>
+      <tr><td><code>0x0303</code></td><td><code>EVT_LGT_DIM</code></td><td>调光完成</td><td><code>fb_level</code>, <code>target</code>, <code>ramp_ms</code></td><td class="c"><span class="tag p1">P1</span></td></tr>
+      <tr><td><code>0x0304</code></td><td><code>EVT_LGT_SCENE</code></td><td>场景切换</td><td><code>scene_id</code>, <code>src</code></td><td class="c"><span class="tag p1">P1</span></td></tr>
+      <tr><td><code>0x0305</code></td><td><code>EVT_LGT_GRP_EXEC</code></td><td>组播执行结果</td><td><code>grp_id</code>, <code>cmd</code>, <code>result</code>, <code>hops</code></td><td class="c"><span class="tag p1">P1</span></td></tr>
+      <tr><td><code>0x0306</code></td><td><code>EVT_LGT_SCHED_EXEC</code></td><td>定时策略执行</td><td><code>policy_id</code>, <code>slot</code>, <code>drift_ms</code>（实际偏差）</td><td class="c"><span class="tag p1">P1</span></td></tr>
+      <tr><td><code>0x0307</code></td><td><code>EVT_LGT_MANUAL</code></td><td>手动干预</td><td><code>method</code>（面板/开关断电/红外）, <code>action</code></td><td class="c"><span class="tag p1">P1</span></td></tr>
+      <tr><td><code>0x0308</code></td><td><code>EVT_LGT_FAULT</code></td><td>灯具故障</td><td><code>type</code>（不亮/频闪/光衰）, <code>measure</code></td><td class="c"><span class="tag p0">P0</span></td></tr>
+      <tr><td><code>0x0309</code></td><td><code>EVT_LGT_MODE_CHG</code></td><td>工作模式切换</td><td><code>old_mode</code>, <code>new_mode</code>（自动/手动/节能）</td><td class="c"><span class="tag p1">P1</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p><b>C 域设计要点：</b><code>src</code> 触发源字段是价值最高的部分。现场"灯为什么自己亮了"的争议，90% 靠这一个字段结案——必须区分本地策略、云端下发、2.4G 组播、物理手动、雷达触发五类。</p>
+
+  <h3>3.4 D 域 — 雷达感应</h3>
+  <div class="tw">
+  <table>
+    <thead><tr><th style="width:88px">码</th><th style="width:160px">事件码</th><th style="width:140px">名称</th><th>载荷字段</th><th style="width:56px" class="c">级别</th></tr></thead>
+    <tbody>
+      <tr><td><code>0x0401</code></td><td><code>EVT_RDR_PRESENCE</code></td><td>有人/无人边沿</td><td><code>state</code>, <code>conf</code>, <code>dur_ms</code>（上一状态持续时长）</td><td class="c"><span class="tag p1">P1</span></td></tr>
+      <tr><td><code>0x0402</code></td><td><code>EVT_RDR_MOTION_LVL</code></td><td>动静分级变化</td><td><code>lvl</code>（静止/微动/移动）, <code>conf</code></td><td class="c"><span class="tag p2">P2</span></td></tr>
+      <tr><td><code>0x0403</code></td><td><code>EVT_RDR_TRIG_AGG</code></td><td>触发计数聚合</td><td><code>win_s</code>, <code>cnt</code>, <code>on_ms</code>, <code>max_conf</code></td><td class="c"><span class="tag p2">P2</span></td></tr>
+      <tr><td><code>0x0404</code></td><td><code>EVT_RDR_SENS_CHG</code></td><td>灵敏度变更</td><td><code>old_lvl</code>, <code>new_lvl</code>, <code>src</code></td><td class="c"><span class="tag p1">P1</span></td></tr>
+      <tr><td><code>0x0405</code></td><td><code>EVT_RDR_CALIB</code></td><td>标定完成</td><td><code>result</code>, <code>noise_floor</code></td><td class="c"><span class="tag p2">P2</span></td></tr>
+      <tr><td><code>0x0406</code></td><td><code>EVT_RDR_FAULT</code></td><td>雷达失联/自检失败</td><td><code>code</code>, <code>spi_err_cnt</code></td><td class="c"><span class="tag p0">P0</span></td></tr>
+      <tr><td><code>0x0407</code></td><td><code>EVT_RDR_FALSE_TRIG</code></td><td>疑似误触发标记</td><td><code>reason</code>（无后续动作/时长异常）, <code>cnt</code></td><td class="c"><span class="tag p2">P2</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="note warn">
+    <span class="t">禁止逐条上报</span>
+    <p><code>0x0401</code> 仅上报<b>状态边沿</b>（持续有人不产生新事件）；<code>0x0403</code> 按窗口聚合（默认 1 h）。不建议把每一次雷达触发都转成一条事件——但需说明：<b>即便逐条上报，600 条/天这个量级仍在链路能力之内</b>，聚合的主要目的是降低占空比突发与云端存储成本，而非带宽不足（详见 8.1–8.3）。</p>
+  </div>
+
+  <h3>3.5 E 域 — 计量能耗 <span class="opt">可选</span></h3>
+  <div class="tw">
+  <table>
+    <thead><tr><th style="width:88px">码</th><th style="width:160px">事件码</th><th style="width:140px">名称</th><th>载荷字段</th><th style="width:56px" class="c">级别</th></tr></thead>
+    <tbody>
+      <tr><td><code>0x0501</code></td><td><code>EVT_MTR_HOUR_FREEZE</code></td><td>小时电量冻结</td><td><code>energy_wh</code>, <code>p_avg</code>, <code>hour_idx</code></td><td class="c"><span class="tag p2">P2</span></td></tr>
+      <tr><td><code>0x0502</code></td><td><code>EVT_MTR_DAY_FREEZE</code></td><td>日电量冻结</td><td><code>energy_wh</code>, <code>date_idx</code></td><td class="c"><span class="tag p2">P2</span></td></tr>
+      <tr><td><code>0x0503</code></td><td><code>EVT_MTR_PWR_LIMIT</code></td><td>功率越限</td><td><code>p_now</code>, <code>limit</code></td><td class="c"><span class="tag p1">P1</span></td></tr>
+      <tr><td><code>0x0504</code></td><td><code>EVT_MTR_JUMP</code></td><td>电量突变</td><td><code>delta</code>, <code>win_s</code></td><td class="c"><span class="tag p2">P2</span></td></tr>
+      <tr><td><code>0x0505</code></td><td><code>EVT_MTR_FAULT</code></td><td>计量芯片故障</td><td><code>code</code>, <code>reg_snapshot</code></td><td class="c"><span class="tag p0">P0</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>3.6 F 域 — 环境感知 <span class="opt">可选</span></h3>
+  <div class="tw">
+  <table>
+    <thead><tr><th style="width:88px">码</th><th style="width:160px">事件码</th><th style="width:150px">名称</th><th>载荷字段</th><th style="width:56px" class="c">级别</th></tr></thead>
+    <tbody>
+      <tr><td><code>0x0601</code></td><td><code>EVT_ENV_LUX_TH</code></td><td>光照度越界</td><td><code>lux</code>, <code>threshold</code>, <code>dir</code></td><td class="c"><span class="tag p2">P2</span></td></tr>
+      <tr><td><code>0x0602</code></td><td><code>EVT_ENV_SENSOR_FAULT</code></td><td>传感器故障</td><td><code>sensor_type</code>, <code>code</code></td><td class="c"><span class="tag p1">P1</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>3.7 G 域 — 通信与网络</h3>
+  <div class="tw">
+  <table>
+    <thead><tr><th style="width:88px">码</th><th style="width:160px">事件码</th><th style="width:150px">名称</th><th>载荷字段</th><th style="width:56px" class="c">级别</th></tr></thead>
+    <tbody>
+      <tr><td><code>0x0701</code></td><td><code>EVT_COM_LINK_DOWN</code></td><td>链路中断</td><td><code>iface</code>, <code>reason</code>, <code>rssi</code></td><td class="c"><span class="tag p1">P1</span></td></tr>
+      <tr><td><code>0x0702</code></td><td><code>EVT_COM_LINK_UP</code></td><td>链路恢复</td><td><code>iface</code>, <code>down_ms</code>, <code>rssi</code></td><td class="c"><span class="tag p1">P1</span></td></tr>
+      <tr><td><code>0x0703</code></td><td><code>EVT_COM_RSSI_DEG</code></td><td>信号质量劣化</td><td><code>rssi</code>, <code>snr</code>, <code>threshold</code></td><td class="c"><span class="tag p2">P2</span></td></tr>
+      <tr><td><code>0x0704</code></td><td><code>EVT_COM_TX_FAIL</code></td><td>上报失败</td><td><code>retry</code>, <code>err_code</code></td><td class="c"><span class="tag p3">P3</span></td></tr>
+      <tr><td><code>0x0705</code></td><td><code>EVT_COM_ROUTE_UNREACH</code></td><td>路由不可达</td><td><code>dst_id</code>, <code>ttl_left</code></td><td class="c"><span class="tag p1">P1</span></td></tr>
+      <tr><td><code>0x0706</code></td><td><code>EVT_COM_NB_CHG</code></td><td>邻居表变化</td><td><code>add_cnt</code>, <code>del_cnt</code></td><td class="c"><span class="tag p3">P3</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>3.8 H 域 — 安全</h3>
+  <div class="tw">
+  <table>
+    <thead><tr><th style="width:88px">码</th><th style="width:170px">事件码</th><th style="width:150px">名称</th><th>载荷字段</th><th style="width:56px" class="c">级别</th></tr></thead>
+    <tbody>
+      <tr><td><code>0x0801</code></td><td><code>EVT_SEC_AUTH_FAIL</code></td><td>鉴权失败</td><td><code>peer_id</code>, <code>fail_cnt</code></td><td class="c"><span class="tag p0">P0</span></td></tr>
+      <tr><td><code>0x0802</code></td><td><code>EVT_SEC_FW_VERIFY_FAIL</code></td><td>固件校验失败</td><td><code>expect_md5</code>, <code>actual_md5</code></td><td class="c"><span class="tag p0">P0</span></td></tr>
+      <tr><td><code>0x0803</code></td><td><code>EVT_SEC_TAMPER</code></td><td>防拆告警</td><td><code>state</code> <span class="opt">可选</span></td><td class="c"><span class="tag p0">P0</span></td></tr>
+      <tr><td><code>0x0804</code></td><td><code>EVT_SEC_KEY_UPD</code></td><td>密钥更新</td><td><code>key_idx</code>, <code>result</code></td><td class="c"><span class="tag p1">P1</span></td></tr>
+      <tr><td><code>0x0805</code></td><td><code>EVT_SEC_CMD_ILLEGAL</code></td><td>非法指令</td><td><code>cmd</code>, <code>src</code></td><td class="c"><span class="tag p1">P1</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>3.9 I 域 — 策略引擎</h3>
+  <div class="tw">
+  <table>
+    <thead><tr><th style="width:88px">码</th><th style="width:170px">事件码</th><th style="width:150px">名称</th><th>载荷字段</th><th style="width:56px" class="c">级别</th></tr></thead>
+    <tbody>
+      <tr><td><code>0x0901</code></td><td><code>EVT_POL_LOAD</code></td><td>策略装载</td><td><code>policy_id</code>, <code>slot</code>, <code>result</code></td><td class="c"><span class="tag p1">P1</span></td></tr>
+      <tr><td><code>0x0902</code></td><td><code>EVT_POL_ACTIVE</code></td><td>策略生效</td><td><code>policy_id</code>, <code>eff_ts</code></td><td class="c"><span class="tag p1">P1</span></td></tr>
+      <tr><td><code>0x0903</code></td><td><code>EVT_POL_EXPIRE</code></td><td>策略失效</td><td><code>policy_id</code>, <code>reason</code></td><td class="c"><span class="tag p1">P1</span></td></tr>
+      <tr><td><code>0x0904</code></td><td><code>EVT_POL_GROUP_CHG</code></td><td>group 槽位变更</td><td><code>slot</code>, <code>old_grp</code>, <code>new_grp</code></td><td class="c"><span class="tag p1">P1</span></td></tr>
+      <tr><td><code>0x0905</code></td><td><code>EVT_POL_CONFLICT</code></td><td>策略冲突</td><td><code>policy_a</code>, <code>policy_b</code>, <code>winner</code></td><td class="c"><span class="tag p1">P1</span></td></tr>
+      <tr><td><code>0x0906</code></td><td><code>EVT_POL_SUSPEND</code></td><td>时间失步挂起</td><td><code>drift_s</code>, <code>affected_cnt</code></td><td class="c"><span class="tag p0">P0</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p><b>I 域是本产品最容易出事故的地方。</b>时间存在三种降级态：离线超 60 min 进入 <code>DEGRADED</code>、掉电重启后为 <code>UNSYNC</code>、授时持续失败则无有效时基。定时策略若在这些状态下硬执行，会出现“整点错位”。<code>EVT_POL_SUSPEND</code> 必须在时间降级时主动上报并挂起定时策略，而不是按错误时间硬跑——宁可不亮，也不能半夜亮。</p>
+
+  <h3>3.10 J 域 — 运维诊断</h3>
+  <div class="tw">
+  <table>
+    <thead><tr><th style="width:88px">码</th><th style="width:170px">事件码</th><th style="width:150px">名称</th><th>载荷字段</th><th style="width:56px" class="c">级别</th></tr></thead>
+    <tbody>
+      <tr><td><code>0x0A01</code></td><td><code>EVT_OPS_HEARTBEAT</code></td><td>心跳</td><td><code>seq</code>, <code>uptime</code>, <code>rssi</code>, <code>light_state</code></td><td class="c"><span class="tag p2">P2</span></td></tr>
+      <tr><td><code>0x0A02</code></td><td><code>EVT_OPS_OFFLINE</code></td><td>离线判定</td><td><code>silence_s</code></td><td class="c"><span class="tag p1">P1</span></td></tr>
+      <tr><td><code>0x0A03</code></td><td><code>EVT_OPS_OTA</code></td><td>OTA 阶段</td><td><code>stage</code>(start/prog/ok/fail/rollback), <code>pct</code>, <code>err</code></td><td class="c"><span class="tag p0">P0</span></td></tr>
+      <tr><td><code>0x0A04</code></td><td><code>EVT_OPS_DIAG</code></td><td>远程诊断响应</td><td><code>diag_id</code>, <code>payload</code></td><td class="c"><span class="tag p3">P3</span></td></tr>
+      <tr><td><code>0x0A05</code></td><td><code>EVT_OPS_LOGDump</code></td><td>日志分包导出</td><td><code>log_id</code>, <code>pkt_idx</code>, <code>total</code></td><td class="c"><span class="tag p3">P3</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- ══════════ 4 ══════════ -->
+<section id="s4">
+  <h2 class="sec"><span class="n">4</span>事件对象数据模型</h2>
+  <p>所有事件共用统一头部，便于二进制编码与云端统一解析。头长固定 <b>17 B</b>，载荷 ≤24 B，CRC 2 B，单事件帧上限 <b>43 B</b>（叠加物理帧头与 ACK 后约 <b>49–57 B</b>，随频段与调制方式变化）。</p>
+  <div class="tw">
+  <table>
+    <thead><tr><th style="width:52px">偏移</th><th style="width:112px">字段</th><th style="width:56px">长度</th><th style="width:66px">类型</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td><code>0</code></td><td><code>dev_id</code></td><td>4 B</td><td>uint32</td><td>设备唯一 ID，入网时分配</td></tr>
+      <tr><td><code>4</code></td><td><code>evt_code</code></td><td>2 B</td><td>uint16</td><td>见第 3 章事件码表</td></tr>
+      <tr><td><code>6</code></td><td><code>flags</code></td><td>1 B</td><td>uint8</td><td>bit7-6 = <code>evt_class</code>（P0–P3）；bit5-3 = <code>time_quality</code>（0 SYNC / 1 CORRECTED / 2 FREERUN / 3 DEGRADED / 4 UNSYNC，<b>数值越小越准</b>）；bit2-0 保留</td></tr>
+      <tr><td><code>7</code></td><td><code>seq</code></td><td>2 B</td><td>uint16</td><td>本次启动内单调递增，回绕后继续</td></tr>
+      <tr><td><code>9</code></td><td><code>boot_id</code></td><td>1 B</td><td>uint8</td><td>启动计数，每次上电 +1，存 Flash</td></tr>
+      <tr><td><code>10</code></td><td><code>ts_utc</code></td><td>4 B</td><td>uint32</td><td><b>事件发生时刻的绝对 UTC 秒</b>（Unix epoch，2106 年回绕）</td></tr>
+      <tr><td><code>14</code></td><td><code>ts_cs</code></td><td>1 B</td><td>uint8</td><td>百分秒 0–99，与 <code>ts_utc</code> 合成 <b>10 ms 分辨率</b></td></tr>
+      <tr><td><code>15</code></td><td><code>ts_dur</code></td><td>2 B</td><td>uint16</td><td>事件持续时长（秒），用于合并与聚合</td></tr>
+      <tr><td><code>17</code></td><td><code>payload</code></td><td>≤24 B</td><td>bytes</td><td>按事件码定义，可为空</td></tr>
+      <tr><td><code>17+n</code></td><td><code>crc16</code></td><td>2 B</td><td>uint16</td><td>覆盖头部 + 载荷</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>4.1 时间是必选字段</h3>
+  <p><b>每个事件都必须携带 <code>ts_utc</code> + <code>ts_cs</code>，不允许"先上报、时间由云端补"。 </b>设备在事件发生瞬间就完成打戳，这是离线补报能保持时序准确的前提（原因见 6.4）。</p>
+  <p>此外，<code>sync_age</code>（距上次授时的秒数）在 <code>FREERUN</code> / <code>DEGRADED</code> 状态下必须随载荷上报，云端据此计算该事件的实际误差上界 = <code>20 ms + sync_age × 20 ppm</code>；<code>CORRECTED</code> 状态下则上报 <code>join_delay</code>（上电到入网的秒数），用于核对回填精度。</p>
+
+  <h3>4.2 唯一性与幂等</h3>
+  <p>去重键：<code>evt_uid = dev_id + boot_id + seq</code>。云端以此做幂等去重，重传与补报均安全。</p>
+  <p><b>不直接用时间戳做唯一键的原因：</b>同一 10 ms 刻度内可能产生多条事件（如组播执行 + 状态变化 + 驱动回报），时间戳不能保证唯一。<b>时间戳承担业务时标职责，<code>seq</code> 承担技术去重职责</b>，两者分工不重叠，也不冲突。</p>
+
+  <h3>4.3 云端物模型映射</h3>
+  <div class="tw">
+  <table>
+    <thead><tr><th style="width:160px">物模型字段</th><th style="width:180px">来源</th><th>用途</th></tr></thead>
+    <tbody>
+      <tr><td><code>eventId</code></td><td><code>evt_uid</code></td><td>去重主键</td></tr>
+      <tr><td><code>deviceId</code></td><td><code>dev_id</code></td><td>设备检索</td></tr>
+      <tr><td><code>eventType</code></td><td><code>evt_code</code> → 枚举名</td><td>规则引擎匹配</td></tr>
+      <tr><td><code>severity</code></td><td><code>flags</code> 高位</td><td>告警分级、工单派发</td></tr>
+      <tr><td><code>eventTime</code></td><td><code>ts_utc</code> + <code>ts_cs</code></td><td><b>设备侧绝对时间，不经云端推算</b></td></tr>
+      <tr><td><code>eventTimeQuality</code></td><td><code>time_quality</code></td><td>SYNC / CORRECTED / FREERUN / DEGRADED / UNSYNC，<b>须暴露给前端</b>；CORRECTED 表示“已回填修正”，精度次于 SYNC 但优于 FREERUN</td></tr>
+      <tr><td><code>eventTimeUncertainty</code></td><td><code>sync_age</code> × 20 ppm</td><td>误差上界（ms），告警回溯与责任界定用</td></tr>
+      <tr><td><code>payload</code></td><td>解析后的对象</td><td>明细展示</td></tr>
+      <tr><td><code>recvTime</code></td><td>云端入站时刻</td><td>链路时延分析，<b>不作时序依据</b></td></tr>
+      <tr><td><code>reportMode</code></td><td>取自 5.4 配置表</td><td>M0–M5。设备侧配置，不随事件载荷传输</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- ══════════ 5 ══════════ -->
+<section id="s5">
+  <h2 class="sec"><span class="n">5</span>上报模式与配置分类</h2>
+  <p class="lead">本章回答"每个事件该怎么发、什么时候发、能不能改"。<b>重要性分级（P0–P3）与上报模式（M0–M5）是两个正交维度</b>——前者决定告警优先级与工单策略，后者决定传输方式与时间粒度。把两者混为一谈，是后期无法灵活调整上报策略的根因。</p>
+
+  <h3>5.1 两级分类：重要性 × 上报模式</h3>
+  <div class="tw">
+  <table>
+    <thead><tr><th style="width:70px">重要性</th><th class="c">M0 实时</th><th class="c">M1 分钟聚合</th><th class="c">M2 小时聚合</th><th class="c">M3 天聚合</th><th class="c">M4 按需</th><th class="c">M5 抑制</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tag p0">P0</span></td><td class="c"><b style="color:var(--red)">唯一允许</b></td><td class="c">✕</td><td class="c">✕</td><td class="c">✕</td><td class="c">✕</td><td class="c">✕</td></tr>
+      <tr><td><span class="tag p1">P1</span></td><td class="c">✓</td><td class="c"><b>默认</b></td><td class="c">✓</td><td class="c">受限</td><td class="c">✕</td><td class="c">✕</td></tr>
+      <tr><td><span class="tag p2">P2</span></td><td class="c">✓</td><td class="c">✓</td><td class="c"><b>默认</b></td><td class="c">✓</td><td class="c">✓</td><td class="c">✓</td></tr>
+      <tr><td><span class="tag p3">P3</span></td><td class="c">✕</td><td class="c">✓</td><td class="c">✓</td><td class="c">✓</td><td class="c"><b>默认</b></td><td class="c">✓</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="note risk">
+    <span class="t">P0 只允许实时，不可配置</span>
+    <p>事故与安全类事件一旦被聚合成分钟级，就永久丢失了"第一次发生"的精确时刻——而排障与责任界定恰恰依赖这一条。因此 <b>P0 的上报模式在固件层硬编码锁定，云端配置指令无法覆盖</b>。</p>
+  </div>
+
+  <h3>5.2 六种上报模式</h3>
+  <div class="tw">
+  <table>
+    <thead><tr><th style="width:120px">模式</th><th style="width:70px">代号</th><th style="width:100px">上报时效</th><th style="width:140px">传输方式</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td><b>M0 实时</b></td><td><code>REALTIME</code></td><td>≤1 s</td><td>单发、插队优先、强制 ACK</td><td>不聚合、不去抖，一条一帧，重传 3 次</td></tr>
+      <tr><td><b>M1 分钟聚合</b></td><td><code>AGG_MIN</code></td><td>1 / 5 / 15 min</td><td>单帧批量（≤8 条）</td><td>按滑动窗口封桶，桶内多事件归并为一条</td></tr>
+      <tr><td><b>M2 小时聚合</b></td><td><code>AGG_HOUR</code></td><td>1 h</td><td>单帧批量</td><td>适合高频低价值事件，压缩比最高</td></tr>
+      <tr><td><b>M3 天聚合</b></td><td><code>AGG_DAY</code></td><td>自然日 00:00</td><td>单帧批量</td><td>依赖 UTC 日期边界，与时间可信度强耦合（见 5.8）</td></tr>
+      <tr><td><b>M4 按需</b></td><td><code>ON_DEMAND</code></td><td>云端拉取</td><td>请求-响应</td><td>设备不主动发，仅响应云端查询</td></tr>
+      <tr><td><b>M5 抑制</b></td><td><code>SUPPRESS</code></td><td>不上报</td><td>仅本地计数</td><td>本地环形计数，随下一条成功上报的事件带出</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="note warn">
+    <span class="t">为什么必须有 M5（抑制）</span>
+    <p><code>EVT_COM_TX_FAIL</code>（上报失败）如果用实时模式上报，会形成<b>"上报失败 → 触发失败事件 → 再次上报 → 再次失败"</b>的正反馈，一次链路抖动就能把 Flash 和信道打满。这类事件必须走 M5，只本地计数，由后续成功上行的帧顺带带出。</p>
+  </div>
+
+  <h3>5.3 可配置性分级</h3>
+  <div class="tw">
+  <table>
+    <thead><tr><th style="width:80px">级别</th><th style="width:60px" class="c">标记</th><th style="width:150px">允许范围</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td><b>锁定</b></td><td class="c"><code>L</code></td><td>不可改</td><td>固件硬编码，云端配置指令一律拒绝。用于 P0 事故/安全类与配置回执类</td></tr>
+      <tr><td><b>受限</b></td><td class="c"><code>R</code></td><td>白名单内切换</td><td>只能在 5.4 表列出的可配范围内选，越界拒绝</td></tr>
+      <tr><td><b>自由</b></td><td class="c"><code>F</code></td><td>M0–M5 任选</td><td>仅适用于 P2/P3，供不同项目按运维强度自行调节</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>5.4 事件与上报模式映射总表</h3>
+  <p>下表为<b>出厂默认配置</b>，也是第 8 章流量测算的基准。云端可通过配置指令调整 <code>R</code>/<code>F</code> 级事件的模式与窗口。</p>
+  <div class="tw">
+  <table>
+    <thead><tr><th style="width:92px">事件码</th><th style="width:150px">名称</th><th style="width:76px" class="c">默认</th><th style="width:180px">可配范围</th><th style="width:88px">聚合函数</th><th style="width:44px" class="c">级别</th></tr></thead>
+    <tbody>
+      <tr><td colspan="6" style="background:#f7f9fc;font-weight:600;color:#0C447C;font-size:12px;">A 域 · 生命周期</td></tr>
+      <tr><td><code>EVT_LC_BOOT</code></td><td>上电启动</td><td class="c"><span class="tag p0">M0</span></td><td>—</td><td>—</td><td class="c"><code>L</code></td></tr>
+      <tr><td><code>EVT_LC_RESET</code></td><td>运行中复位</td><td class="c"><span class="tag p0">M0</span></td><td>—</td><td>—</td><td class="c"><code>L</code></td></tr>
+      <tr><td><code>EVT_LC_JOIN_OK</code></td><td>入网成功</td><td class="c"><span class="tag p0">M0</span></td><td>—</td><td>—</td><td class="c"><code>L</code></td></tr>
+      <tr><td><code>EVT_LC_JOIN_FAIL</code></td><td>入网失败</td><td class="c"><span class="tag p0">M0</span></td><td>M0 / M1(1min, COUNT)</td><td>COUNT</td><td class="c"><code>R</code></td></tr>
+      <tr><td><code>EVT_LC_LEAVE</code></td><td>退网 / 被踢</td><td class="c"><span class="tag p0">M0</span></td><td>—</td><td>—</td><td class="c"><code>L</code></td></tr>
+      <tr><td><code>EVT_LC_PARENT_CHG</code></td><td>父节点切换</td><td class="c"><span class="tag p0">M0</span></td><td>M0 / M1(5min, COUNT)</td><td>COUNT</td><td class="c"><code>R</code></td></tr>
+      <tr><td><code>EVT_LC_ROLE_CHG</code></td><td>角色变更</td><td class="c"><span class="tag p0">M0</span></td><td>—</td><td>—</td><td class="c"><code>L</code></td></tr>
+      <tr><td><code>EVT_LC_FW_CHG</code></td><td>固件版本变更</td><td class="c"><span class="tag p0">M0</span></td><td>—</td><td>—</td><td class="c"><code>L</code></td></tr>
+      <tr><td><code>EVT_LC_FAC_RST</code></td><td>出厂重置</td><td class="c"><span class="tag p0">M0</span></td><td>—</td><td>—</td><td class="c"><code>L</code></td></tr>
+      <tr><td><code>EVT_LC_TIME_SYNC</code></td><td>时间同步</td><td class="c"><span class="tag p1">M1</span></td><td>M1(5min) / M2</td><td>LAST</td><td class="c"><code>R</code></td></tr>
+      <tr><td><code>EVT_LC_CFG_APPLY</code></td><td>配置生效回执</td><td class="c"><span class="tag p0">M0</span></td><td>—</td><td>—</td><td class="c"><code>L</code></td></tr>
+
+      <tr><td colspan="6" style="background:#f7f9fc;font-weight:600;color:#0C447C;font-size:12px;">B 域 · 电源与硬件</td></tr>
+      <tr><td><code>EVT_PWR_OFF</code></td><td>掉电快照</td><td class="c"><span class="tag p0">M0</span></td><td>—</td><td>—</td><td class="c"><code>L</code></td></tr>
+      <tr><td><code>EVT_PWR_ON</code></td><td>上电恢复</td><td class="c"><span class="tag p0">M0</span></td><td>—</td><td>—</td><td class="c"><code>L</code></td></tr>
+      <tr><td><code>EVT_PWR_UV</code></td><td>欠压</td><td class="c"><span class="tag p0">M0</span></td><td>M0 / M1(1min, MIN)</td><td>MIN</td><td class="c"><code>R</code></td></tr>
+      <tr><td><code>EVT_PWR_OV</code></td><td>过压</td><td class="c"><span class="tag p0">M0</span></td><td>M0 / M1(1min, MAX)</td><td>MAX</td><td class="c"><code>R</code></td></tr>
+      <tr><td><code>EVT_PWR_DRV_OPEN</code></td><td>驱动开路</td><td class="c"><span class="tag p0">M0</span></td><td>—</td><td>—</td><td class="c"><code>L</code></td></tr>
+      <tr><td><code>EVT_PWR_DRV_SHORT</code></td><td>驱动短路</td><td class="c"><span class="tag p0">M0</span></td><td>—</td><td>—</td><td class="c"><code>L</code></td></tr>
+      <tr><td><code>EVT_PWR_OT_WARN</code></td><td>过温预警</td><td class="c"><span class="tag p1">M1</span></td><td>M0 / M1(5min, MAX) / M2</td><td>MAX</td><td class="c"><code>R</code></td></tr>
+      <tr><td><code>EVT_PWR_OT_PROT</code></td><td>过温保护</td><td class="c"><span class="tag p0">M0</span></td><td>—</td><td>—</td><td class="c"><code>L</code></td></tr>
+      <tr><td><code>EVT_PWR_SELFTEST</code></td><td>自检结果</td><td class="c"><span class="tag p3">M3</span></td><td>M2 / M3</td><td>LAST</td><td class="c"><code>R</code></td></tr>
+      <tr><td><code>EVT_PWR_WDT</code></td><td>看门狗复位</td><td class="c"><span class="tag p0">M0</span></td><td>M0 / M1(15min, COUNT)</td><td>COUNT</td><td class="c"><code>R</code></td></tr>
+
+      <tr><td colspan="6" style="background:#f7f9fc;font-weight:600;color:#0C447C;font-size:12px;">C 域 · 照明控制</td></tr>
+      <tr><td><code>EVT_LGT_ON</code></td><td>开灯</td><td class="c"><span class="tag p1">M1</span></td><td>M0 / M1(15min) / M2</td><td>DURATION</td><td class="c"><code>R</code></td></tr>
+      <tr><td><code>EVT_LGT_OFF</code></td><td>关灯</td><td class="c"><span class="tag p1">M1</span></td><td>M0 / M1(15min) / M2</td><td>DURATION</td><td class="c"><code>R</code></td></tr>
+      <tr><td><code>EVT_LGT_DIM</code></td><td>调光完成</td><td class="c"><span class="tag p2">M2</span></td><td>M1 / M2 / M3</td><td>LAST</td><td class="c"><code>F</code></td></tr>
+      <tr><td><code>EVT_LGT_SCENE</code></td><td>场景切换</td><td class="c"><span class="tag p1">M1</span></td><td>M1(15min) / M2</td><td>FIRST_LAST</td><td class="c"><code>R</code></td></tr>
+      <tr><td><code>EVT_LGT_GRP_EXEC</code></td><td>组播执行结果</td><td class="c"><span class="tag p1">M1</span></td><td>M1(15min) / M2</td><td>COUNT</td><td class="c"><code>R</code></td></tr>
+      <tr><td><code>EVT_LGT_SCHED_EXEC</code></td><td>定时策略执行</td><td class="c"><span class="tag p3">M3</span></td><td>M1 / M2 / M3</td><td>COUNT</td><td class="c"><code>F</code></td></tr>
+      <tr><td><code>EVT_LGT_MANUAL</code></td><td>手动干预</td><td class="c"><span class="tag p1">M1</span></td><td>M1(15min) / M2</td><td>COUNT</td><td class="c"><code>R</code></td></tr>
+      <tr><td><code>EVT_LGT_FAULT</code></td><td>灯具故障</td><td class="c"><span class="tag p0">M0</span></td><td>—</td><td>—</td><td class="c"><code>L</code></td></tr>
+      <tr><td><code>EVT_LGT_MODE_CHG</code></td><td>模式切换</td><td class="c"><span class="tag p2">M2</span></td><td>M1 / M2 / M3</td><td>LAST</td><td class="c"><code>F</code></td></tr>
+
+      <tr><td colspan="6" style="background:#f7f9fc;font-weight:600;color:#0C447C;font-size:12px;">D 域 · 雷达感应</td></tr>
+      <tr><td><code>EVT_RDR_PRESENCE</code></td><td>有人/无人边沿</td><td class="c"><span class="tag p1">M1</span></td><td>M1(15min) / M2</td><td>DURATION</td><td class="c"><code>R</code></td></tr>
+      <tr><td><code>EVT_RDR_MOTION_LVL</code></td><td>动静分级变化</td><td class="c"><span class="tag p2">M2</span></td><td>M2 / M3 / M5</td><td>HIST</td><td class="c"><code>F</code></td></tr>
+      <tr><td><code>EVT_RDR_TRIG_AGG</code></td><td>触发计数聚合</td><td class="c"><span class="tag p2">M2</span></td><td>M1(15min) / M2 / M3</td><td>COUNT</td><td class="c"><code>F</code></td></tr>
+      <tr><td><code>EVT_RDR_SENS_CHG</code></td><td>灵敏度变更</td><td class="c"><span class="tag p0">M0</span></td><td>M0 / M1(5min, LAST)</td><td>LAST</td><td class="c"><code>R</code></td></tr>
+      <tr><td><code>EVT_RDR_CALIB</code></td><td>标定完成</td><td class="c"><span class="tag p3">M3</span></td><td>M2 / M3</td><td>LAST</td><td class="c"><code>F</code></td></tr>
+      <tr><td><code>EVT_RDR_FAULT</code></td><td>雷达失联/自检失败</td><td class="c"><span class="tag p0">M0</span></td><td>—</td><td>—</td><td class="c"><code>L</code></td></tr>
+      <tr><td><code>EVT_RDR_FALSE_TRIG</code></td><td>疑似误触发标记</td><td class="c"><span class="tag p3">M3</span></td><td>M2 / M3</td><td>COUNT</td><td class="c"><code>F</code></td></tr>
+
+      <tr><td colspan="6" style="background:#f7f9fc;font-weight:600;color:#0C447C;font-size:12px;">E 域 · 计量能耗 <span class="opt">可选</span></td></tr>
+      <tr><td><code>EVT_MTR_HOUR_FREEZE</code></td><td>小时电量冻结</td><td class="c"><span class="tag p2">M2</span></td><td>M1 / M2 / M3</td><td>SUM</td><td class="c"><code>F</code></td></tr>
+      <tr><td><code>EVT_MTR_DAY_FREEZE</code></td><td>日电量冻结</td><td class="c"><span class="tag p3">M3</span></td><td>M3</td><td>SUM</td><td class="c"><code>R</code></td></tr>
+      <tr><td><code>EVT_MTR_PWR_LIMIT</code></td><td>功率越限</td><td class="c"><span class="tag p1">M1</span></td><td>M0 / M1(5min, MAX)</td><td>MAX</td><td class="c"><code>R</code></td></tr>
+      <tr><td><code>EVT_MTR_JUMP</code></td><td>电量突变</td><td class="c"><span class="tag p2">M2</span></td><td>M1 / M2</td><td>MAX</td><td class="c"><code>F</code></td></tr>
+      <tr><td><code>EVT_MTR_FAULT</code></td><td>计量芯片故障</td><td class="c"><span class="tag p0">M0</span></td><td>—</td><td>—</td><td class="c"><code>L</code></td></tr>
+
+      <tr><td colspan="6" style="background:#f7f9fc;font-weight:600;color:#0C447C;font-size:12px;">F 域 · 环境感知 <span class="opt">可选</span></td></tr>
+      <tr><td><code>EVT_ENV_LUX_TH</code></td><td>光照度越界</td><td class="c"><span class="tag p2">M2</span></td><td>M1 / M2 / M3</td><td>MIN_MAX</td><td class="c"><code>F</code></td></tr>
+      <tr><td><code>EVT_ENV_SENSOR_FAULT</code></td><td>传感器故障</td><td class="c"><span class="tag p1">M1</span></td><td>M0 / M1(5min, COUNT)</td><td>COUNT</td><td class="c"><code>R</code></td></tr>
+
+      <tr><td colspan="6" style="background:#f7f9fc;font-weight:600;color:#0C447C;font-size:12px;">G 域 · 通信与网络</td></tr>
+      <tr><td><code>EVT_COM_LINK_DOWN</code></td><td>链路中断</td><td class="c"><span class="tag p1">M1</span></td><td>M0 / M1(15min, COUNT)</td><td>COUNT</td><td class="c"><code>R</code></td></tr>
+      <tr><td><code>EVT_COM_LINK_UP</code></td><td>链路恢复</td><td class="c"><span class="tag p1">M1</span></td><td>M0 / M1(15min, DURATION)</td><td>DURATION</td><td class="c"><code>R</code></td></tr>
+      <tr><td><code>EVT_COM_RSSI_DEG</code></td><td>信号质量劣化</td><td class="c"><span class="tag p2">M2</span></td><td>M1 / M2 / M3</td><td>MIN</td><td class="c"><code>F</code></td></tr>
+      <tr><td><code>EVT_COM_TX_FAIL</code></td><td>上报失败</td><td class="c"><span class="tag p3">M5</span></td><td>M3 / M5</td><td>COUNT</td><td class="c"><code>R</code></td></tr>
+      <tr><td><code>EVT_COM_ROUTE_UNREACH</code></td><td>路由不可达</td><td class="c"><span class="tag p1">M1</span></td><td>M1(15min) / M2</td><td>COUNT</td><td class="c"><code>R</code></td></tr>
+      <tr><td><code>EVT_COM_NB_CHG</code></td><td>邻居表变化</td><td class="c"><span class="tag p3">M5</span></td><td>M3 / M5</td><td>COUNT</td><td class="c"><code>F</code></td></tr>
+
+      <tr><td colspan="6" style="background:#f7f9fc;font-weight:600;color:#0C447C;font-size:12px;">H 域 · 安全</td></tr>
+      <tr><td><code>EVT_SEC_AUTH_FAIL</code></td><td>鉴权失败</td><td class="c"><span class="tag p0">M0</span></td><td>—</td><td>—</td><td class="c"><code>L</code></td></tr>
+      <tr><td><code>EVT_SEC_FW_VERIFY_FAIL</code></td><td>固件校验失败</td><td class="c"><span class="tag p0">M0</span></td><td>—</td><td>—</td><td class="c"><code>L</code></td></tr>
+      <tr><td><code>EVT_SEC_TAMPER</code></td><td>防拆告警</td><td class="c"><span class="tag p0">M0</span></td><td>—</td><td>—</td><td class="c"><code>L</code></td></tr>
+      <tr><td><code>EVT_SEC_KEY_UPD</code></td><td>密钥更新</td><td class="c"><span class="tag p0">M0</span></td><td>—</td><td>—</td><td class="c"><code>L</code></td></tr>
+      <tr><td><code>EVT_SEC_CMD_ILLEGAL</code></td><td>非法指令</td><td class="c"><span class="tag p1">M1</span></td><td>M0 / M1(15min, COUNT)</td><td>COUNT</td><td class="c"><code>R</code></td></tr>
+
+      <tr><td colspan="6" style="background:#f7f9fc;font-weight:600;color:#0C447C;font-size:12px;">I 域 · 策略引擎</td></tr>
+      <tr><td><code>EVT_POL_LOAD</code></td><td>策略装载</td><td class="c"><span class="tag p0">M0</span></td><td>—</td><td>—</td><td class="c"><code>L</code></td></tr>
+      <tr><td><code>EVT_POL_ACTIVE</code></td><td>策略生效</td><td class="c"><span class="tag p1">M1</span></td><td>M0 / M1(5min, LAST)</td><td>LAST</td><td class="c"><code>R</code></td></tr>
+      <tr><td><code>EVT_POL_EXPIRE</code></td><td>策略失效</td><td class="c"><span class="tag p1">M1</span></td><td>M0 / M1(5min, LAST)</td><td>LAST</td><td class="c"><code>R</code></td></tr>
+      <tr><td><code>EVT_POL_GROUP_CHG</code></td><td>group 槽位变更</td><td class="c"><span class="tag p0">M0</span></td><td>—</td><td>—</td><td class="c"><code>L</code></td></tr>
+      <tr><td><code>EVT_POL_CONFLICT</code></td><td>策略冲突</td><td class="c"><span class="tag p1">M1</span></td><td>M1(5min, COUNT) / M2</td><td>COUNT</td><td class="c"><code>R</code></td></tr>
+      <tr><td><code>EVT_POL_SUSPEND</code></td><td>时间失步挂起</td><td class="c"><span class="tag p0">M0</span></td><td>—</td><td>—</td><td class="c"><code>L</code></td></tr>
+
+      <tr><td colspan="6" style="background:#f7f9fc;font-weight:600;color:#0C447C;font-size:12px;">J 域 · 运维诊断</td></tr>
+      <tr><td><code>EVT_OPS_HEARTBEAT</code></td><td>心跳</td><td class="c"><span class="tag p2">M2</span></td><td>M1 / M2 / M3</td><td>LAST</td><td class="c"><code>F</code></td></tr>
+      <tr><td><code>EVT_OPS_OFFLINE</code></td><td>离线判定</td><td class="c"><span class="tag p1">M1</span></td><td>M1(15min, COUNT)</td><td>COUNT</td><td class="c"><code>R</code></td></tr>
+      <tr><td><code>EVT_OPS_OTA</code></td><td>OTA 阶段</td><td class="c"><span class="tag p0">M0</span></td><td>—</td><td>—</td><td class="c"><code>L</code></td></tr>
+      <tr><td><code>EVT_OPS_DIAG</code></td><td>远程诊断响应</td><td class="c"><span class="tag opt">M4</span></td><td>M4</td><td>—</td><td class="c"><code>L</code></td></tr>
+      <tr><td><code>EVT_OPS_LOGDump</code></td><td>日志分包导出</td><td class="c"><span class="tag opt">M4</span></td><td>M4</td><td>—</td><td class="c"><code>L</code></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>5.5 聚合函数</h3>
+  <p>每个走 M1–M3 的事件必须绑定一个 reduce 函数，否则"聚合"没有语义。载荷长度受 24 B 限制，因此函数输出必须收敛：</p>
+  <div class="tw">
+  <table>
+    <thead><tr><th style="width:110px">函数</th><th style="width:100px">语义</th><th style="width:190px">输出载荷</th><th>适用</th></tr></thead>
+    <tbody>
+      <tr><td><code>COUNT</code></td><td>计数</td><td><code>cnt</code></td><td>触发次数、失败次数、复位次数</td></tr>
+      <tr><td><code>SUM</code></td><td>求和</td><td><code>sum</code></td><td>电量、累计时长</td></tr>
+      <tr><td><code>MAX</code></td><td>最大值</td><td><code>max</code>, <code>max_ts</code></td><td>温度峰值、功率峰值</td></tr>
+      <tr><td><code>MIN</code></td><td>最小值</td><td><code>min</code>, <code>min_ts</code></td><td>电压跌落、信号最低点</td></tr>
+      <tr><td><code>MIN_MAX</code></td><td>双极值</td><td><code>min</code>, <code>max</code></td><td>光照度区间</td></tr>
+      <tr><td><code>FIRST_LAST</code></td><td>首末值</td><td><code>first</code>, <code>last</code>, <code>cnt</code></td><td>状态翻转（开→关）</td></tr>
+      <tr><td><code>DURATION</code></td><td>累计时长</td><td><code>on_ms</code>, <code>cnt</code></td><td>开灯时长、离线时长、有人时长</td></tr>
+      <tr><td><code>HIST</code></td><td>分档直方图</td><td><code>bins[8]</code>（各档计数）</td><td>雷达置信度分布、动静比例</td></tr>
+      <tr><td><code>LAST</code></td><td>保留最后一次</td><td><code>last</code></td><td>配置类、状态类快照</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>5.6 配置下发与生效</h3>
+  <div class="tw">
+  <table>
+    <thead><tr><th style="width:56px" class="c">步骤</th><th style="width:150px">动作</th><th>要点</th></tr></thead>
+    <tbody>
+      <tr><td class="c"><b>1</b></td><td>云端下发</td><td><code>CFG_EVT_MODE</code>：<code>cfg_ver</code> + 列表 <code>(evt_code, mode, win, reduce)</code></td></tr>
+      <tr><td class="c"><b>2</b></td><td>逐项校验</td><td>锁定项 → 拒绝；越权（如 P0 改 M2）→ 拒绝；<code>win</code> 越界 → 取边界值并标注</td></tr>
+      <tr><td class="c"><b>3</b></td><td>整包原子生效</td><td><b>不允许部分生效</b>。全套校验通过才切换，否则整包回滚，避免运行在半套配置上</td></tr>
+      <tr><td class="c"><b>4</b></td><td>回执</td><td>回 <code>EVT_LC_CFG_APPLY</code>（锁定 M0）：<code>cfg_ver</code> + <code>accepted_cnt</code> + <code>rejected[]</code></td></tr>
+      <tr><td class="c"><b>5</b></td><td>持久化</td><td>写 Flash 独立扇区并带 CRC；上电校验失败则回落出厂默认并上报异常</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="note warn">
+    <span class="t">配置回执必须实时，这条不能自相矛盾</span>
+    <p>如果 <code>EVT_LC_CFG_APPLY</code> 本身被配成聚合上报，云端将无法确认配置是否生效，形成逻辑死锁。因此它被<b>锁定为 M0</b>，且与 <code>EVT_POL_LOAD</code>、<code>EVT_POL_GROUP_CHG</code> 一样，属于"回执类事件"，一律实时。</p>
+  </div>
+
+  <h3>5.7 桶对齐与上报散列</h3>
+  <p>若 10 万节点都在整点封桶上报，会形成周期性上行雪崩。必须在桶边界上叠加按设备 ID 散列的抖动：</p>
+  <div class="note">
+    <span class="t">散列公式</span>
+    <p><code>上报时刻 = 桶边界 + hash(dev_id) mod J</code>，<code>J</code> 为该模式的抖动窗口。</p>
+  </div>
+  <div class="tw">
+  <table>
+    <thead><tr><th style="width:110px">模式</th><th style="width:110px">桶宽</th><th style="width:110px" class="c">抖动窗口 J</th><th style="width:150px" class="c">单 CCO 平均并发</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>M1 分钟</td><td>15 min</td><td class="c">±60 s</td><td class="c">≈8.3 节点/s</td><td>按 500 节点/CCO 测算</td></tr>
+      <tr><td>M2 小时</td><td>1 h</td><td class="c">±300 s</td><td class="c">≈1.7 节点/s</td><td>推荐默认</td></tr>
+      <tr><td>M3 天</td><td>24 h</td><td class="c">±1800 s</td><td class="c">≈0.3 节点/s</td><td>必须散列，否则凌晨齐发</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>5.8 与时间可信度的联动</h3>
+  <p>M1/M2 桶只依赖相对时长，时间降级影响可控；<b>M3 天桶依赖 UTC 自然日边界，是本章与第 6 章唯一的强耦合点</b>：</p>
+  <div class="tw">
+  <table>
+    <thead><tr><th style="width:130px">时间状态</th><th style="width:130px" class="c">M1 / M2</th><th class="c">M3 天级桶</th></tr></thead>
+    <tbody>
+      <tr><td><code>SYNC</code></td><td class="c">正常封桶</td><td class="c">正常按 UTC 日封桶</td></tr>
+      <tr><td><code>FREERUN</code>（≤60 min）</td><td class="c">正常，误差 &lt;100 ms</td><td class="c">正常，跨日误差可忽略</td></tr>
+      <tr><td><code>DEGRADED</code>（&gt;60 min）</td><td class="c">正常</td><td class="c"><b>标记 <code>bucket_confident=false</code></b>，可能落错日</td></tr>
+      <tr><td><code>UNSYNC</code></td><td class="c">正常（相对时长）</td><td class="c"><b>禁止封天桶</b>，等授时回填后再封；事件本身超 2 h 可带 <code>uncertainty</code> 粗报（见 6.5），天桶超 24 h 降级为滚动 24 h 窗口</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>天级聚合的电量、误触发统计这类数据一旦落错日，能耗报表与对账就会错位。因此 <code>bucket_confident</code> 必须随载荷上送，云端对 <code>false</code> 的桶单独标记、不与正式报表混算。</p>
+
+  <h3>5.9 合并与抑制规则</h3>
+  <ul>
+    <li><b>仅对 M1 及以上生效：</b>M0 事件一律不合并、不去抖，逐条上报。</li>
+    <li><b>同类合并：</b>同一 <code>evt_code</code> 在同一桶内重复出现，归并为一条，载荷按 5.5 绑定的函数计算，保留首个事件的 <code>ts_utc</code>。</li>
+    <li><b>抖动抑制：</b>状态类事件（开/关、有人/无人）设 2 s 抑制窗，窗内反复翻转只记最后一次 + 翻转次数。</li>
+    <li><b>等级提升：</b>同一事件在 1 h 内重复超阈值（如驱动故障 5 次），由云端自动提升为"告警"并生成工单，不改变其上报模式。</li>
+  </ul>
+</section>
+
+<!-- ══════════ 6 ══════════ -->
+<section id="s6">
+  <h2 class="sec"><span class="n">6</span>时间基准与事件时间戳</h2>
+  <p class="lead">核心原则：<b>每个事件必须携带设备侧生成的绝对时间戳（UTC）</b>。节点入网即获得网络时间，节点间同步误差 &lt;20 ms；离线但未掉电时，由 20 ppm 晶振自由走时，在可信窗口内时间仍满足 100 ms 的系统精度要求。<b>T8 已配置大电容，掉电后通信主控可维持约 3 s</b>，足以锁存断电时刻并写入 Flash 快照，并尝试上报一次；上电后未入网期间以本地晶振计时，入网后回填校准并标注为「修正」。</p>
+
+  <h3>6.1 五种时基状态</h3>
+  <div class="tw">
+  <table>
+    <thead><tr><th style="width:160px">状态</th><th style="width:170px">时基来源</th><th style="width:150px">时间误差</th><th>quality 值</th></tr></thead>
+    <tbody>
+      <tr><td><b>在线（已同步）</b></td><td>网络授时，入网时下发</td><td>&lt;20 ms</td><td><span class="tag p2">0 SYNC</span></td></tr>
+      <tr><td><b>上电未入网（已回填）</b></td><td>本地晶振计时 + 入网授时反推校准</td><td>&lt;25 ms（取决于入网耗时）</td><td><span class="tag opt">1 CORRECTED</span></td></tr>
+      <tr><td><b>离线未掉电</b><br>age ≤60 min</td><td>20 ppm 晶振自由运行</td><td>≤92 ms（20 ms + 漂移）</td><td><span class="tag p2">2 FREERUN</span></td></tr>
+      <tr><td><b>离线未掉电</b><br>age &gt;60 min</td><td>20 ppm 晶振自由运行</td><td>&gt;100 ms，随 age 线性增长</td><td><span class="tag p1">3 DEGRADED</span></td></tr>
+      <tr><td><b>无有效时基</b></td><td>上电未入网且无法回填</td><td>不可知</td><td><span class="tag p0">4 UNSYNC</span></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="note">
+    <span class="t">反直觉但重要：CORRECTED 比 FREERUN 更准</span>
+    <p>现场容易把"修正过的时间"当成"次一等的数据"，实际相反。<b>CORRECTED 精度优于 FREERUN</b>：前者只短时自由运行（上电到入网，通常几十秒到几分钟），且有精确外部锚点反推；后者要连续自由运行最长 60 min。</p>
+    <p>误差推导：<code>T_boot = T_net − uptime_now</code>，则 <code>t_evt = T_boot + uptime_evt</code>。总误差 = 授时误差 20 ms + <code>t_join × 20 ppm</code>。若入网耗时 3 min，漂移仅 3.6 ms，合计约 <b>24 ms</b>。</p>
+    <p>因此 <code>time_quality</code> 的枚举值按<b>精度从高到低</b>排列（0 最准、4 最差），云端可直接按数值比较，无需查表。</p>
+  </div>
+
+  <h3>6.2 离线可信窗口推导</h3>
+  <p>系统精度需求 100 ms 是总误差预算，须先扣除同步本身的误差，剩余部分才是晶振漂移可用的额度：</p>
+  <div class="note">
+    <span class="t">计算过程</span>
+    <p>漂移可用额度 = 100 ms − 20 ms（同步误差）= <b>80 ms</b></p>
+    <p>20 ppm = 20 μs/s，则临界时长 = 80 ms ÷ 20 μs/s = 4000 s ≈ <b>66.7 min</b></p>
+    <p>工程取值 <b>60 min</b>：对应漂移 72 ms，总误差 92 ms，余量 8 ms。取整且留余量，便于固件实现。</p>
+  </div>
+  <div class="tw">
+  <table>
+    <thead><tr><th style="width:130px" class="c">离线时长</th><th style="width:130px" class="c">累计漂移</th><th style="width:130px" class="c">总误差</th><th class="c">判定</th><th>处置</th></tr></thead>
+    <tbody>
+      <tr><td class="c">15 min</td><td class="c">18 ms</td><td class="c">38 ms</td><td class="c"><span class="tag p2">FREERUN</span></td><td>直用</td></tr>
+      <tr><td class="c">30 min</td><td class="c">36 ms</td><td class="c">56 ms</td><td class="c"><span class="tag p2">FREERUN</span></td><td>直用</td></tr>
+      <tr><td class="c">60 min</td><td class="c">72 ms</td><td class="c">92 ms</td><td class="c"><span class="tag p2">FREERUN</span></td><td>直用（工程上限）</td></tr>
+      <tr><td class="c">67 min</td><td class="c">80 ms</td><td class="c">100 ms</td><td class="c"><span class="tag p1">临界</span></td><td>理论边界，不承诺精度</td></tr>
+      <tr><td class="c">120 min</td><td class="c">144 ms</td><td class="c">164 ms</td><td class="c"><span class="tag p1">DEGRADED</span></td><td>标记误差上界 ±164 ms</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>6.3 离线期间的事件修正流程</h3>
+  <p>"离线记录 → 上报前重同步 → 按事件发生时刻修正"，落地为固定五步，固件须按此实现：</p>
+  <div class="tw">
+  <table>
+    <thead><tr><th style="width:56px" class="c">步骤</th><th style="width:170px">动作</th><th>要点</th></tr></thead>
+    <tbody>
+      <tr><td class="c"><b>1</b></td><td>事件发生即打戳</td><td>用当前时基写入 <code>ts_utc</code> + <code>ts_cs</code>，同时记录 <code>sync_age</code>（距上次同步秒数）与 <code>time_quality</code></td></tr>
+      <tr><td class="c"><b>2</b></td><td>落 Flash</td><td>事件带完整绝对时间写入环形区，<b>不依赖"稍后上报时再补时间"</b></td></tr>
+      <tr><td class="c"><b>3</b></td><td>重连后先同步</td><td>链路恢复后的<b>第一个动作是校时</b>，取得偏移 Δ = T_net − T_local，校时完成前不发缓存事件</td></tr>
+      <tr><td class="c"><b>4</b></td><td>线性修正</td><td>若期间未掉电（<code>boot_id</code> 未变，时基连续），对缓存事件统一加 Δ 修正：<code>t_evt' = t_evt + Δ</code></td></tr>
+      <tr><td class="c"><b>5</b></td><td>补报上传</td><td>修正后重算 <code>time_quality</code>，按 P0→P1→P2 顺序与原 <code>seq</code> 序补报</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="note warn">
+    <span class="t">修正的前提条件</span>
+    <p>第 4 步的线性修正只对<b>时基连续</b>的区间成立。若期间发生掉电，<code>boot_id</code> 变更、时基断裂，<b>不得对断电前的事件套用 Δ</b>——那些事件的时间戳在写入时就是准确的，反而不能动。掉电场景按下节 6.5 的独立流程处理。</p>
+  </div>
+
+  <h3>6.4 掉电 3 秒窗口：时序预算与优先级取舍</h3>
+  <p class="lead">大电容仅能维持通信主控工作约 <b>3 s</b>。这个窗口不足以「既可靠上报、又可靠落盘」，必须做刚性取舍——<b>先落盘、后上报</b>。</p>
+
+  <div class="note risk">
+    <span class="t">30 s 方案下是「先上报、后写盘」，3 s 下必须反过来</span>
+    <p>判断依据是<b>动作是否可恢复</b>：上报失败可以等来电后补报（事件已在 Flash 里）；而 Flash 没写就<b>永久丢失</b>，无任何补救途径。3 s 内只能保一个，必须保不可恢复的那个。</p>
+    <p>因此 <code>EVT_PWR_OFF</code> 与 <code>t_off</code> 的<b>落盘优先级高于上报</b>。上报是尽力而为的加分项，不是必达项。</p>
+  </div>
+
+  <div class="tw">
+  <table>
+    <thead><tr><th style="width:130px">时间窗</th><th style="width:250px">动作</th><th style="width:80px" class="c">预算</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td><code>T+0</code></td><td>硬件中断检测 Vin 跌落，<b>锁存 <code>t_off</code></b></td><td class="c">&lt;5 ms</td><td><b>断电时刻的精度在此刻即锁定</b>，与后续能否上报成功完全无关</td></tr>
+      <tr><td><code>T+0 – 50 ms</code></td><td>关灯（PWM 归零）、停外设、冻结策略引擎</td><td class="c">50 ms</td><td>先卸掉 LED 驱动这个最大负载，为射频发射留出储能，同时避免尾段闪烁</td></tr>
+      <tr><td><code>T+50 – 250 ms</code></td><td><b>写 Flash 快照</b>：<code>t_off</code>、<code>seq</code> 高水位、末状态</td><td class="c">≤200 ms</td><td><b>最高优先级。先写后发，写完立即回读校验</b></td></tr>
+      <tr><td><code>T+250 – 1500 ms</code></td><td>首帧上报 <code>EVT_PWR_OFF</code>（P0）</td><td class="c">≤1.2 s</td><td>含 CCA、路由寻址、ACK 往返</td></tr>
+      <tr><td><code>T+1500 – 2700 ms</code></td><td>至多 <b>1 次</b>重传</td><td class="c">≤1.2 s</td><td>失败即放弃，不纠缠；重传上限由 3 次降为 1 次</td></tr>
+      <tr><td><code>T+2700 – 3000 ms</code></td><td>主动关闭射频，进入低功耗</td><td class="c">300 ms</td><td>停射频防发射电流拉垮电压，保住已写入的 Flash 数据</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h4>单帧空中时长参考</h4>
+  <div class="tw">
+  <table>
+    <thead><tr><th style="width:110px" class="c">有效速率</th><th style="width:160px" class="c">60 B 帧空中时长</th><th style="width:180px" class="c">3 s 内理论可发帧数</th><th>现实约束</th></tr></thead>
+    <tbody>
+      <tr><td class="c">10 kbps</td><td class="c">48 ms</td><td class="c">数十帧</td><td rowspan="3">真正的瓶颈不是空中时长，而是 <b>CCA 退避 + 多跳中继 + ACK 往返</b>。一次完整上报事务保守按 300–800 ms 估，故 3 s 内现实可行的是「1 次上报 + 1 次重传」</td></tr>
+      <tr><td class="c">4.8 kbps</td><td class="c">100 ms</td><td class="c">约 20 帧</td></tr>
+      <tr><td class="c">1.2 kbps</td><td class="c">400 ms</td><td class="c">约 6 帧</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="note warn">
+    <span class="t">设计原则：按 3 s 设计，按 2 s 验收</span>
+    <p>超级电容容量会衰减——5–10 年寿命末期、高温环境下可能只剩新品的 70%（约 <b>2.1 s</b>）。因此<b>「不可丢失」的三个动作（锁存 <code>t_off</code> + 关灯 + 写 Flash）必须在 <code>T+250 ms</code> 内全部完成</b>，剩余 2.75 s 才用于尽力上报。</p>
+    <p>30 s 方案里这条容错空间很大；3 s 方案下它变成生死线——任何把 Flash 写入排在上报之后的实现，在电容衰减后都会连带丢掉断电记录。</p>
+  </div>
+
+  <div class="note risk">
+    <span class="t">反直觉但关键：过度重传会「把数据搞丢」</span>
+    <p>射频发射是掉电期间最大的电流负载。若父节点已挂、信道持续 CCA 失败，仍坚持重传会把电容电压拉到 MCU 工作阈值以下，导致<b>正在进行的 Flash 写操作被中断、扇区损坏</b>——为了抢一条上报，反而毁掉全部缓存。</p>
+    <p>因此固件必须实现<b>快速放弃</b>：连续 2 次 CCA 失败或路由不可达即终止上报，把剩余电量全部留给 Flash 校验与干净关机。<b>掉电期间「少发一帧」远比「发一半」安全。</b></p>
+  </div>
+
+  <div class="note warn">
+    <span class="t">区域停电时的实际预期</span>
+    <p>整个电表箱或整栋楼停电时，<b>父节点/中继同时掉电</b>，叶子节点 3 s 内上报基本不可能成功。此时窗口的唯一价值是：<b>在 <code>T+250 ms</code> 内把 <code>t_off</code> 与 <code>EVT_PWR_OFF</code> 干净地写入 Flash</b>。</p>
+    <p>来电后按第 7 章补报流程上传。<b>对外口径必须统一为「断电时刻精确记录、事件可靠留存」，不能表述为「停电即实时上报到云」</b>——后者在区域停电场景会成为客户投诉点。</p>
+  </div>
+
+  <h3>6.5 上电后未入网期间：本地记录与回填</h3>
+  <p>上电复位时无网络时基，此阶段的事件按下述流程处理：</p>
+  <div class="tw">
+  <table>
+    <thead><tr><th style="width:56px" class="c">步骤</th><th style="width:200px">动作</th><th>要点</th></tr></thead>
+    <tbody>
+      <tr><td class="c"><b>1</b></td><td>上电复位</td><td><code>boot_id</code> +1，从 Flash 读回上次 <code>t_off</code>（电容窗口内锁存并写入）。<b>若读取失败或无有效记录，则断电时长不可知</b>，后续事件一律标 <code>UNSYNC</code></td></tr>
+      <tr><td class="c"><b>2</b></td><td>启动本地计时</td><td><code>uptime</code> 从 0 起算，此期间事件按相对时基记录，<code>time_quality</code> 暂标 <code>UNSYNC</code></td></tr>
+      <tr><td class="c"><b>3</b></td><td>事件落 Flash</td><td>缓存不发送，等待授时（避免以错误时间污染云端）</td></tr>
+      <tr><td class="c"><b>4</b></td><td>入网授时</td><td>取得 <code>T_net</code>，记录当前 <code>uptime_now</code></td></tr>
+      <tr><td class="c"><b>5</b></td><td><b>反推上电时刻</b></td><td><code>T_boot = T_net − uptime_now</code></td></tr>
+      <tr><td class="c"><b>6</b></td><td>回填修正</td><td><code>t_evt = T_boot + uptime_evt</code>，<code>time_quality</code> 改为 <b><code>CORRECTED</code></b></td></tr>
+      <tr><td class="c"><b>7</b></td><td>补报</td><td>按 <code>seq</code> 顺序补报，云端见 <code>CORRECTED</code> 标记即知该时间已修正</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="note risk">
+    <span class="t">必须避开的错误实现</span>
+    <p><b>不得用 <code>t_off</code> 作为上电后的计时基准。</b>掉电时长未知（可能 3 秒，也可能 3 天），若直接以 <code>t_off</code> 续走，上电后的全部事件时间会整体前移一个"断电时长"，误差可达数小时，且看起来完全合理、极难排查。</p>
+    <p><b>唯一正确的锚点是入网授时</b>，用它反推 <code>T_boot</code>。<code>t_off</code> 只用于计算断电时长，不作为计时起点。</p>
+  </div>
+
+  <p><b>UNSYNC 的超时兜底：</b>若上电后长时间无法入网（网络故障），缓存事件会持续积压直至 Flash 溢出。因此规定：<code>UNSYNC</code> 持续超过 <b>2 h</b> 后，允许以"<code>t_off</code> + 估计断电时长 + <code>uptime</code>"给出<b>粗略时间</b>并上报，<code>time_quality</code> 标 <code>UNSYNC</code>、附带 <code>uncertainty</code> 区间。<b>宁可给一个标注了不确定度的时间，也不能让数据全丢</b>。</p>
+
+  <h3>6.6 为什么必须绝对时间戳而非相对时间</h3>
+  <ul>
+    <li><b>补报场景时延极大：</b>断网 4 h 后补报，云端收到时刻与事件发生时刻相差数小时，用接收时间排序会彻底错乱。</li>
+    <li><b>多节点关联必须对齐：</b>同一电表箱 50 盏灯同时掉电、同一区域批量过温，这类分析只能靠绝对时间对齐；靠 <code>recvTime</code> 会被链路排队时延打散。</li>
+    <li><b>离线时长只有设备自己知道：</b>云端看到的是"一条 4 h 前的补报事件"，无法判断设备是刚离线还是已离线数天，只有设备侧记录的 <code>sync_age</code> 能说明。</li>
+    <li><b>策略执行偏差需要可审计：</b><code>EVT_LGT_SCHED_EXEC</code> 的 <code>drift_ms</code> 必须基于绝对时间计算，否则定时策略的可靠性无从验证。</li>
+    <li><b>停电时长可精确计算：</b><code>t_on</code>（回填所得）− <code>t_off</code>（电容期间实测）= 实际断电时长，误差 &lt;1 s。这是运维价值最高的单一数据，可直接区分"瞬时闪断"与"长时间停电"，支撑 SLA 与责任界定。</li>
+  </ul>
+
+  <h3>6.7 与定时策略的联动</h3>
+  <p>时间降级时，定时策略不得硬执行：</p>
+  <ol>
+    <li><code>SYNC</code> / <code>CORRECTED</code> / <code>FREERUN</code> 状态下，定时策略正常执行，偏差控制在 100 ms 内。</li>
+    <li><code>DEGRADED</code>（离线 &gt;60 min）时，<b>定时策略挂起</b>并上报 <code>EVT_POL_SUSPEND</code>（P0），仅保留本地感应与组播类策略。</li>
+    <li><code>UNSYNC</code>（上电未授时）时一律挂起定时策略，等待授时；超 3 次同步失败由云端决策是否降级为常亮/常暗兜底。</li>
+    <li>时间跳变 &gt;5 min 时，上报 <code>EVT_LC_TIME_SYNC</code> 并携带 <code>jump_ms</code>，云端据此修正历史策略执行记录。</li>
+  </ol>
+</section>
+
+<!-- ══════════ 7 ══════════ -->
+<section id="s7">
+  <h2 class="sec"><span class="n">7</span>Flash 缓存与补报</h2>
+  <p>断网是常态而非异常。事件必须在本地缓存，恢复后按优先级补报。</p>
+  <div class="tw">
+  <table>
+    <thead><tr><th style="width:110px">分区</th><th style="width:80px" class="c">容量</th><th style="width:80px" class="c">条数</th><th style="width:80px" class="c">淘汰策略</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>P0 保留区</td><td class="c">8 KB</td><td class="c">~170</td><td class="c">满则拒绝新写入</td><td><b>不被任何低级别挤占</b>，宁可丢新也不丢掉电/安全记录</td></tr>
+      <tr><td>P1 缓冲环</td><td class="c">6 KB</td><td class="c">~128</td><td class="c">FIFO 覆盖</td><td>保留最近 128 条 P1，覆盖约 4 h 断网</td></tr>
+      <tr><td>P2 聚合环</td><td class="c">6 KB</td><td class="c">~128</td><td class="c">FIFO 覆盖</td><td>只存聚合记录，覆盖 32 h（15 min 一条）</td></tr>
+      <tr><td>索引/元数据</td><td class="c">2 KB</td><td class="c">—</td><td class="c">—</td><td>写指针、boot_id、seq 高水位、TTL 标记</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p class="lead">表内条数按单事件 48 B 最小值估算；若实际帧长取 56 B，条数下浮约 15%，仍满足 24 h 断网覆盖要求。</p>
+
+  <h3>7.1 补报规则</h3>
+  <ul>
+    <li><b>先校时后补报：</b>链路恢复后<b>不得立即发缓存事件</b>，必须先完成一次授时并做偏移修正（见 6.3），否则整批补报事件的时间戳会整体偏移。</li>
+    <li><b>顺序：</b>按 <code>boot_id</code> 升序 → <code>seq</code> 升序补报，先 P0 后 P1 后 P2。</li>
+    <li><b>限速：</b>补报期间限流，避免恢复瞬间形成上行风暴，建议 ≤5 事件/s，且让位于实时 P0。</li>
+    <li><b>TTL：</b>P2 超过 3 天未补报成功则丢弃（聚合数据已有替代价值）；P0/P1 <b>不设 TTL</b>。</li>
+    <li><b>断点续传：</b>用 <code>cloud_ack_seq</code> 记录云端已确认的最高 <code>seq</code>，重连后从该点继续。</li>
+  </ul>
+
+  <div class="note warn">
+    <span class="t">Flash 写寿命</span>
+    <p>P0 保留区建议独占一个 Flash 扇区并做<b>写平衡</b>，避免单点擦写。按 P0 日均 3 条估算，一年约 1100 次写，配合扇区轮转可支撑 10 年设计寿命。掉电快照若每次都写，需重新核算——这也是超级电容方案要单独评估写入频次的原因。</p>
+  </div>
+</section>
+
+<!-- ══════════ 8 ══════════ -->
+<section id="s8">
+  <h2 class="sec"><span class="n">8</span>带宽与流量预算</h2>
+  <p>以 <b>10 万灯</b>规模、<b>5.4 节出厂默认配置</b>测算，单事件按 49 B 计（含物理帧头与 ACK）。<b>关键结论：雷达事件量远低于直觉，带宽并非瓶颈；真正的风险在 P0 突发与频段占空比。</b></p>
+
+  <div class="kpi">
+    <div><div class="v">151</div><div class="u">条 / 天 · 单灯</div><div class="l">默认配置合计</div></div>
+    <div><div class="v">6.5 KB</div><div class="u">流量 / 天 · 单灯</div><div class="l">平均 0.6 bps</div></div>
+    <div><div class="v">650 MB</div><div class="u">流量 / 天 · 全网</div><div class="l">按 10 万灯</div></div>
+    <div><div class="v">0.3 kbps</div><div class="u">单 CCO 平均占用</div><div class="l">按 500 灯/CCO，余量充裕</div></div>
+  </div>
+
+  <h3>8.1 雷达事件量的物理约束</h3>
+  <p class="lead">先纠正一个常见误判：<b>把雷达触发直接等同于事件条数</b>。T8 的 5.8G 雷达实际受三条物理约束，真实事件量远低于按触发频率推算的结果。</p>
+  <div class="tw">
+  <table>
+    <thead><tr><th style="width:150px">约束</th><th style="width:150px">数值</th><th>对事件量的影响</th></tr></thead>
+    <tbody>
+      <tr><td><b>判别周期</b></td><td>0.4 – 0.5 s</td><td>雷达完成一次移动目标判别需 0.4–0.5 s，事件率<b>物理上限 2–2.5 次/s</b>，人流再密也不会更快</td></tr>
+      <tr><td><b>无人保持窗</b></td><td>典型 10 – 30 s</td><td>判定无人需保持窗口，避免人稍作停留即误判，由此构成<b>最小完整事件周期</b></td></tr>
+      <tr><td><b>边沿语义</b></td><td>状态翻转才计事件</td><td><b>持续有人不产生新事件</b>。流水式连续人流只产生一对边沿（有人→无人），而非按人次累加</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="note">
+    <span class="t">最小事件周期的推导</span>
+    <p><code>T_cycle = T_presence_min + T_hold = 0.5 s + 10 s = 10.5 s</code></p>
+    <p>理论最大边沿率 = 2 ÷ 10.5 s ≈ <b>0.19 次/s ≈ 1.6 万条/天</b>。但这要求设备全天 24 h 无间断地"有人-无人"翻转，现实中不存在——真正的约束是场景人流，不是器件极限。</p>
+  </div>
+
+  <h3>8.2 典型场景的估算</h3>
+  <div class="tw">
+  <table>
+    <thead><tr><th style="width:140px">安装场景</th><th style="width:130px" class="c">日均有人期</th><th style="width:130px" class="c">边沿数 / 天</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>地库车位灯</td><td class="c">80–150</td><td class="c">160–300</td><td>车辆进出 + 人员，夜间稀疏</td></tr>
+      <tr><td><b>办公走廊</b></td><td class="c">200–400</td><td class="c">400–800</td><td>白天高峰，连续人流被边沿语义合并</td></tr>
+      <tr><td>楼梯间</td><td class="c">30–60</td><td class="c">60–120</td><td>低频，事件量最小</td></tr>
+      <tr><td>卫生间前室</td><td class="c">300–500</td><td class="c">600–1000</td><td>高频短停留，事件量最大</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>设计中值取走廊场景偏保守值：<b>300 个有人期 / 600 条边沿 / 天</b>。<b>但 600 条边沿不等于 600 条上报</b>——<code>EVT_RDR_PRESENCE</code> 按 M1（15 min）聚合，日上限 96 个桶，实际活跃桶约 50–70 个。</p>
+
+  <h3>8.3 三种雷达事件处理方式对比</h3>
+  <div class="tw">
+  <table>
+    <thead><tr><th style="width:230px">处理方式</th><th style="width:110px" class="c">事件/天/灯</th><th style="width:110px" class="c">流量/天/灯</th><th style="width:110px" class="c">全网 10 万灯</th><th class="c">结论</th></tr></thead>
+    <tbody>
+      <tr><td>原始触发逐条上报<br><span style="font-size:11px;color:var(--ink-3)">按每 3 s 一次、全天不间断推算的错误假设</span></td><td class="c">28 800</td><td class="c">1.38 MB</td><td class="c">138 GB</td><td class="c"><b style="color:var(--red)">假设不成立</b></td></tr>
+      <tr><td>边沿逐条上报（不聚合）</td><td class="c">600</td><td class="c">29 KB</td><td class="c">2.9 GB</td><td class="c"><b style="color:var(--amb)">可承载，但浪费</b></td></tr>
+      <tr><td>边沿 + M1 聚合（推荐）</td><td class="c">60</td><td class="c">2.9 KB</td><td class="c">290 MB</td><td class="c"><b style="color:var(--grn)">推荐</b></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>8.4 推荐方案明细（单灯 / 天）</h3>
+  <div class="tw">
+  <table>
+    <thead><tr><th style="width:170px">事件类</th><th style="width:100px" class="c">日均条数</th><th style="width:100px" class="c">流量</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td>P0 硬件 / 生命周期</td><td class="c">3</td><td class="c">147 B</td><td>掉电、复位、链路异常为主</td></tr>
+      <tr><td>P1 照明控制（M1）</td><td class="c">20</td><td class="c">980 B</td><td>开关约 30 次，落入约 20 个活跃桶</td></tr>
+      <tr><td>P1 雷达边沿（M1）</td><td class="c">60</td><td class="c">2.9 KB</td><td>300 有人期 → 600 边沿 → 约 60 个活跃桶</td></tr>
+      <tr><td>P1 其他（M1）</td><td class="c">8</td><td class="c">390 B</td><td>手动干预、链路抖动、策略回执</td></tr>
+      <tr><td>P2 聚合（M2）</td><td class="c">36</td><td class="c">1.8 KB</td><td>雷达计数聚合 24 + 调光 12</td></tr>
+      <tr><td>P2 心跳（M2）</td><td class="c">24</td><td class="c">288 B</td><td>1 h 一条，短帧 12 B</td></tr>
+      <tr><td colspan="2"><b>合计</b></td><td class="c"><b>151 条 / 6.5 KB</b></td><td>折合平均 0.6 bps/灯</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="note">
+    <span class="t">测算结论</span>
+    <p>默认配置下单 CCO（500 灯）日均流量约 <b>3.25 MB</b>、平均带宽 <b>0.3 kbps</b>，Sub-G 链路余量充裕（按 868 MHz、有效吞吐 ≥10 kbps 口径）。</p>
+    <p><b>结论修正：</b>即便退化为「雷达边沿逐条上报、完全不聚合」，也仅 29 KB/天/灯、单 CCO 约 1.34 kbps，<b>仍在链路能力之内</b>。因此<b>雷达并不是带宽瓶颈</b>。</p>
+    <p>那为什么仍要聚合？三个理由：① 降低<b>发射占空比</b>的突发占用——这才是 470–510 MHz 的硬约束（见 8.5）；② 降低云端存储与规则计算成本；③ 误触发分析要的是<b>统计特征</b>，原始流水只会增加噪声。<b>聚合是为了合规与成本，不是为了带宽。</b></p>
+  </div>
+
+  <h3>8.5 频段选配对上报突发的影响</h3>
+  <p>上面的测算是<b>日均</b>口径。但两个候选频段都受<b>发射占空比</b>约束，合规判定看的是<b>瞬时突发</b>而非日均总量——这一环必须补齐，否则会出现"日均流量完全合规、现场却被判定超限发射"的尴尬。</p>
+  <div class="tw">
+  <table>
+    <thead><tr><th style="width:130px">维度</th><th style="width:230px">470–510 MHz（国内）</th><th>868 MHz（出口）</th></tr></thead>
+    <tbody>
+      <tr><td>用途归类</td><td>微功率短距离 · 民用计量仪表</td><td>欧洲 ISM 频段</td></tr>
+      <tr><td>功率限值</td><td>≤50 mW (ERP) 量级，须按现行微功率设备目录公告核对</td><td>按 ETSI EN 300 220 分档限值</td></tr>
+      <tr><td>占空比约束</td><td><b>有</b>发射时长 / 占空比限制，具体限值须核对公告原文</td><td><b>有</b>，按子频段 0.1% / 1% / 10% 分档</td></tr>
+      <tr><td>传播特性</td><td>绕射强、穿透好，电表箱与地库场景优势明显</td><td>天线尺寸小、可用速率高，穿透较弱</td></tr>
+      <tr><td>对事件模型的影响</td><td><b>突发额度最紧</b>，P0 必须单独预留配额</td><td>速率余量大，P2 批量包可加大</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h4>8.5.1 事件令牌桶</h4>
+  <p>占空比把"字节数"换算成"时间额度"，因此上报必须是令牌桶整形，而不是有事件就发：</p>
+  <div class="note">
+    <span class="t">可用帧数估算</span>
+    <p>每小时可用帧数 ≈ <code>3600 × D ÷ T_frame</code>，其中 <code>D</code> 为该频段占空比限值，<code>T_frame</code> 为单帧空中时长（含前导、跳频与 ACK 往返）。<b>固件须按实际选配频段与调制参数代入计算，不得沿用另一频段的经验值。</b></p>
+  </div>
+  <div class="tw">
+  <table>
+    <thead><tr><th style="width:150px">机制</th><th>规则</th></tr></thead>
+    <tbody>
+      <tr><td>配额切分</td><td>P0 独占 30%，P1 与 P2 共享 70%。P0 配额不足以承载日均 P0 事件，即视为载荷设计缺陷，须回头压缩 payload</td></tr>
+      <tr><td>超限降级</td><td>P1 超出配额时合并为一条汇总事件（带 <code>cnt</code>）；P2 直接推迟到下一窗口，<b>不丢弃</b></td></tr>
+      <tr><td>P0 允许透支</td><td>事故态（掉电、过温、安全）可透支额度，但须记账，并在随后 30 min 内降载偿还，避免连续透支构成合规风险</td></tr>
+      <tr><td>补报不占实时配额</td><td>断网恢复后的补报走独立低速通道（≤5 事件/s），与实时事件分时复用，防止补报风暴挤掉在线 P0</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="note warn">
+    <span class="t">为什么这一节必须前置到设计阶段</span>
+    <p>若等到样机送检才发现 470–510 MHz 的占空比对不上，改动会波及事件码分级、合并策略、Flash 分区三处，返工成本极高。频段一旦随项目锁定，本节参数即为固件的硬约束。</p>
+  </div>
+</section>
+
+<!-- ══════════ 9 ══════════ -->
+<section id="s9">
+  <h2 class="sec"><span class="n">9</span>风险与待决事项</h2>
+  <div class="tw">
+  <table>
+    <thead><tr><th style="width:56px" class="c">编号</th><th style="width:70px" class="c">级别</th><th style="width:210px">事项</th><th>建议处置</th></tr></thead>
+    <tbody>
+      <tr><td class="c">R1</td><td class="c"><span class="tag p1">P1</span></td><td>大电容仅约 3 s，<b>掉电事件可保证本地落盘，但不能保证上报到云</b>；区域停电时必然失败</td><td>固件遵循「先落盘、后上报」，重传上限 1 次；快速放弃机制见 6.4，避免重传拉垮电压毁坏 Flash</td></tr>
+      <tr><td class="c">R2</td><td class="c"><span class="tag p0">P0</span></td><td>离线 &gt;60 min 进入 DEGRADED，掉电重启后为 UNSYNC，期间定时策略须挂起</td><td>强制“降级即挂起”并上报 <code>EVT_POL_SUSPEND</code>；<code>UNSYNC</code> 期间事件缓存不发，待授时后回填补报</td></tr>
+      <tr><td class="c">R3</td><td class="c"><span class="tag p1">P1</span></td><td>事件码空间划分未冻结</td><td>本版已按 0x0Nxx 分域预留，需固件与云端同步冻结</td></tr>
+      <tr><td class="c">R4</td><td class="c"><span class="tag p1">P1</span></td><td>心跳周期与离线判定阈值不一致</td><td>心跳 1 h，离线判定建议 3 个周期（3 h），需与运维确认可接受时延</td></tr>
+      <tr><td class="c">R5</td><td class="c"><span class="tag p1">P1</span></td><td>P1 合并后丢失单次明细</td><td>合并仅对同码同窗口生效，且保留 <code>cnt</code>/首末时刻；关键事件走 P0 不合</td></tr>
+      <tr><td class="c">R6</td><td class="c"><span class="tag p2">P2</span></td><td>Flash 分区容量未与固件实际占用对齐</td><td>待固件给出 Flash map 后二次校核 22 KB 预算</td></tr>
+      <tr><td class="c">R7</td><td class="c"><span class="tag p2">P2</span></td><td>可选能力（计量/光照/防拆）SKU 裁剪规则</td><td>云端物模型按 SKU 加载事件子集，缺失事件不产生空值</td></tr>
+      <tr><td class="c">R8</td><td class="c"><span class="tag p0">P0</span></td><td><b>Sub-G 频段未锁定</b>（470–510 MHz / 868 MHz），占空比限值未核算</td><td>频段随项目锁定后，按 8.5 令牌桶重算 P0/P1 突发配额；固件不得硬编码单一频段参数</td></tr>
+      <tr><td class="c">R9</td><td class="c"><span class="tag p1">P1</span></td><td>20 ppm 若为 25 ℃ 单点指标而非全温区指标，高低温下漂移会显著放大，60 min 可信窗口需打折</td><td>确认晶振规格书的全温偏差；若为单点指标，按全温最大值重算窗口并下调 DEGRADED 阈值</td></tr>
+      <tr><td class="c">R10</td><td class="c"><span class="tag p0">P0</span></td><td>3 s 窗口本身极紧，电容衰减后（末期约 2.1 s）容错空间几乎为零</td><td>按「3 s 设计、2 s 验收」；锁存+关灯+写 Flash 强制在 <b>T+250 ms</b> 内完成；高温机型单独核算电容寿命</td></tr>
+      <tr><td class="c">R11</td><td class="c"><span class="tag p1">P1</span></td><td>区域性停电时父节点/中继同时掉电，叶子节点 3 s 内上报必然失败</td><td>窗口价值收敛为「保证本地落盘」；对外口径统一为「断电时刻精确记录」，来电后按补报流程上传</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- ══════════ 10 ══════════ -->
+<section id="s10">
+  <h2 class="sec"><span class="n">10</span>附录：命名规范</h2>
+  <h3>10.1 事件码命名</h3>
+  <p>格式：<code>EVT_{域}_{对象}_{动作}</code>，域用 2 字母缩写，对象可省略。全大写，下划线分词。</p>
+  <div class="tw">
+  <table>
+    <thead><tr><th style="width:110px">域缩写</th><th style="width:130px">含义</th><th>示例</th></tr></thead>
+    <tbody>
+      <tr><td><code>LC</code></td><td>Lifecycle</td><td><code>EVT_LC_JOIN_OK</code></td></tr>
+      <tr><td><code>PWR</code></td><td>Power</td><td><code>EVT_PWR_OT_PROT</code></td></tr>
+      <tr><td><code>LGT</code></td><td>Light</td><td><code>EVT_LGT_GRP_EXEC</code></td></tr>
+      <tr><td><code>RDR</code></td><td>Radar</td><td><code>EVT_RDR_TRIG_AGG</code></td></tr>
+      <tr><td><code>MTR</code></td><td>Meter</td><td><code>EVT_MTR_DAY_FREEZE</code></td></tr>
+      <tr><td><code>ENV</code></td><td>Environment</td><td><code>EVT_ENV_LUX_TH</code></td></tr>
+      <tr><td><code>COM</code></td><td>Communication</td><td><code>EVT_COM_LINK_DOWN</code></td></tr>
+      <tr><td><code>SEC</code></td><td>Security</td><td><code>EVT_SEC_FW_VERIFY_FAIL</code></td></tr>
+      <tr><td><code>POL</code></td><td>Policy</td><td><code>EVT_POL_SUSPEND</code></td></tr>
+      <tr><td><code>OPS</code></td><td>Operations</td><td><code>EVT_OPS_OTA</code></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>10.2 版本变更记录</h3>
+  <div class="tw">
+  <table>
+    <thead><tr><th style="width:80px">版本</th><th style="width:120px">日期</th><th style="width:110px">修订人</th><th>变更说明</th></tr></thead>
+    <tbody>
+      <tr><td><b>v1.6</b></td><td>2026-11-16</td><td>曾总</td><td><b>电容窗口由 30 s 修正为约 3 s</b>：6.4 整节重写，确立「先落盘、后上报」优先级（与 30 s 方案相反）；重传上限由 3 次降为 1 次；新增「过度重传会毁坏 Flash」的快速放弃机制；R1 重新打开为 P1，R10 升为 P0；设计原则改为「按 3 s 设计、2 s 验收」</td></tr>
+      <tr><td>v1.5</td><td>2026-11-16</td><td>曾总</td><td><b>重算雷达事件量</b>：纠正“触发=事件”的误判，改为按<b>判别周期 0.4–0.5 s + 无人保持窗 + 边沿语义</b>建模；新增 8.1 物理约束推导、8.2 场景估算；单灯日均由 530 条修正为 <b>151 条 / 6.5 KB</b>；结论修正为“雷达不是带宽瓶颈，聚合是为占空比合规与成本”</td></tr>
+      <tr><td>v1.4</td><td>2026-11-16</td><td>曾总</td><td>纳入 30 s 大电容事实：新增 CORRECTED 时基态、掉电 30 s 时序预算表、上电未入网回填七步；time_quality 扩为 3 bit；R1 关闭，新增 R10/R11</td></tr>
+      <tr><td>v1.3</td><td>2026-11-16</td><td>曾总</td><td>第 5 章重构为“上报模式与配置分类”：拆出重要性（P0–P3）× 上报模式（M0–M5）两个正交维度；新增六种上报模式、可配性三级（L/R/F）、66 条事件默认模式映射总表、9 种聚合函数、配置下发五步、桶对齐与报送散列</td></tr>
+      <tr><td>v1.2</td><td>2026-11-16</td><td>曾总</td><td>重构第 6 章：推翻“无 RTC 则时间不可信”的判断，改为“入网授时 + 20 ppm 晶振自由走时 + 上报前重同步修正”；事件改为<b>必带绝对时间戳</b>；头部 16 B→17 B；新增可信窗口推导（60 min）、时间质量四档、修正五步流程；R1 降为 P1、新增 R9</td></tr>
+      <tr><td>v1.1</td><td>2026-11-16</td><td>曾总</td><td>修正 Sub-G 频段定义：由单一 865–868 MHz 改为 <b>470–510 MHz / 868 MHz 双频段选配</b>；新增 1.2 双频段对比、8.3 频段对上报突发的影响与事件令牌桶；新增风险 R8；帧长修正为 48–56 B</td></tr>
+      <tr><td>v1.0</td><td>2026-11-16</td><td>曾总</td><td>首次发布。定义 10 域 66 个事件码、数据模型、QoS 矩阵、时间定标与资源预算</td></tr>
+      <tr><td><i>v1.2</i></td><td>待定</td><td>—</td><td>计划：Flash map 校核、OTA 分阶段事件细化、SKU 裁剪矩阵</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<footer>
+  <span>澜潮科技 · T8 灯事件物模型定义 v1.6</span>
+  <span>内部资料 · 评审中</span>
+</footer>
+
+</div>
+</body>
+</html>
