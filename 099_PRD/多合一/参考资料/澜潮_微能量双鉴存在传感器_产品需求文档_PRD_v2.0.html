@@ -1,0 +1,1813 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>澜潮 · 微能量 PIR+24G 双鉴存在传感器 · 产品需求文档 PRD v2.0</title>
+<style>
+  :root{
+    --bg:#f5f7fa; --card:#fff; --ink:#1a2733; --ink2:#48596a; --ink3:#7d8b99;
+    --line:#e1e7ee; --brand:#1f4e79; --brand2:#0b6bcb; --soft:#eef4fb;
+    --p0:#c0392b; --p0bg:#fdeeec; --p1:#c47f0a; --p1bg:#fdf6e8; --p2:#4a6b8a; --p2bg:#eef3f8;
+    --ok:#2e8b57; --okbg:#eaf6ee; --new:#7a4bb5; --newbg:#f4eefb;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; padding:0 18px 70px; background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei","Hiragino Sans GB",sans-serif;
+    font-size:14px; line-height:1.66; -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1180px; margin:0 auto;}
+
+  .cover{background:linear-gradient(140deg,#153a5c 0%,#1f4e79 45%,#3f8fc4 100%);
+    color:#fff; border-radius:0 0 16px 16px; padding:42px 40px 34px; margin-bottom:20px;
+    position:relative; overflow:hidden;}
+  .cover::after{content:""; position:absolute; right:-70px; top:-70px; width:260px; height:260px;
+    border:1px solid rgba(255,255,255,.18); border-radius:50%;}
+  .cover::before{content:""; position:absolute; right:-10px; top:-10px; width:140px; height:140px;
+    border:1px solid rgba(255,255,255,.14); border-radius:50%;}
+  .cover .kicker{font-size:11.5px; letter-spacing:3px; opacity:.78; text-transform:uppercase;}
+  .cover h1{margin:13px 0 9px; font-size:27px; font-weight:600; letter-spacing:.6px; line-height:1.38;}
+  .cover .sub{font-size:13.5px; opacity:.9; max-width:800px;}
+  .cover .meta{margin-top:20px; display:flex; flex-wrap:wrap; gap:9px; position:relative; z-index:1;}
+  .cover .meta span{background:rgba(255,255,255,.13); border:1px solid rgba(255,255,255,.22);
+    border-radius:20px; padding:4px 14px; font-size:12px;}
+  .cover .meta .v{background:rgba(255,255,255,.26); border-color:rgba(255,255,255,.4); font-weight:600;}
+
+  .toc{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:20px 26px; margin-bottom:20px;}
+  .toc h2{border:none; padding:0; margin-bottom:12px;}
+  .toc ol{columns:2; column-gap:38px; margin:0; padding-left:20px;}
+  .toc li{margin:5px 0; break-inside:avoid;}
+  .toc a{color:var(--ink2); text-decoration:none; border-bottom:1px dotted #c3d0dd;}
+  .toc a:hover{color:var(--brand2); border-bottom-color:var(--brand2);}
+
+  section{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:24px 28px; margin-bottom:20px;}
+  h2{font-size:18px; margin:0 0 4px; color:var(--brand); font-weight:600;
+    display:flex; align-items:center; gap:10px; scroll-margin-top:20px;}
+  h2::before{content:""; width:4px; height:18px; background:var(--brand2); border-radius:2px; display:inline-block;}
+  .h2note{font-size:12.8px; color:var(--ink3); margin:2px 0 16px 14px;}
+  h3{font-size:14.7px; margin:24px 0 8px; color:var(--ink); font-weight:600;}
+  h3:first-of-type{margin-top:8px;}
+  h4{font-size:13.3px; margin:16px 0 6px; color:var(--brand); font-weight:600;}
+  p{margin:8px 0; color:var(--ink2);}
+  ul,ol{margin:8px 0; padding-left:22px; color:var(--ink2);}
+  li{margin:3px 0;}
+  code{background:#eef2f6; border:1px solid #e0e7ee; border-radius:4px; padding:1px 5px;
+    font-family:Consolas,Monaco,monospace; font-size:12.3px; color:#2d4a63;}
+  strong{color:var(--ink);}
+
+  .tblwrap{overflow-x:auto; margin:10px 0 6px; border:1px solid var(--line); border-radius:8px;}
+  table{width:100%; border-collapse:collapse; font-size:12.5px; background:#fff;}
+  th{background:#eef2f6; color:var(--brand); font-weight:600; text-align:left;
+    padding:8px 9px; border-bottom:1px solid var(--line); white-space:nowrap; font-size:12.2px;}
+  td{padding:7px 9px; border-bottom:1px solid #edf1f5; vertical-align:top; color:var(--ink2);}
+  tbody tr:nth-child(even){background:#fafcfd;}
+  tbody tr:hover{background:#f3f9ff;}
+  td.id{font-family:Consolas,Monaco,monospace; font-size:11.9px; color:var(--brand); font-weight:600; white-space:nowrap;}
+  td.def{color:var(--ink2); font-size:12.2px;}
+  .tag{display:inline-block; padding:1px 7px; border-radius:10px; font-size:11px; font-weight:600; white-space:nowrap;}
+  .t0{background:var(--p0bg); color:var(--p0); border:1px solid #f3cdc7;}
+  .t1{background:var(--p1bg); color:var(--p1); border:1px solid #f0dfb9;}
+  .t2{background:var(--p2bg); color:var(--p2); border:1px solid #d9e3ee;}
+  .tok{background:var(--okbg); color:var(--ok); border:1px solid #cbe7d5;}
+  .tnew{background:var(--newbg); color:var(--new); border:1px solid #ddd0f0;}
+  .tdel{background:#f2f3f5; color:#8a97a3; border:1px solid #dfe4e9;}
+  tr.r0 td:first-child{box-shadow:inset 3px 0 0 var(--p0);}
+  tr.rn td:first-child{box-shadow:inset 3px 0 0 var(--new);}
+  .mode{display:inline-block; padding:1px 6px; border-radius:4px; font-size:11px; font-weight:700; font-family:Consolas,monospace;}
+  .mI{background:#fdecea; color:#a93226;}
+  .mA{background:#fef5e7; color:#a86b0d;}
+  .mH{background:#eaf4fd; color:#1a6ea8;}
+  .mL{background:#f0f0f2; color:#6b7785;}
+
+  .cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(165px,1fr)); gap:12px; margin:14px 0 8px;}
+  .card{background:var(--soft); border:1px solid #dbe7f4; border-radius:10px; padding:13px 15px;}
+  .card .n{font-size:22px; font-weight:700; color:var(--brand2); line-height:1.2;}
+  .card .n small{font-size:12.5px; font-weight:500; color:var(--ink2);}
+  .card .l{font-size:12.3px; color:var(--ink2); margin-top:3px;}
+  .card.up{background:#eaf6ee; border-color:#cbe7d5;}
+  .card.up .n{color:var(--ok);}
+
+  .callout{border-left:3px solid var(--brand2); background:#f4f9fe; border-radius:0 8px 8px 0; padding:11px 15px; margin:13px 0; font-size:12.9px; color:var(--ink2);}
+  .callout.warn{border-left-color:var(--p1); background:#fffbf2;}
+  .callout.danger{border-left-color:var(--p0); background:#fef7f6;}
+  .callout.ok{border-left-color:var(--ok); background:#f4fbf6;}
+  .callout.new{border-left-color:var(--new); background:#f9f5fe;}
+  .callout b{color:var(--ink);}
+
+  .diag{background:#fbfdfe; border:1px solid var(--line); border-radius:10px; padding:12px 10px; margin:13px 0; overflow-x:auto;}
+  .diag svg{display:block; max-width:100%; height:auto; margin:0 auto;}
+
+  .scope{display:grid; grid-template-columns:1fr 1fr; gap:15px; margin:12px 0;}
+  .scope .box{border:1px solid var(--line); border-radius:10px; padding:13px 15px; background:#fbfdfe;}
+  .scope .box h4{margin:0 0 7px;}
+  .scope .no{border-color:#f0dcd8; background:#fefaf9;}
+  .scope .no h4{color:var(--p0);}
+  .scope ul{margin:0; font-size:12.6px;}
+
+  footer{text-align:center; font-size:12px; color:var(--ink3); padding:18px 0 0;}
+  @media print{
+    body{background:#fff; padding:0;}
+    section,.toc{break-inside:auto; border:none; padding:0; margin-bottom:24px;}
+    .cover{border-radius:0;}
+    .tblwrap{break-inside:avoid;}
+  }
+  @media (max-width:760px){ .scope{grid-template-columns:1fr;} .toc ol{columns:1;} }
+
+  .lb1{background:#eaf6ee; color:#1f6b3f; border:1px solid #cbe7d5;}
+  .lb2{background:#eef4fb; color:#1f4e79; border:1px solid #d5e3f2;}
+  .lbn{background:#f2f3f5; color:#8a97a3; border:1px solid #e2e6ea;}
+  .pnA{background:#fdeeec; color:#a93226; border:1px solid #f3cdc7;}
+  .pnD{background:#eef2f6; color:#5a6b7b; border:1px solid #dfe6ed;}
+  td.per{white-space:nowrap; font-size:11.6px; color:#1f4e79;}
+  tr td.grp, td.grp{background:#f4f7fa; font-weight:700; color:#1f4e79; font-size:12.4px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="cover">
+  <div class="kicker">Product Requirements Document · Lanchao Energy IoT</div>
+  <h1>微能量采集 PIR + 24GHz 双鉴存在传感器<br>产品需求文档（PRD）</h1>
+  <div class="sub">PIR 门控雷达 · 三通道事件出口（本地广播 / 父节点 / 云端）· 触发角 120° / 保持角 150° · 微能量与 USB 双供能 · 光照四用途</div>
+  <div class="meta">
+    <span class="v">版本 v2.0</span>
+    <span>2026-11-18</span>
+    <span>状态：评审稿</span>
+    <span>工程代号 PIR24-H</span>
+    <span>事件总数 54</span>
+    <span>属性 40 / 服务 11</span>
+  </div>
+</div>
+
+<div class="toc">
+  <h2 id="toc">目录</h2>
+  <ol>
+    <li><a href="#s1">产品概述与双形态定位</a></li>
+    <li><a href="#s2">目标场景与用户价值</a></li>
+    <li><a href="#s3">产品形态、硬件与外观</a></li>
+    <li><a href="#s4">系统架构与组网上联路径</a></li>
+    <li><a href="#s5">功能需求（FR）</a></li>
+    <li><a href="#s6">物模型：属性、事件、服务</a></li>
+    <li><a href="#s7"><b>事件定义与上报配置体系</b></a></li>
+    <li><a href="#s8">性能指标与验收方法（含定义）</a></li>
+    <li><a href="#s9">能量预算与续航模型</a></li>
+    <li><a href="#s10">双鉴融合逻辑与雷达时序</a></li>
+    <li><a href="#s11">安装工艺、扫码录入与效率</a></li>
+    <li><a href="#s12">可靠性、合规与隐私</a></li>
+    <li><a href="#s13">测试与验收计划</a></li>
+    <li><a href="#s14">项目计划、风险与待决事项</a></li>
+    <li><a href="#s15">附录</a></li>
+  </ol>
+</div>
+
+<!-- ============ 1 ============ -->
+<section>
+  <h2 id="s1">一、产品概述与双形态定位</h2>
+  <p class="h2note">一句话定义：撕开背胶一贴即用、不接线不换电、坐在工位不动也不会关灯的存在传感器；完全无光的位置插一根 USB 就能获得更强性能。</p>
+
+  <h3>1.1 背景与要解决的问题</h3>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:180px">现有方案</th><th style="width:240px">致命缺陷</th><th>现场表现</th></tr></thead>
+      <tbody>
+        <tr><td>纯 PIR 人体感应</td><td>只对<b>移动</b>热源响应，静止即判无人</td><td>办公位静坐 5 分钟灯就灭；被迫把延时调到 20–30 min，节能率回落到 30% 以下</td></tr>
+        <tr><td>纯 24G 雷达</td><td>对金属摆动、管道、穿墙敏感；常驻工作耗电高</td><td>卷帘门、管道、窗帘导致"无人常亮"；电池型产品几个月没电</td></tr>
+        <tr><td>市电/电池型存在传感器</td><td>需布线或 1–2 年换电池</td><td>改造布线成本高于设备本身；万级点位无法规模化运维</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><strong>本产品解法：</strong>PIR 做门控与主发现通道，雷达只在 PIR 静默后才启动做"静止保持"确认；能量管理 IC 统一管理光伏 / 超容 / 电池三源；3M 胶贴与镭雕扫码解决施工速度；USB 作为第二形态覆盖完全无光场景。</p>
+
+  <h3>1.2 双形态定位</h3>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:110px">形态</th><th style="width:200px">供能方式</th><th style="width:200px">适用场景</th><th>能力差异</th></tr></thead>
+      <tbody>
+        <tr><td><strong>形态 A<br>微能量</strong></td><td>光伏 + 50F 超容 + 400 mAh 电池兜底，三源由能量管理 IC 统一管理</td><td>办公、走廊、卫生间、会议室、靠窗区域——常态照度 ≥30 lux</td><td>标准性能：雷达延迟确认 <b>60 s 起步</b>，能量不足可延长；受 5 级能量策略约束</td></tr>
+        <tr class="rn"><td><strong>形态 B<br>USB 外供</strong></td><td>USB 5 V 直供超容与升降压芯片，超容保持满电，电池不消耗</td><td><b>地库深处、密闭机房、设备间、无窗库房</b>——照度长期 &lt;10 lux</td><td><span class="tag tok">外供电高性能模式</span>：雷达延迟可缩至 15–30 s、灵敏度可上调、无低电降级、全量上报</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>1.3 产品边界</h3>
+  <div class="scope">
+    <div class="box">
+      <h4>本产品做（In Scope）</h4>
+      <ul>
+        <li>PIR 门控 + 24G 延迟确认的双鉴存在检测</li>
+        <li>微能量与 USB 双供能，自动识别切换</li>
+        <li>光照四用途：联动 / 安装质检 / 免开灯 / <b>灯具故障辅助判断</b></li>
+        <li>56 条事件的全量定义与上报策略配置</li>
+        <li>2.4G 纯叶子终端，经 L2 CCO → L1 CCO 上联</li>
+        <li>3M 胶贴随手贴；镭雕设备码 + App 位置录入</li>
+        <li>硬件单刀开关（运输模式 + 手动复位）</li>
+        <li>无孔化外观</li>
+      </ul>
+    </div>
+    <div class="box no">
+      <h4>本产品不做（Out of Scope）</h4>
+      <ul>
+        <li>不做摄像头、音频采集、身份识别</li>
+        <li>雷达不做独立触发源，只在 PIR 之后启动</li>
+        <li>不做低频保底扫描（已按方案 1 定案）</li>
+        <li>不做中继/路由；不做 Sub-G、不做 PLC</li>
+        <li>不做独立网关</li>
+        <li>不做距离分档 / 多人计数（转预留）</li>
+        <li>不做室外、雨淋；不做粗糙易脱落墙面</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2 ============ -->
+<section>
+  <h2 id="s2">二、目标场景与用户价值</h2>
+
+  <h3>2.1 目标客户与角色</h3>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:160px">角色</th><th style="width:200px">核心诉求</th><th>成功判据</th></tr></thead>
+      <tbody>
+        <tr><td>物业公司（付费方）</td><td>电费下降、投诉不上升、不用管电池</td><td>照明能耗降 60%+，地库 85%+；年度零维护工单</td></tr>
+        <tr><td>场内售电方</td><td>可量化节能收益</td><td>能耗大屏按点位/分区出节能率，可用于结算</td></tr>
+        <tr><td>工程安装商</td><td>装得快、录入不麻烦</td><td>单人单日 &gt;400 点位（含拨开关与扫码）；扫码一次成功</td></tr>
+        <tr><td>系统集成/运维</td><td>远程可控；点位可追溯；<b>灯具故障可被发现</b></td><td>90% 异常远程可判；可按点位/群组调整上报策略；开灯无响应可自动上报</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>2.2 典型场景与形态选择</h3>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:105px">场景</th><th style="width:85px">推荐形态</th><th style="width:125px">推荐姿态</th><th style="width:85px">无人延时</th><th>特殊约束</th></tr></thead>
+      <tbody>
+        <tr><td>开放办公区</td><td>微能量</td><td>顶装 / 斜装</td><td>15 min</td><td>必须检出静坐；避开空调出风口</td></tr>
+        <tr class="rn"><td>地下车库</td><td><b>USB 外供</b></td><td>顶装 / 倒装</td><td>3 min</td><td>建议就近取 5 V；取电困难点位退化为微能量+电池</td></tr>
+        <tr><td>走廊 / 楼梯间</td><td>微能量</td><td>斜装（2.0–2.4 m）</td><td>30 s</td><td>重不漏检；白天照度足可启用免开灯</td></tr>
+        <tr><td>卫生间</td><td>微能量</td><td>顶装 / 斜装</td><td>60 s</td><td>隔间遮挡，PIR 视线受阻</td></tr>
+        <tr><td>会议室</td><td>微能量</td><td>顶装</td><td>5 min</td><td>幕布摆动、长时间静坐</td></tr>
+        <tr class="rn"><td>设备机房 / 密闭库房</td><td><b>USB 外供</b></td><td>斜装（门内侧）</td><td>2 min</td><td>完全无光，微能量不可行</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="h2note" style="margin-left:0"><b>形态判据：</b>常态照度 ≥30 lux → 微能量；&lt;10 lux 且能就近取 5 V → USB；两者都不满足 → 微能量 + 接受电池更换周期，或改方案。</p>
+</section>
+
+<!-- ============ 3 ============ -->
+<section>
+  <h2 id="s3">三、产品形态、硬件与外观</h2>
+
+  <h3>3.1 硬件架构：能量管理 IC 统一管理三源</h3>
+  <div class="diag">
+  <svg viewBox="0 0 1060 430" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,Microsoft YaHei,sans-serif">
+    <defs>
+      <marker id="p1" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto">
+        <path d="M0,0 L7,3.2 L0,6.4 Z" fill="#7d8b99"></path>
+      </marker>
+      <marker id="p2" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto">
+        <path d="M0,0 L7,3.2 L0,6.4 Z" fill="#c47f0a"></path>
+      </marker>
+      <marker id="p3" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto">
+        <path d="M0,0 L7,3.2 L0,6.4 Z" fill="#7a4bb5"></path>
+      </marker>
+      <marker id="p4" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto">
+        <path d="M0,0 L7,3.2 L0,6.4 Z" fill="#c0392b"></path>
+      </marker>
+    </defs>
+
+    <!-- 左列三源 -->
+    <rect x="16" y="28" width="148" height="52" rx="8" fill="#fff8e8" stroke="#c47f0a" stroke-width="1.4"></rect>
+    <text x="90" y="48" text-anchor="middle" font-size="12.2" font-weight="600" fill="#8a5a06">室内光伏</text>
+    <text x="90" y="66" text-anchor="middle" font-size="10.3" fill="#7d8b99">50 lux → 30 µA @3.3–3.7 V</text>
+
+    <rect x="16" y="106" width="148" height="52" rx="8" fill="#fff8e8" stroke="#c47f0a" stroke-width="1.5"></rect>
+    <text x="90" y="126" text-anchor="middle" font-size="12.2" font-weight="600" fill="#8a5a06">锂超容 50 F</text>
+    <text x="90" y="144" text-anchor="middle" font-size="10.3" fill="#7d8b99">漏电 2 µA · 预充 3.5 V</text>
+
+    <rect x="16" y="184" width="148" height="52" rx="8" fill="#eaf6ee" stroke="#2e8b57" stroke-width="1.5"></rect>
+    <text x="90" y="204" text-anchor="middle" font-size="12.2" font-weight="600" fill="#1f6b3f">400 mAh 电池</text>
+    <text x="90" y="222" text-anchor="middle" font-size="10.3" fill="#7d8b99">&lt;2.6 V 切入</text>
+
+    <!-- 能量管理 IC 大框 -->
+    <rect x="212" y="20" width="196" height="232" rx="10" fill="#fdf6e8" stroke="#c47f0a" stroke-width="1.8"></rect>
+    <text x="310" y="44" text-anchor="middle" font-size="12.5" font-weight="700" fill="#8a5a06">能量管理 IC</text>
+    <text x="310" y="62" text-anchor="middle" font-size="10.3" fill="#4a5b6b">（第三方，暂不用自研 GS4001）</text>
+    <line x1="228" y1="72" x2="392" y2="72" stroke="#e5d5b8" stroke-width="1"></line>
+    <text x="230" y="92" font-size="10.6" fill="#4a5b6b">· 光伏 MPPT 与冷启动</text>
+    <text x="230" y="112" font-size="10.6" fill="#4a5b6b">· 超容充电 / 保护 / 2.6 V 门槛</text>
+    <text x="230" y="132" font-size="10.6" fill="#4a5b6b">· 电池切入 / 低压补充</text>
+    <text x="230" y="152" font-size="10.6" fill="#4a5b6b">· SOC 估算与健康度</text>
+    <line x1="228" y1="164" x2="392" y2="164" stroke="#e5d5b8" stroke-width="1"></line>
+    <text x="230" y="184" font-size="10.6" fill="#c0392b" font-weight="600">静态电流约 300 nA</text>
+    <text x="230" y="204" font-size="10.6" fill="#7d8b99">三源统一管理后单路输出</text>
+    <text x="230" y="224" font-size="10.6" fill="#7d8b99">（开关即切此输出）</text>
+
+    <!-- 开关 -->
+    <rect x="440" y="106" width="66" height="34" rx="6" fill="#fdeeec" stroke="#c0392b" stroke-width="1.6"></rect>
+    <text x="473" y="119" text-anchor="middle" font-size="10.4" fill="#c0392b" font-weight="700">SW1</text>
+    <text x="473" y="133" text-anchor="middle" font-size="9.4" fill="#c0392b">单刀开关</text>
+
+    <!-- 升降压 -->
+    <rect x="542" y="94" width="150" height="58" rx="8" fill="#eef4fb" stroke="#0b6bcb" stroke-width="1.6"></rect>
+    <text x="617" y="116" text-anchor="middle" font-size="12.2" font-weight="600" fill="#1f4e79">Buck-Boost</text>
+    <text x="617" y="133" text-anchor="middle" font-size="10.3" fill="#4a5b6b">2.5–5 V → 3.3 V</text>
+
+    <!-- MCU -->
+    <rect x="542" y="190" width="150" height="56" rx="8" fill="#eef4fb" stroke="#0b6bcb" stroke-width="1.6"></rect>
+    <text x="617" y="212" text-anchor="middle" font-size="12.2" font-weight="600" fill="#1f4e79">TLSR8258</text>
+    <text x="617" y="229" text-anchor="middle" font-size="10.3" fill="#4a5b6b">MCU + 2.4G BLE</text>
+
+    <!-- USB -->
+    <rect x="16" y="272" width="148" height="52" rx="8" fill="#f4eefb" stroke="#7a4bb5" stroke-width="1.6"></rect>
+    <text x="90" y="292" text-anchor="middle" font-size="12.2" font-weight="600" fill="#5b2f96">USB 供电口</text>
+    <text x="90" y="310" text-anchor="middle" font-size="10.3" fill="#7d8b99">5 V · 限流 ≤300 mA</text>
+
+    <!-- 传感器 -->
+    <rect x="736" y="28" width="180" height="54" rx="8" fill="#fffbee" stroke="#c47f0a" stroke-width="1.6"></rect>
+    <text x="826" y="48" text-anchor="middle" font-size="12.2" font-weight="600" fill="#8a5a06">PIR 通道 120°</text>
+    <text x="826" y="66" text-anchor="middle" font-size="10.2" fill="#c0392b">常开 · 门控源 · 单点依赖</text>
+
+    <rect x="736" y="98" width="180" height="54" rx="8" fill="#eef4fb" stroke="#3f8fc4" stroke-width="1.4"></rect>
+    <text x="826" y="118" text-anchor="middle" font-size="12.2" font-weight="600" fill="#1f4e79">24G 雷达 150°</text>
+    <text x="826" y="136" text-anchor="middle" font-size="10.2" fill="#7d8b99">T_scan ≤5 s · 被延迟确认门控</text>
+
+    <rect x="736" y="168" width="180" height="54" rx="8" fill="#f4fbf6" stroke="#2e8b57" stroke-width="1.5"></rect>
+    <text x="826" y="188" text-anchor="middle" font-size="12.2" font-weight="600" fill="#1f6b3f">光照通道</text>
+    <text x="826" y="206" text-anchor="middle" font-size="10.2" fill="#7d8b99">全型号标配 · 四用途</text>
+
+    <rect x="736" y="238" width="180" height="54" rx="8" fill="#f7f8fa" stroke="#b9c6d3" stroke-width="1.3" stroke-dasharray="5,4"></rect>
+    <text x="826" y="258" text-anchor="middle" font-size="11.8" font-weight="600" fill="#4a5b6b">3M 胶贴 + 无孔外观</text>
+    <text x="826" y="276" text-anchor="middle" font-size="10.2" fill="#7d8b99">顶装 / 侧装 / 斜装</text>
+
+    <!-- 连线：三源 → EMIC -->
+    <path d="M164,54 L212,54" stroke="#c47f0a" stroke-width="1.6" marker-end="url(#p2)"></path>
+    <path d="M164,132 L212,132" stroke="#c47f0a" stroke-width="1.6" marker-end="url(#p2)"></path>
+    <path d="M164,210 L212,210" stroke="#2e8b57" stroke-width="1.6" marker-end="url(#p2)"></path>
+    <text x="166" y="122" font-size="9.6" fill="#8a5a06">充放</text>
+
+    <!-- EMIC → SW → BuckBoost -->
+    <path d="M408,124 L440,124" stroke="#c47f0a" stroke-width="1.8" marker-end="url(#p2)"></path>
+    <path d="M506,124 L542,124" stroke="#c0392b" stroke-width="1.8" marker-end="url(#p4)"></path>
+    <text x="512" y="117" font-size="9.4" fill="#c0392b">系统供电</text>
+
+    <!-- USB → 超容（充电） -->
+    <path d="M164,292 C186,292 186,180 164,164" stroke="#7a4bb5" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#p3)"></path>
+    <text x="188" y="272" font-size="9.6" fill="#5b2f96">直充超容</text>
+
+    <!-- USB → BuckBoost（旁路开关） -->
+    <path d="M164,306 C330,306 420,240 542,150" stroke="#7a4bb5" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#p3)"></path>
+    <text x="300" y="330" font-size="9.8" fill="#5b2f96" font-weight="600">USB 直供（绕过开关，运输模式下插 USB 仍可工作）</text>
+
+    <!-- BuckBoost → MCU -->
+    <path d="M617,152 L617,190" stroke="#0b6bcb" stroke-width="1.5" marker-end="url(#p1)"></path>
+
+    <!-- MCU → 传感器 -->
+    <path d="M692,206 C714,206 714,60 736,55" stroke="#7d8b99" stroke-width="1.3" marker-end="url(#p1)"></path>
+    <path d="M692,218 C714,218 714,125 736,125" stroke="#7d8b99" stroke-width="1.3" marker-end="url(#p1)"></path>
+    <path d="M692,232 C714,232 714,195 736,195" stroke="#7d8b99" stroke-width="1.3" marker-end="url(#p1)"></path>
+  </svg>
+  </div>
+
+  <h3>3.2 供能路径拆解</h3>
+  <p>三条路径的角色必须分清，否则会误判"开关断开后设备应该完全不工作"。</p>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:130px">路径</th><th style="width:280px">走向</th><th>关键特性</th></tr></thead>
+      <tbody>
+        <tr class="rn"><td><b>主能量路径</b></td><td>光伏 / 超容 / 电池 → <b>能量管理 IC</b>（三源统一管理）→ SW1 单刀开关 → Buck-Boost → 系统</td><td>三源由一个 IC 统一调度，输出单路；<b>开关就切在这一路上</b></td></tr>
+        <tr class="rn"><td><b>USB 充电路径</b></td><td>USB → 锂超容（直充，不经 IC）</td><td>现场补电与产线预充走这条，速度快、不受 IC 充电逻辑限制</td></tr>
+        <tr class="rn"><td><b>USB 直供路径</b></td><td>USB → Buck-Boost → 系统（<b>绕过 SW1</b>）</td><td><b>运输模式（开关 OFF）下插 USB 设备仍能工作</b>——产线可在已拨 OFF 状态完成身份写入与测试</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout ok">
+    <b>USB 旁路这个设计很实用。</b>如果 USB 也要经过开关，产线就得"拨 ON 写入 → 拨 OFF 包装"，多一道动作且容易漏拨。现在可以在"已进入运输模式"的状态下直接插 USB 完成写入、校验、测试，最后拔线包装——<b>漏拨风险大幅降低</b>。
+  </div>
+
+  <h3>3.3 两种供能形态的行为差异</h3>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:150px">项目</th><th style="width:235px">形态 A 微能量</th><th>形态 B USB 外供</th></tr></thead>
+      <tbody>
+        <tr class="rn"><td><b>雷达延迟确认</b><br><code>T_radar_delay</code></td><td><b>60 s 起步</b>（能量不足延长至 120 / 300 s）</td><td>可缩至 <b>15–30 s</b></td></tr>
+        <tr><td>雷达单次扫描</td><td colspan="2">T_scan ≤5 s，典型 2 s（由模组实测标定写入固件，两形态相同）</td></tr>
+        <tr class="rn"><td><b>雷达占空比</b></td><td>2 s ÷ 60 s ≈ <b>3.3%</b>（且 PIR 活跃时长为 0）</td><td>2 s ÷ 15 s ≈ 13%</td></tr>
+        <tr><td>微动灵敏度</td><td>默认档</td><td><b>可上调 1 档</b></td></tr>
+        <tr><td>事件上报</td><td>受 5 级能量策略约束，P2 可能被压缩</td><td>全量上报，不受限</td></tr>
+        <tr><td>电池寿命顾虑</td><td>存在（视照度）</td><td><b>无</b>，电池完全不消耗</td></tr>
+        <tr><td>充电中行为</td><td>—</td><td><b>边充边检，检测不中断</b></td></tr>
+        <tr><td>识别与切换</td><td colspan="2">自动识别 USB 插入/拔出，≤5 s 切换供能模式并上报 <code>powerSource</code>；切换过程检测不中断、不重启</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout ok">
+    <b>边充边检不影响充电速度。</b>USB 输入能力（5 V／≥500 mA，限流上限 300 mA）比检测负载高出三个数量级——检测工作电流是几十 µA 量级，占比不足 1%，可以忽略。<b>因此充电期间检测照常运行，雷达延迟确认参数不做任何临时调整，超容 2.5→3.5 V 仍 &lt;10 min 完成。</b><br>
+    唯一需要保留的保护是限流 ≤300 mA（防 USB 源过流）与防反灌；安装人员插线后会看到指示灯充电状态，检测功能同时在跑，属正常。
+  </div>
+
+  <h3>3.4 覆盖角：触发角 120° 与保持角 150°</h3>
+  <p>两个角度不是"重叠与不重叠"的关系，而是<b>两种不同的职责</b>：PIR 负责"发现人"（触发），雷达负责"记住人还在"（保持）。</p>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:150px">区域（以安装点垂线为 0°）</th><th style="width:130px">PIR 触发角<br>（全角 120°）</th><th style="width:120px">雷达保持角<br>（全角 150°）</th><th>实际能力</th></tr></thead>
+      <tbody>
+        <tr class="r0"><td><b>0°–60°（核心区）</b></td><td><span class="tag tok">可触发</span></td><td><span class="tag tok">可保持</span></td><td><b>完整双鉴</b>：能发现人，也能维持"有人"</td></tr>
+        <tr class="rn"><td><b>60°–75°（外环区）</b></td><td><span class="tag t0">不可触发</span></td><td><span class="tag tok">可保持</span></td><td><b>只能保持</b>：若人先在内圈被发现、再走到外环，雷达能继续维持；若人<b>只在外环且不动</b>，永远不会被发现</td></tr>
+        <tr><td>&gt;75°</td><td>不可触发</td><td>不可保持</td><td>无能力</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout new">
+    <b>这样理解就顺了：</b><br>
+    · <b>PIR 120° = 有效触发角</b>，它决定了"这个点位能发现多大范围的人"，是产品的<b>对外承诺值</b>；<br>
+    · <b>雷达 150° = 有效保持角</b>，它决定了"人被发现后能在多大范围内继续被维持"，是<b>体验增强值</b>；<br>
+    · 外环 60°–75° 的价值在于：人从内圈走过、转身到侧后方时，灯不会因为"走出 PIR 视野"而误灭——这是雷达宽角带来的实际收益；<br>
+    · 局限同样要讲清：<b>如果有人在侧后方一直静止不动，PIR 从未触发，系统就不会知道他在</b>。这不是缺陷，是 PIR 门控架构的必然取舍。
+  </div>
+  <p><b>对外表述规范：</b>规格书写"有效探测角 120°（触发）／维持角 150°（保持）"，不写"探测角 150°"。销售布点时按 120° 计算覆盖，外环作为容错余量而非设计余量。</p>
+
+  <h3>3.5 外观设计要求：无孔化与隐私观感</h3>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:40px">#</th><th style="width:180px">设计要求</th><th style="width:300px">具体做法</th><th>要避免的观感</th></tr></thead>
+      <tbody>
+        <tr class="rn"><td>1</td><td><b>整机无开孔</b></td><td>外壳与菲涅尔透镜一体化注塑；雷达天线内置透波盖板（PC/ABS，同色同材质）；无麦克风孔、无散热孔、无外露螺丝</td><td>"这里有收音/摄像元件"</td></tr>
+        <tr class="rn"><td>2</td><td><b>透镜不留同心圆</b></td><td>菲涅尔分区纹理做在<b>内侧</b>，外表面为均匀雾面或细皮纹</td><td>同心圆环极具"镜头"联想</td></tr>
+        <tr class="rn"><td>3</td><td><b>不出现拟眼造型</b></td><td>探测区做成整片半透明装饰环或整面窗口，不做小而圆的独立开孔</td><td>"两只眼睛"或"一只眼"</td></tr>
+        <tr class="rn"><td>4</td><td><b>无外露状态灯</b></td><td>LED 用隐藏导光柱（仅调试模式透光），量产出货状态完全不可见</td><td>红灯常亮＝"正在录制"</td></tr>
+        <tr><td>5</td><td>表面避免镜面</td><td>哑光、细皮纹或细磨砂</td><td>镜面反光像镜头镀膜</td></tr>
+        <tr><td>6</td><td>形态贴近"环境设施"</td><td>圆或方圆扁平盘（Φ90×32 mm 内），视觉接近烟感/温控；白、灰双色</td><td>"安防监控设备"</td></tr>
+        <tr class="rn"><td>7</td><td><b>USB 口与开关隐蔽</b></td><td>同置于底面凹槽、同色盖片遮蔽、与镭雕码同区</td><td>外露接口＝"可被改装"</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>3.6 关键硬件规格</h3>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:140px">项目</th><th style="width:315px">规格</th><th>备注 / 约束</th></tr></thead>
+      <tbody>
+        <tr><td>能量采集</td><td>室内弱光型光伏；50 lux 输出 30 µA @3.3–3.7 V（约 99–111 µW）</td><td>需 10–500 lux 全范围实测曲线</td></tr>
+        <tr class="rn"><td><b>能量管理 IC</b></td><td>第三方方案；<b>统一管理光伏 / 超容 / 电池三源</b>；静态电流约 <b>300 nA</b></td><td>暂不使用自研 GS4001；须支持 MPPT 冷启动 &lt;300 mV 与 3.5 V 超容曲线；保留二供</td></tr>
+        <tr><td>储能（主）</td><td>锂超容 50 F；保护 2.5 V；出厂预充 3.5 V；漏电 2 µA</td><td>可用能量约 150 J</td></tr>
+        <tr><td>储能（备）</td><td>400 mAh 锂锰纽扣电池，超容 &lt;2.6 V 切入</td><td>形态 B 下不消耗</td></tr>
+        <tr class="rn"><td><b>USB 供电</b></td><td>Type-C；<b>直充超容 + 直供 Buck-Boost（绕开关）</b>；限流 ≤300 mA；防反灌、ESD</td><td>插拔寿命 ≥500 次；同色防尘盖</td></tr>
+        <tr class="rn"><td><b>硬件单刀开关</b></td><td>SPST 滑动；<b>切断能量管理 IC 输出</b>；接触电阻 ≤100 mΩ；额定 ≥100 mA；镀金触点</td><td>切断后仅余超容漏电 2 µA + IC 静态 0.3 µA ≈ <b>2.3 µA</b>；寿命 ≥5000 次</td></tr>
+        <tr><td>电源变换</td><td>Buck-Boost，2.5–5 V 宽输入 → 3.3 V</td><td>需低 Iq，避免静态损耗吃掉预算</td></tr>
+        <tr><td>主控 / 通信</td><td>TLSR8258（MCU + 2.4G BLE 一体）</td><td>休眠 1–3 µA</td></tr>
+        <tr><td>PIR 通道</td><td>双元热释电 + 菲涅尔，<b>触发角 120°</b>，7×24 常开</td><td>单点依赖；自检须强化</td></tr>
+        <tr><td>24G 通道</td><td>24.0–24.25 GHz ISM，多普勒，含 I/Q，<b>保持角 ≥150°</b>；T_scan ≤5 s</td><td><b>选型红线：扫描期平均电流 ≤150 µA</b></td></tr>
+        <tr class="rn"><td>光照通道</td><td>0–2000 lux，±15%；<b>全型号标配，取消 -L 后缀</b></td><td>四用途：联动 / 安装质检 / 免开灯 / <b>灯具故障判断</b></td></tr>
+        <tr class="rn"><td><b>镭雕设备码</b></td><td>外壳镭雕二维码/DataMatrix：<code>modelCode</code> + <code>MAC</code> + <code>batch</code> + <code>mfgDate</code> + <code>hwVer</code></td><td>不可撕毁篡改；对比度与扫码成功率 ≥99.5%</td></tr>
+        <tr><td>结构与外观</td><td>3M 胶贴 + 卡扣/磁吸底座；Φ≈90 mm、厚 ≤32 mm、重 ≤100 g；整机无开孔</td><td>顶装/侧装/斜装；外观见 3.5</td></tr>
+        <tr><td>防护等级</td><td>IP30（室内）</td><td>USB 口与开关凹槽开盖状态不计入 IP 等级</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+<!-- ============ 4 ============ -->
+<section>
+  <h2 id="s4">四、系统架构与组网上联路径</h2>
+
+  <h3>4.1 上联路径</h3>
+  <div class="diag">
+  <svg viewBox="0 0 1020 160" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,Microsoft YaHei,sans-serif">
+    <defs>
+      <marker id="q1" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto">
+        <path d="M0,0 L7,3.2 L0,6.4 Z" fill="#7d8b99"></path>
+      </marker>
+    </defs>
+    <rect x="14" y="48" width="150" height="64" rx="9" fill="#f9f5fe" stroke="#7a4bb5" stroke-width="1.6"></rect>
+    <text x="89" y="70" text-anchor="middle" font-size="12.2" font-weight="600" fill="#5b2f96">本设备（≤8 台/父）</text>
+    <text x="89" y="88" text-anchor="middle" font-size="10.3" fill="#4a5b6b">HARVEST_LEAF</text>
+    <text x="89" y="103" text-anchor="middle" font-size="10.3" fill="#7d8b99">休眠终端 · 2.4G</text>
+
+    <rect x="200" y="48" width="168" height="64" rx="9" fill="#eef4fb" stroke="#0b6bcb" stroke-width="1.4"></rect>
+    <text x="284" y="70" text-anchor="middle" font-size="12.2" font-weight="600" fill="#1f4e79">L2 父节点</text>
+    <text x="284" y="88" text-anchor="middle" font-size="10.3" fill="#4a5b6b">叶子 / PCO / CCO</text>
+    <text x="284" y="103" text-anchor="middle" font-size="10.3" fill="#7d8b99">时隙编排 + 双向暂存</text>
+
+    <rect x="404" y="48" width="158" height="64" rx="9" fill="#eef4fb" stroke="#0b6bcb" stroke-width="1.5"></rect>
+    <text x="483" y="70" text-anchor="middle" font-size="12.2" font-weight="600" fill="#1f4e79">L2 CCO</text>
+    <text x="483" y="88" text-anchor="middle" font-size="10.3" fill="#4a5b6b">2.4G 子网汇聚</text>
+    <text x="483" y="103" text-anchor="middle" font-size="10.3" fill="#7d8b99">（必经）</text>
+
+    <rect x="598" y="48" width="158" height="64" rx="9" fill="#e8f0f8" stroke="#1f4e79" stroke-width="1.5"></rect>
+    <text x="677" y="70" text-anchor="middle" font-size="12.2" font-weight="600" fill="#153a5c">L1 CCO</text>
+    <text x="677" y="88" text-anchor="middle" font-size="10.3" fill="#4a5b6b">PLC + Sub-G 汇聚</text>
+    <text x="677" y="103" text-anchor="middle" font-size="10.3" fill="#7d8b99">跨层上联出口</text>
+
+    <rect x="792" y="48" width="180" height="64" rx="9" fill="#eaf6ee" stroke="#2e8b57" stroke-width="1.5"></rect>
+    <text x="882" y="70" text-anchor="middle" font-size="12.2" font-weight="600" fill="#1f6b3f">云平台</text>
+    <text x="882" y="88" text-anchor="middle" font-size="10.3" fill="#4a5b6b">设备管理 / 能耗大屏</text>
+    <text x="882" y="103" text-anchor="middle" font-size="10.3" fill="#7d8b99">白名单 / 上报策略</text>
+
+    <path d="M164,80 L200,80" stroke="#7d8b99" stroke-width="1.6" marker-end="url(#q1)"></path>
+    <path d="M368,80 L404,80" stroke="#7d8b99" stroke-width="1.6" marker-end="url(#q1)"></path>
+    <path d="M562,80 L598,80" stroke="#7d8b99" stroke-width="1.6" marker-end="url(#q1)"></path>
+    <path d="M756,80 L792,80" stroke="#7d8b99" stroke-width="1.6" marker-end="url(#q1)"></path>
+    <text x="284" y="30" text-anchor="middle" font-size="10.3" fill="#5b2f96">上行：事件 / 属性</text>
+    <text x="284" y="136" text-anchor="middle" font-size="10.3" fill="#0b6bcb">下行：配置 / 策略 / OTA（暂存后投递）</text>
+  </svg>
+  </div>
+
+  <h3>4.2 唤醒窗口与父节点时隙编排</h3>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:150px">机制</th><th style="width:250px">要求</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td>唤醒窗口长度</td><td>100–500 ms（暂定）</td><td>形态 B 可取上限提升下行成功率</td></tr>
+        <tr><td>唤醒时刻协商</td><td>节点与父节点协商基准时刻与周期</td><td>入网或参数变更时协商</td></tr>
+        <tr><td>时隙编排</td><td>父节点编排各子节点唤醒窗口；单父节点 ≤8 台</td><td>8×500 ms=4 s，相对 300 s 周期占 1.3%</td></tr>
+        <tr><td>窗口超时</td><td>无下行 → 立即继续休眠</td><td>不做无意义等待</td></tr>
+        <tr><td>交互维持</td><td>有下行或有上传 → 按交互需求维持</td><td>需约定最长维持上限</td></tr>
+        <tr><td>外部触发唤醒</td><td>仅 PIR 可随时唤醒；雷达不作为触发源</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="h2note" style="margin-left:0">8 台上限的代价：按办公 30 m²/台算，单父节点覆盖约 240 m²，2000 m² 楼层需 8–9 个父节点，需计入网络规划成本。</p>
+
+  <h3>4.3 三条硬约束</h3>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:40px">#</th><th style="width:210px">约束</th><th>原因与影响</th></tr></thead>
+      <tbody>
+        <tr class="r0"><td>1</td><td><strong>不可作为中继 / 路由节点</strong></td><td>中继需 7×24 常收，功耗 mA 级。误编为父节点会陷入"能量耗尽—重启—再被选为父"死循环。入网须带 <code>devClass=HARVEST_LEAF</code>、<code>canRelay=false</code></td></tr>
+        <tr class="r0"><td>2</td><td><strong>仅 2.4G，不接 PLC、不用 Sub-G</strong></td><td>无市电耦合无法做 PLC；统一 2.4G 单模</td></tr>
+        <tr class="r0"><td>3</td><td><strong>父节点必须缓存 OTA 包</strong></td><td>节点长期休眠无法维持长连接下载；资源不足走小分片+唤醒逐片下发</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>4.4 双向暂存与失败回退</h3>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:100px">方向</th><th style="width:230px">机制</th><th style="width:200px">溢出处理</th><th>节点侧配合</th></tr></thead>
+      <tbody>
+        <tr><td><strong>下行</strong></td><td>父节点为休眠子节点暂存下行报文，唤醒窗口内投递</td><td>溢出则上游返回失败，云侧重试</td><td>窗口内未收到即继续休眠</td></tr>
+        <tr class="rn"><td><strong>本地广播</strong></td><td><b>不经树形路径</b>：2.4G 泛洪组播直达同群组灯节点，TTL ≤4</td><td>超 TTL 自然丢弃；无确认则重播 2 次，仍无确认报 E606</td><td>灯侧按 <code>evtSeq</code> 去重后执行，并回短 ACK</td></tr>
+        <tr class="rn"><td><strong>上行</strong></td><td>父节点接收后暂存再转发，防父节点离线丢报文</td><td>超暂存深度则<b>通知发送失败</b>，节点写入事件缓存，下次唤醒重传</td><td>"未确认→本地缓存→重传"；缓存满时上报丢弃条数</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="h2note" style="margin-left:0">上行暂存比下行更重要：下行可重发，上行丢失是事件永久丢失。建议"父节点 ACK 后才删本地缓存"的两阶段语义。</p>
+</section>
+
+<!-- ============ 5 ============ -->
+<section>
+  <h2 id="s5">五、功能需求（FR）</h2>
+  <p class="h2note">P0 = 首发必须实现；P1 = 首发应实现；P2 = 规划项。紫色标记行为与事件体系直接相关的关键需求。</p>
+
+  <h3>5.1 FR-1xx 探测与双鉴融合</h3>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:70px">ID</th><th style="width:320px">需求描述</th><th style="width:46px">优先级</th><th>验收标准</th></tr></thead>
+      <tbody>
+        <tr class="r0"><td class="id">FR-101</td><td>移动人体检出，输出"有人进入"事件</td><td><span class="tag t0">P0</span></td><td>径向 0.5 m/s 穿越检出率 &gt;99%</td></tr>
+        <tr class="r0"><td class="id">FR-102</td><td>PIR 门控：PIR 常开，雷达在无人态完全关闭；雷达不作为触发源</td><td><span class="tag t0">P0</span></td><td>无人态雷达供电为 0</td></tr>
+        <tr class="r0"><td class="id">FR-103</td><td>PIR 直接翻转：触发即置"疑似有人"并立即上报</td><td><span class="tag t0">P0</span></td><td>触发到上报 ≤300 ms</td></tr>
+        <tr class="rn"><td class="id">FR-104</td><td><b>进入阶段</b>：PIR 触发 → 立即翻转 + 启动雷达扫描 → 在 <code>W_verify</code>（≥T_scan）内做 AND 校验；不匹配则回滚（E112）</td><td><span class="tag t0">P0</span></td><td>W_verify ≥ T_scan；慢响应不得误回滚</td></tr>
+        <tr class="rn"><td class="id">FR-105</td><td><b>保持阶段：雷达延迟确认机制</b>——有人态启动 <code>T_radar_delay</code> 计时器（默认 60 s）；<b>期间 PIR 每次触发即重置计时器</b>；计时器到期才启动雷达扫描</td><td><span class="tag t0">P0</span></td><td>PIR 活跃期间雷达启动次数为 0；PIR 静默满 60 s 后启动 1 次扫描</td></tr>
+        <tr class="rn"><td class="id">FR-106</td><td><b>延迟确认结果处理</b>：雷达检出目标 → 重置计时器维持"有人"；未检出 → 计入离开判决计数</td><td><span class="tag t0">P0</span></td><td>检出后计时器正确重置；未检出进入 N_leave 计数</td></tr>
+        <tr class="r0"><td class="id">FR-107</td><td>离开判决：连续 <code>N_leave</code> 次（2–8）雷达判无目标才翻转，单次不翻转；PIR 不参与</td><td><span class="tag t0">P0</span></td><td>单次判决翻转率 0%</td></tr>
+        <tr><td class="id">FR-108</td><td>无人确认延时 <code>T_leave</code> 可配 10 s–30 min</td><td><span class="tag t0">P0</span></td><td>误差 ≤±1 s；断电保持</td></tr>
+        <tr><td class="id">FR-110</td><td>微动检出（限已进入有人相关状态时）</td><td><span class="tag t1">P1</span></td><td>5 m 内微动检出率 ≥90%</td></tr>
+        <tr><td class="id">FR-111</td><td>活动强度分级输出（静/微动/走动）</td><td><span class="tag t1">P1</span></td><td>一致性 ≥85%</td></tr>
+        <tr class="r0"><td class="id">FR-112</td><td>PIR 失效处理：上报"双鉴不可用"（非降级单鉴）</td><td><span class="tag t0">P0</span></td><td>贴镜片/开路后 60 s 内上报 E205</td></tr>
+        <tr class="r0"><td class="id">FR-113</td><td>雷达失效处理：退化为纯 PIR 运行并上报降级</td><td><span class="tag t0">P0</span></td><td>屏蔽雷达后 60 s 内上报 E204</td></tr>
+        <tr><td class="id">FR-114</td><td>回滚率监测，超阈值告警</td><td><span class="tag t1">P1</span></td><td>24 h 回滚率 &gt;20% 触发告警</td></tr>
+        <tr><td class="id">FR-115</td><td>抖动自检：频繁翻转时上报异常</td><td><span class="tag t1">P1</span></td><td>对出风口安装，1 min 内翻转 ≥3 次即触发 E110</td></tr>
+        <tr class="rn"><td class="id">FR-116</td><td><b>延迟确认参数可配</b>：<code>T_radar_delay</code> 支持 15 / 30 / 60 / 120 / 300 s 五档，随能量等级自动调整</td><td><span class="tag t0">P0</span></td><td>五档均生效；低电档自动延长并回读确认</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>5.2 FR-6xx 光照通道四用途</h3>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:70px">ID</th><th style="width:320px">需求描述</th><th style="width:46px">优先级</th><th>验收标准</th></tr></thead>
+      <tbody>
+        <tr><td class="id">FR-601</td><td>用途一：照度联动开灯——仅"暗且有人"才下发开灯</td><td><span class="tag t0">P0</span></td><td>阈值 10–1000 lux 可配，20% 滞回</td></tr>
+        <tr><td class="id">FR-602</td><td>用途二：安装质量告警——照度长期不足时上报</td><td><span class="tag t0">P0</span></td><td>连续 48 h 日均低于门槛触发 E309</td></tr>
+        <tr><td class="id">FR-603</td><td>用途三：白天免开灯判定——照度高于阈值不输出开灯，但仍上报有人事件</td><td><span class="tag t0">P0</span></td><td>阈值可配；有人事件照常上报</td></tr>
+        <tr class="rn"><td class="id">FR-604</td><td><b>用途四：灯具故障辅助判断</b>——下发开灯后 <code>T_check</code> 内照度无预期上升 → 判定"开灯未生效"，上报 E605（疑似灯具故障或通信未生效）。<b>生效条件已放宽</b>：开灯前照度 &lt;300 lux 且下发亮度 ≥70% 档即可判定，不再限定"全亮"</td><td><span class="tag t1">P1</span></td><td>增量阈值自适应（取"预期增量 30%"与 20 lux 的较大值）；<b>连续 2 次开灯无效才上报</b>；T_check 默认 10 s</td></tr>
+        <tr><td class="id">FR-605</td><td>照度驱动检测降频：照度长期高于免开灯阈值时降低雷达频次以省电</td><td><span class="tag t1">P1</span></td><td>降频档可配可回读；降频后仍能检出</td></tr>
+        <tr><td class="id">FR-606</td><td>采光面遮蔽识别与照度数据上云（最小/最大/均值，±15%）</td><td><span class="tag t1">P1</span></td><td>遮挡 24 h 内触发 E310</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout new">
+    <b>第四用途的价值与边界必须同时讲清。</b>它能远程发现"灯坏了"或"开灯指令没送到"，把原本要靠人工巡检的事变成自动告警，对物业是实打实的减负。<br>
+    但它<b>只能判断"开灯没效果"，无法区分是灯具坏、驱动器坏、还是通信没到</b>——三种情况的处置方式完全不同。因此 E605 的定位是<b>"疑似故障、需人工复核"</b>，不是"确定故障"。要区分三者，还需结合灯具侧是否有回执：有回执且照度未升 → 灯具/驱动问题；无回执 → 通信问题。这个判断逻辑应放在云端做，不在设备端。
+  </div>
+
+  <h3>5.3 FR-2xx 能量管理</h3>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:70px">ID</th><th style="width:320px">需求描述</th><th style="width:46px">优先级</th><th>验收标准</th></tr></thead>
+      <tbody>
+        <tr class="r0"><td class="id">FR-201</td><td>室内照度 &gt;30 lux 时可完成入网</td><td><span class="tag t0">P0</span></td><td>前提：超容 ≥3 V</td></tr>
+        <tr class="r0"><td class="id">FR-202</td><td>SOC 估算误差 ≤±10%</td><td><span class="tag t0">P0</span></td><td>全区间实测对比</td></tr>
+        <tr class="r0"><td class="id">FR-203</td><td>5 级能量分级与自适应策略（形态 A）</td><td><span class="tag t0">P0</span></td><td>边界误差 ≤±3%；<b>任何档位不取消双鉴</b></td></tr>
+        <tr class="r0"><td class="id">FR-204</td><td>低电四维调节：<code>T_radar_delay</code>、心跳与聚合周期、上报方式、发射功率</td><td><span class="tag t0">P0</span></td><td>生效且可回读；低电时 <code>N_leave</code> 同步加大</td></tr>
+        <tr class="r0"><td class="id">FR-205</td><td>超容最低保护 2.5 V；低于该值停止对外供电</td><td><span class="tag t0">P0</span></td><td>放电至 2.5 V 输出关断；回升恢复</td></tr>
+        <tr><td class="id">FR-205b</td><td>超容欠压双档检测：2.7 V 预警 / 2.5 V 保护</td><td><span class="tag t0">P0</span></td><td>分别触发 E311；恢复后上报解除</td></tr>
+        <tr class="r0"><td class="id">FR-206</td><td>电池切入门限 2.6 V，带 0.1 V 滞回</td><td><span class="tag t0">P0</span></td><td>切入/退出稳定，不频繁启停</td></tr>
+        <tr><td class="id">FR-206b</td><td>备用电池六态监测：未接入 / 待机 / 供电中 / 低电 / 耗尽 / 异常</td><td><span class="tag t0">P0</span></td><td>六态均可判并可上报</td></tr>
+        <tr class="r0"><td class="id">FR-207</td><td>Last Gasp：掉电前强制上报末次状态</td><td><span class="tag t0">P0</span></td><td>100 次断电成功率 ≥95%</td></tr>
+        <tr><td class="id">FR-208</td><td>Last Gasp 能量硬性隔离</td><td><span class="tag t0">P0</span></td><td>预留区独立门限</td></tr>
+        <tr><td class="id">FR-209</td><td>USB 双用途：补电 + 长期供电；充电中维持检测</td><td><span class="tag t0">P0</span></td><td>补电 2.5→3.5 V &lt;10 min；插入后 ≤5 s 切换</td></tr>
+        <tr><td class="id">FR-210</td><td>形态自动识别与高性能模式</td><td><span class="tag t0">P0</span></td><td>形态 B 连续 72 h 无低电降级；拔电 ≤5 s 平滑回切</td></tr>
+        <tr><td class="id">FR-211</td><td>形态 B 下电池零消耗</td><td><span class="tag t0">P0</span></td><td>电池电压月降 ≤5 mV</td></tr>
+        <tr class="rn"><td class="id">FR-215</td><td><b>硬件单刀开关</b>：切断能量管理 IC 输出，支持运输模式与手动掉电复位</td><td><span class="tag t0">P0</span></td><td>开关 OFF 待机电流 ≤2.5 µA（超容 2 µA + IC 0.3 µA）</td></tr>
+        <tr class="rn"><td class="id">FR-216</td><td><b>上电原因识别</b>：开关拨通 / 看门狗 / 能量恢复 / 软复位 四态</td><td><span class="tag t0">P0</span></td><td><code>bootCause</code> 四态正确并随 E305 上报</td></tr>
+        <tr class="rn"><td class="id">FR-217</td><td><b>运输模式自放电控制</b>：开关 OFF 后除超容漏电与 IC 静态外无其他消耗</td><td><span class="tag t0">P0</span></td><td>6 个月库存电压降 &lt;1 V（实测约 0.72 V）</td></tr>
+        <tr><td class="id">FR-212</td><td>纯电池工况维持基本检测与保活</td><td><span class="tag t1">P1</span></td><td>完全无光、日均 ≤11 µA 下 ≥2 年</td></tr>
+        <tr><td class="id">FR-213</td><td>储能与电池健康度检测</td><td><span class="tag t1">P1</span></td><td>充电斜率异常或自放电过快触发 E307</td></tr>
+        <tr style="text-decoration-line:line-through"><td class="id">FR-214</td><td>能量不足时拒绝 OTA 安装</td><td><span class="tag t0">P0</span></td><td>返回明确拒绝码</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>5.4 FR-3xx 通信、组网与时间同步</h3>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:70px">ID</th><th style="width:320px">需求描述</th><th style="width:46px">优先级</th><th>验收标准</th></tr></thead>
+      <tbody>
+        <tr><td class="id">FR-301</td><td>扫镭雕码 + App 位置录入 + 白名单：扫码带出型号/MAC/批次 → App 录入四级位置 → 云端校验 → 放行</td><td><span class="tag t0">P0</span></td><td>扫码一次成功 ≥99.5%；录入+提交 ≤10 s</td></tr>
+        <tr><td class="id">FR-301b</td><td><b>App 位置记忆与序号自动递增</b>（支撑 400 点位/人日）</td><td><span class="tag t0">P0</span></td><td>同区域连续安装无需重选；单点位录入 ≤10 s</td></tr>
+        <tr class="r0"><td class="id">FR-302</td><td>入网携带 <code>devClass=HARVEST_LEAF</code>、<code>canRelay=false</code>、<code>maxHopDepth=3</code></td><td><span class="tag t0">P0</span></td><td>拓扑中永不为父节点</td></tr>
+        <tr class="r0"><td class="id">FR-303</td><td>唤醒窗口协商；父节点时隙编排；单父节点 ≤8 台</td><td><span class="tag t0">P0</span></td><td>8 台满载无碰撞（丢包 &lt;1%）</td></tr>
+        <tr><td class="id">FR-304</td><td>窗口超时即休眠；有交互按需维持</td><td><span class="tag t0">P0</span></td><td>超时后电流回落 ≤5 s</td></tr>
+        <tr><td class="id">FR-305</td><td>外部触发随时唤醒（仅 PIR）</td><td><span class="tag t0">P0</span></td><td>触发到发出上报 ≤1 s</td></tr>
+        <tr class="r0"><td class="id">FR-306</td><td>上行可靠投递：父节点 ACK 后才删本地缓存</td><td><span class="tag t0">P0</span></td><td>注入 500 次 ACK 丢失，事件零丢失</td></tr>
+        <tr class="r0"><td class="id">FR-307</td><td>按需校时：偏差 &lt;100 ms 不校；≥100 ms 触发，校后 &lt;20 ms</td><td><span class="tag t0">P0</span></td><td>90 ms 不触发、110 ms 触发</td></tr>
+        <tr><td class="id">FR-308</td><td>三时间戳模型：设备单调秒 / 校时还原 UTC / 云端接收时刻</td><td><span class="tag t0">P0</span></td><td>补报事件排序正确率 100%</td></tr>
+        <tr class="r0"><td class="id">FR-309</td><td><b>事件上报策略可配（三通道）</b>：每条事件可独立配置本地广播方式、本地重播次数、父节点上行方式、云端上报方式、聚合周期、条数上限、重传次数、启用状态</td><td><span class="tag t0">P0</span></td><td>54 条逐条可配；回读一致；硬约束不可突破</td></tr>
+        <tr class="rn"><td class="id">FR-309b</td><td><b>本地广播通道</b>：联动类事件走 2.4G 泛洪组播直达同群组灯节点（TTL ≤4），不等父节点、不等云；要求确认时等灯侧短 ACK，超时重播 2 次</td><td><span class="tag t0">P0</span></td><td>E101 触发到灯亮 ≤300 ms（4 跳内）；3 次无确认上报 E606</td></tr>
+        <tr class="rn"><td class="id">FR-309c</td><td><b>三条出口互不阻塞</b>：本地广播、父节点上行、云端上报各自独立调度，任一通道失败不得影响另两条</td><td><span class="tag t0">P0</span></td><td>注入父节点离线，本地广播仍正常；注入广播丢包，事件仍上云</td></tr>
+        <tr><td class="id">FR-310</td><td>离线事件缓存与补报，容量 <b>≥256 条</b>（环形，按时间戳淘汰最旧）</td><td><span class="tag t1">P1</span></td><td>断网 24 h 恢复后完整率 100%（日均 ≤300 条场景）</td></tr>
+        <tr><td class="id">FR-311</td><td>缓存溢出上报丢弃条数</td><td><span class="tag t1">P1</span></td><td>E508 正确上报 dropCnt</td></tr>
+        <tr><td class="id">FR-312</td><td>OTA：父节点缓存 + 小分片 + 断点续传 + 能量校验</td><td><span class="tag t1">P1</span></td><td>两条路径均成功；中断可续传</td></tr>
+        <tr><td class="id">FR-313</td><td>自动重连与父节点迁移</td><td><span class="tag t0">P0</span></td><td>父节点失联后 ≤3 min 重挂载</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>5.5 FR-4xx 本地策略与联动</h3>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:70px">ID</th><th style="width:320px">需求描述</th><th style="width:46px">优先级</th><th>验收标准</th></tr></thead>
+      <tbody>
+        <tr><td class="id">FR-401</td><td>本地策略引擎：时段 + 照度 + 存在状态组合规则，可离线执行</td><td><span class="tag t0">P0</span></td><td>断网仍生效；切换 ≤1 s</td></tr>
+        <tr class="r0"><td class="id">FR-402</td><td>最短点亮时间约束：回滚撤销不得立即关灯，遵循灯侧最短点亮（默认 10 s）</td><td><span class="tag t0">P0</span></td><td>回滚不产生可见闪灯</td></tr>
+        <tr><td class="id">FR-403</td><td>组 ID 槽位管理，多群组并发多策略</td><td><span class="tag t1">P1</span></td><td>槽位满配无丢失</td></tr>
+        <tr><td class="id">FR-404</td><td>本地实时联动：2.4G 泛洪组播，跳数 ≤4</td><td><span class="tag t1">P1</span></td><td>端到端 ≤500 ms</td></tr>
+        <tr class="rn"><td class="id">FR-405</td><td><b>开灯响应校验</b>：本地下发开灯后启动 T_check 计时，读取照度变化；无变化时上报 E605</td><td><span class="tag t1">P1</span></td><td>暗环境全亮场景下可检出；误报 ≤10%</td></tr>
+        <tr><td class="id">FR-406</td><td>断电恢复后策略时间补偿</td><td><span class="tag t1">P1</span></td><td>掉电 4 h 恢复后不误触发</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>5.6 FR-5xx 运维与诊断</h3>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:70px">ID</th><th style="width:320px">需求描述</th><th style="width:46px">优先级</th><th>验收标准</th></tr></thead>
+      <tbody>
+        <tr class="r0"><td class="id">FR-501</td><td>PIR 强化自检（单点依赖，频次提至 6 h）</td><td><span class="tag t0">P0</span></td><td>偏置电压、信号链、响应测试全覆盖</td></tr>
+        <tr><td class="id">FR-501b</td><td>PIR 疑似失效判据：采集正常 + 通信正常 + 连续 7 天零触发</td><td><span class="tag t0">P0</span></td><td>贴镜片 7 天可上报 E113</td></tr>
+        <tr><td class="id">FR-502</td><td>雷达通道自检</td><td><span class="tag t1">P1</span></td><td>本振/底噪/回波异常可判</td></tr>
+        <tr class="r0"><td class="id">FR-503</td><td>防拆与脱落检测</td><td><span class="tag t0">P0</span></td><td>拆卸/胶贴脱落 ≤5 s 上报 E407</td></tr>
+        <tr><td class="id">FR-504</td><td>探测窗遮挡识别</td><td><span class="tag t1">P1</span></td><td>遮挡 24 h 内上报 E408</td></tr>
+        <tr class="r0"><td class="id">FR-506</td><td>后台批量自检：入网后核查能量基线与通道功能，异常生成返工清单</td><td><span class="tag t0">P0</span></td><td>2 h 内出报告</td></tr>
+        <tr><td class="id">FR-507</td><td>安装前能量核查：上报超容电压，&lt;3 V 提示 USB 补电</td><td><span class="tag t0">P0</span></td><td>App 可见提示与指引</td></tr>
+        <tr><td class="id">FR-508</td><td>远程参数下发与回读校验</td><td><span class="tag t0">P0</span></td><td>成功率 ≥99.5%；非法值返回 E505</td></tr>
+        <tr><td class="id">FR-509</td><td>调试模式：限时开启（≤10 min 自动关）</td><td><span class="tag t1">P1</span></td><td>超时强制关闭</td></tr>
+        <tr><td class="id">FR-510</td><td>白名单管理：设备-位置-项目映射，冲突拒绝并告警</td><td><span class="tag t0">P0</span></td><td>伪造/错位绑定可拦截；变更留痕</td></tr>
+        <tr><td class="id">FR-511</td><td>本地蓝牙配置通道：手机 App 直连 BLE 修改参数，无需上云</td><td><span class="tag t0">P0</span></td><td>触发维护模式后可连；配置 ≤3 min</td></tr>
+        <tr class="rn"><td class="id">FR-512</td><td><b>本地配置云端人工确认</b>：本地配置生效后上报"待确认"，由授权人员确认后固化基线；72 h 未确认告警、7 天自动回退</td><td><span class="tag t0">P0</span></td><td>三态流转正确；回退前 24 h 通知</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+<!-- ============ 6 ============ -->
+<section>
+  <h2 id="s6">六、物模型：属性、事件、服务</h2>
+
+  <h3>6.1 三件套结构</h3>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:100px">类别</th><th style="width:90px">数量</th><th style="width:250px">要点</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td><strong>属性</strong></td><td><b>40</b></td><td>存在与探测 11 / 电源 14 / 光照 7 / 安装与网络 8</td><td>读写属性 3 个（<code>tRadarDelay</code>、<code>daylightMode</code>、<code>wWake</code>），其余只读</td></tr>
+        <tr><td><strong>事件</strong></td><td><b>54</b></td><td>六类：E1xx 存在 / E2xx 双鉴 / E3xx 能量 / E4xx 自检 / E5xx 运维 / E6xx 光照联动</td><td>逐条含定义与三通道配置，见第七章</td></tr>
+        <tr><td><strong>服务</strong></td><td><b>11</b></td><td>配置类 6 / 校准安装类 3 / 诊断与安防 2</td><td>见 6.3</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>6.2 属性清单（按分组，40 项）</h3>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:150px">属性</th><th style="width:88px">类型</th><th style="width:48px">读写</th><th style="width:70px">上报</th><th>取值与说明</th></tr></thead>
+      <tbody>
+        <tr><td colspan="5" style="background:#f4f7fa;font-weight:700;color:#1f4e79">存在与探测</td></tr>
+        <tr><td><code>presenceState</code></td><td>enum</td><td>R</td><td>变化+周期</td><td>0 无人 / 1 疑似有人 / 2 有人 / 3 微动</td></tr>
+        <tr><td><code>actLevel</code></td><td>uint8</td><td>R</td><td>变化</td><td>1 静 / 2 微动 / 3 走动</td></tr>
+        <tr><td><code>radarGate</code></td><td>enum</td><td>R</td><td>变化</td><td>雷达门控状态：关闭 / 待延迟确认 / 扫描中</td></tr>
+        <tr><td><code>rollbackCnt</code></td><td>uint16</td><td>R</td><td>周期</td><td>累计进入回滚次数</td></tr>
+        <tr class="rn"><td><code>tRadarDelay</code></td><td>uint16</td><td>RW</td><td>变化</td><td>雷达延迟确认时间（s），15/30/60/120/300 五档</td></tr>
+        <tr><td><code>tScan</code></td><td>uint16</td><td>R</td><td>周期</td><td>雷达实测单次扫描时长（ms），模组标定值</td></tr>
+        <tr><td><code>wVerify</code> / <code>nLeave</code> / <code>tLeave</code></td><td>uint16/8/16</td><td>RW</td><td>变化</td><td>校验窗口 / 离开判决次数 / 无人确认延时</td></tr>
+        <tr><td><code>pirSens</code> / <code>radarSens</code></td><td>uint8</td><td>RW</td><td>变化</td><td>灵敏度档位 1–5</td></tr>
+
+        <tr><td colspan="5" style="background:#f4f7fa;font-weight:700;color:#1f4e79">能量与电源</td></tr>
+        <tr><td><code>powerSource</code></td><td>enum</td><td>R</td><td>变化</td><td>HARVEST / USB_CHARGING / USB_ONLINE</td></tr>
+        <tr><td><code>energyLevel</code></td><td>uint8</td><td>R</td><td>变化</td><td>5 级能量档位 L1–L5</td></tr>
+        <tr><td><code>soc</code> / <code>vcap</code> / <code>pHarvest</code></td><td>uint8/16/16</td><td>R</td><td>变化/周期</td><td>荷电 % / 超容电压 mV / 采集功率 µW</td></tr>
+        <tr><td><code>capUv</code></td><td>enum</td><td>R</td><td>变化</td><td>NORMAL ≥2.7 V / WARN 2.5–2.7 V / UV_PROTECT &lt;2.5 V</td></tr>
+        <tr><td><code>capHealth</code> / <code>batHealth</code></td><td>uint8</td><td>R</td><td>周期</td><td>超容 / 电池健康度 0–100</td></tr>
+        <tr><td><code>batStatus</code></td><td>enum</td><td>R</td><td>变化</td><td>未接入 / 待机 / 供电中 / 低电 / 耗尽 / 异常</td></tr>
+        <tr><td><code>vbat</code> / <code>batLife</code> / <code>batIn</code></td><td>16/8/bool</td><td>R</td><td>周期/变化</td><td>电池电压 mV / 剩余寿命月 / 是否切入</td></tr>
+        <tr><td><code>protState</code></td><td>bitmap</td><td>R</td><td>变化</td><td>保护状态位：欠压 / 电池耗尽 / 过流 / 过温</td></tr>
+        <tr class="rn"><td><code>bootCause</code></td><td>enum</td><td>R</td><td>上电时</td><td>POWER_SWITCH_ON / WATCHDOG / POWER_RECOVER / SOFT_RESET</td></tr>
+        <tr class="rn"><td><code>factoryId</code></td><td>string</td><td>R</td><td>上电时</td><td>产线写入的身份信息（只读），用于三重一致性比对</td></tr>
+        <tr class="rn"><td><code>swState</code></td><td>bool</td><td>R</td><td>上电时</td><td>开关状态回读（仅 ON 时有意义）</td></tr>
+
+        <tr><td colspan="5" style="background:#f4f7fa;font-weight:700;color:#1f4e79">光照</td></tr>
+        <tr><td><code>lux</code> / <code>luxAvgDay</code></td><td>uint16</td><td>R</td><td>变化/周期</td><td>当前照度（最小/最大/均值）/ 日均照度</td></tr>
+        <tr><td><code>daylightMode</code></td><td>enum</td><td>RW</td><td>变化</td><td>OFF / 免开灯 / 降频</td></tr>
+        <tr class="rn"><td><code>luxDelta</code></td><td>int16</td><td>R</td><td>校验时</td><td>开灯响应校验的照度变化量（lux）</td></tr>
+        <tr class="rn"><td><code>lightFaultCnt</code></td><td>uint16</td><td>R</td><td>周期</td><td>累计"开灯无响应"判定次数</td></tr>
+
+        <tr><td colspan="5" style="background:#f4f7fa;font-weight:700;color:#1f4e79">安装、身份与通信</td></tr>
+        <tr><td><code>mountMode</code> / <code>tiltDeg</code></td><td>enum/int8</td><td>RW</td><td>变化</td><td>顶装 / 侧装 / 斜装，及倾角</td></tr>
+        <tr><td><code>locCode</code> / <code>whitelistState</code></td><td>string/enum</td><td>RW</td><td>变化</td><td>App 录入的四级位置码 / 白名单状态</td></tr>
+        <tr><td><code>wWake</code></td><td>uint16</td><td>RW</td><td>变化</td><td>唤醒窗口 ms（100–500）</td></tr>
+        <tr><td><code>reportCycle</code> / <code>reportBatchMax</code></td><td>enum/8</td><td>RW</td><td>变化</td><td>聚合周期 / 单次条数上限</td></tr>
+        <tr><td><code>clockSkew</code></td><td>int16</td><td>R</td><td>每次校时</td><td>本次校时修正量 ms</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>6.3 服务清单（11 项）</h3>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:160px">服务</th><th style="width:46px">优先级</th><th>入参 / 出参</th></tr></thead>
+      <tbody>
+        <tr class="rn"><td><code>checkLightResponse</code></td><td><span class="tag t1">P1</span></td><td>入：T_check、期望照度增量；出：实测 luxDelta、判定结果</td></tr>
+        <tr class="rn"><td><code>setReportPolicy</code></td><td><span class="tag t0">P0</span></td><td>入：事件 ID 列表 + <b>三通道参数</b>（本地广播开关与是否需灯确认、本地重播次数、父节点上行方式、云端上报方式、聚合周期、条数上限、重传次数、启用状态）或模板 ID；出：逐条生效确认含"实际执行值"</td></tr>
+        <tr><td><code>enterMaintenance</code></td><td><span class="tag t0">P0</span></td><td>入：时长（≤30 min）、鉴权码；出：长唤醒窗口开启确认</td></tr>
+        <tr><td><code>bindLocation</code></td><td><span class="tag t0">P0</span></td><td>入：镭雕码（型号+MAC+批次+日期+hwVer）、四级位置、姿态、倾角；出：白名单校验结果</td></tr>
+        <tr><td><code>startCalibration</code></td><td><span class="tag t0">P0</span></td><td>入：通道、时长；出：标定结果码</td></tr>
+        <tr><td><code>setMountMode</code></td><td><span class="tag t0">P0</span></td><td>入：姿态、倾角；出：生效确认</td></tr>
+        <tr><td><code>setFusionParams</code></td><td><span class="tag t0">P0</span></td><td>入：<code>wVerify</code>、<code>tRadarDelay</code>、<code>nLeave</code>、<code>tLeave</code></td></tr>
+        <tr><td><code>setWakePlan</code></td><td><span class="tag t0">P0</span></td><td>入：唤醒窗口、周期、基准时刻</td></tr>
+        <tr><td><code>setDaylightPolicy</code></td><td><span class="tag t1">P1</span></td><td>入：免开灯阈值、降频档、滞回、开灯校验阈值</td></tr>
+        <tr><td><code>armSecurity</code></td><td><span class="tag t1">P1</span></td><td>入：布防状态、时段、滞留阈值</td></tr>
+        <tr><td><code>readDiagSnapshot</code></td><td><span class="tag t1">P1</span></td><td>入：无；出：通道/电源/照度/最近 8 条事件/回滚次数/当前策略摘要</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============ 7 ============ -->
+<section>
+  <h2 id="s7">七、事件定义与上报配置体系</h2>
+  <p class="h2note">本章是全文档的核心依据：54 条事件逐条给出<b>定义</b>（触发条件 + 含义），并把事件出口拆成<b>三条独立通道</b>——本地广播、父节点上行、云端上报——分别规定默认方式、周期与可禁用性。研发可直接按此实现，测试可直接按此验收。</p>
+
+  <h3>7.1 六条设计原则</h3>
+  <ol>
+    <li><strong>每条事件必须有可判定的触发条件。</strong>"有人离开"不是一个名字，而是一组明确条件：离开判决计数达标 + 连续 N_leave 次雷达判无目标。没有触发条件的事件等于没有定义。</li>
+    <li><strong>三条出口必须分开定义，不能用一个"上报方式"字段笼统表达。</strong>"要多快送到灯"和"要多省送到云"是两个正交需求。用同一个字段同时表达，结果只能二选一——要么为了开灯快而全部即时上云（耗电），要么为了省电而让开灯变慢（体验崩）。拆成三条后，两者可以同时最优。</li>
+    <li><strong>上报方式是设备行为，必须是有限枚举。</strong>设备是休眠终端，无法响应任意节奏。所有配置必须落在设备能执行的有限档位内。</li>
+    <li><strong>三级硬约束不可被配置突破。</strong>① 能量底线 ② 安全合规类（防拆、滞留、双鉴失效必须即时且不可禁用）③ 数据完整性（缓存溢出、白名单失败、联动确认超时必须报）。</li>
+    <li><strong>本地配置是受控变更，必须经云端人工确认。</strong>生效后进入"待确认"态，授权人员确认才固化基线；72 h 未确认告警，7 天自动回退。</li>
+    <li><strong>聚合不是丢弃，是延迟。</strong>聚合类事件仍完整记录在本地缓存，周期到达打包上报；期间若发生更高优先级事件，打包一并提前发送。</li>
+  </ol>
+
+  <h3>7.2 三通道出口模型</h3>
+  <p>一条事件从设备发出，可能走三条完全不同的路。三者的目的、时延、确认语义、失败处理都不一样，必须分别配置、分别监控。</p>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:104px">通道</th><th style="width:46px">标识</th><th style="width:190px">目的</th><th style="width:150px">典型时延</th><th style="width:210px">确认语义</th><th>失败处理</th></tr></thead>
+      <tbody>
+        <tr class="rn"><td><b>D1 本地广播</b></td><td><code>LB</code></td><td><b>立即让灯/执行器动作</b>，不等网络、不等云</td><td><b>≤300 ms</b>（泛洪，≤4 跳）</td><td><b>灯侧 ACK</b> 经父节点回传，代表"指令已被灯收到"</td><td>重播 2 次（间隔随机 20–50 ms 防碰撞）；3 次无确认 → 上报 E606</td></tr>
+        <tr><td><b>D2 父节点上行</b></td><td><code>UL</code></td><td><b>把事件交进网络，保证不丢</b></td><td>1 个唤醒窗口内（100–500 ms 命中，最长 ≤5 min）</td><td><b>父节点 ACK</b>，代表"事件已进入父节点暂存队列"</td><td>未 ACK 则本地保留、下次唤醒重传；父节点暂存溢出须回通知（见 4.4）</td></tr>
+        <tr><td><b>D3 云端上报</b></td><td><code>CL</code></td><td><b>可运营、可统计、可追溯</b></td><td>I ≤1 s／A 15 min–24 h／H 300–1800 s／L 不上报</td><td>父节点 ACK 即视为"设备侧完成投递"</td><td>按 A 档缓存、补报；缓存溢出报 E508</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="diag">
+  <svg viewBox="0 0 1040 320" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,Microsoft YaHei,sans-serif">
+    <defs>
+      <marker id="ar1" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#7a4bb5"/></marker>
+      <marker id="ar2" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#0b6bcb"/></marker>
+      <marker id="ar3" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#2e8b57"/></marker>
+      <marker id="ar4" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#c47f0a"/></marker>
+    </defs>
+
+    <!-- 设备 -->
+    <rect x="20" y="118" width="150" height="84" rx="9" fill="#eef4fb" stroke="#1f4e79" stroke-width="1.6"></rect>
+    <text x="95" y="146" text-anchor="middle" font-size="12.6" font-weight="700" fill="#1f4e79">本传感器</text>
+    <text x="95" y="165" text-anchor="middle" font-size="10.4" fill="#48596a">微能量 · 休眠终端</text>
+    <text x="95" y="182" text-anchor="middle" font-size="10.4" fill="#48596a">PIR 门控雷达</text>
+
+    <!-- D1 灯 -->
+    <rect x="300" y="26" width="150" height="66" rx="9" fill="#f9f5fe" stroke="#7a4bb5" stroke-width="1.6"></rect>
+    <text x="375" y="52" text-anchor="middle" font-size="12.4" font-weight="700" fill="#5b2f96">灯具 / 执行器</text>
+    <text x="375" y="70" text-anchor="middle" font-size="10.4" fill="#48596a">同群组 2.4G 广播域</text>
+
+    <!-- D2 父节点 -->
+    <rect x="300" y="176" width="150" height="66" rx="9" fill="#eef4fb" stroke="#0b6bcb" stroke-width="1.6"></rect>
+    <text x="375" y="202" text-anchor="middle" font-size="12.4" font-weight="700" fill="#1f4e79">父节点</text>
+    <text x="375" y="220" text-anchor="middle" font-size="10.4" fill="#48596a">叶子 / PCO / CCO</text>
+
+    <!-- L2 CCO / L1 CCO / 云 -->
+    <rect x="530" y="176" width="120" height="66" rx="9" fill="#f4f9fe" stroke="#3f8fc4" stroke-width="1.4"></rect>
+    <text x="590" y="215" text-anchor="middle" font-size="11.8" fill="#1f4e79">L2 CCO</text>
+
+    <rect x="700" y="176" width="120" height="66" rx="9" fill="#f4f9fe" stroke="#3f8fc4" stroke-width="1.4"></rect>
+    <text x="760" y="215" text-anchor="middle" font-size="11.8" fill="#1f4e79">L1 CCO</text>
+
+    <rect x="870" y="176" width="130" height="66" rx="9" fill="#eaf6ee" stroke="#2e8b57" stroke-width="1.6"></rect>
+    <text x="935" y="205" text-anchor="middle" font-size="12.4" font-weight="700" fill="#1f6b3f">云平台</text>
+    <text x="935" y="223" text-anchor="middle" font-size="10.4" fill="#48596a">策略 / 统计 / 运维</text>
+
+    <!-- D1 路径 -->
+    <path d="M170,140 C230,140 240,66 298,60" stroke="#7a4bb5" stroke-width="2.2" fill="none" marker-end="url(#ar1)"></path>
+    <text x="186" y="96" font-size="11" font-weight="700" fill="#5b2f96">D1 本地广播</text>
+    <text x="186" y="112" font-size="10.2" fill="#7a4bb5">≤300 ms · ≤4 跳</text>
+    <!-- 灯侧确认回程 -->
+    <path d="M300,74 C246,86 236,128 176,132" stroke="#7a4bb5" stroke-width="1.4" fill="none" stroke-dasharray="5,4" marker-end="url(#ar1)"></path>
+    <text x="240" y="128" font-size="9.8" fill="#5b2f96">灯侧 ACK 回传</text>
+
+    <!-- D2 路径 -->
+    <path d="M170,196 L296,205" stroke="#0b6bcb" stroke-width="2.2" fill="none" marker-end="url(#ar2)"></path>
+    <text x="192" y="192" font-size="11" font-weight="700" fill="#1f4e79">D2 父节点上行</text>
+    <text x="192" y="232" font-size="10.2" fill="#0b6bcb">父节点 ACK · 暂存</text>
+
+    <!-- D3 路径 -->
+    <path d="M450,209 L526,209" stroke="#2e8b57" stroke-width="2.2" fill="none" marker-end="url(#ar3)"></path>
+    <path d="M650,209 L696,209" stroke="#2e8b57" stroke-width="2" fill="none" marker-end="url(#ar3)"></path>
+    <path d="M820,209 L866,209" stroke="#2e8b57" stroke-width="2" fill="none" marker-end="url(#ar3)"></path>
+    <text x="470" y="196" font-size="11" font-weight="700" fill="#1f6b3f">D3 云端上报</text>
+    <text x="470" y="252" font-size="10.2" fill="#2e8b57">I / A / H / L 四档 · 周期可配</text>
+
+    <!-- 底部说明条 -->
+    <rect x="20" y="274" width="1000" height="34" rx="7" fill="#fdf6e8" stroke="#e8d5a8" stroke-width="1"></rect>
+    <text x="36" y="296" font-size="11" fill="#8a5a06">典型组合：有人进入 = D1 即时广播（灯 300 ms 亮，要求灯侧确认）+ D2 父节点 ACK（事件不丢）+ D3 云端聚合 15 min（省钱省空口）。三条并行，互不等待。</text>
+  </svg>
+  </div>
+
+  <div class="callout danger">
+    <b>最容易埋的误解：父节点 ACK ≠ 云端已收到。</b>ACK 只证明事件进了父节点暂存队列，而父节点到 CCO 是多跳，暂存溢出还会丢。若把两者混为一谈，会出现"设备以为上报成功、云端一条没收到"的静默丢数据——而且设备侧日志完全正常，排查会耗掉大量时间。<br>
+    <b>处置：</b>每条事件带递增 <code>evtSeq</code>；<b>云端按设备维度做序号连续性校验</b>，发现空号即判丢事件并下发补报请求。这一条应写进通信协议，属于必做项而非优化项。
+  </div>
+
+  <h3>7.3 本地广播与灯侧确认</h3>
+  <p>为什么本地必须单独占一条通道：云端往返最短也是一个唤醒窗口（秒级），而开灯要求 <b>≤300 ms 用户可感知</b>。两者差一个数量级，不可能用同一条路满足。</p>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:126px">要素</th><th>设计</th></tr></thead>
+      <tbody>
+        <tr><td>承载方式</td><td>2.4G 泛洪组播，<b>TTL ≤4 跳</b>；携带群组 ID（32 个 group-ID 槽位）、动作码、<code>evtSeq</code>、需确认标志</td></tr>
+        <tr><td>时延预算</td><td>组帧 ≤30 ms + 空口 ≤15 ms/跳 + 灯侧处理 ≤50 ms → <b>典型单跳 ≤120 ms，4 跳 ≤300 ms</b></td></tr>
+        <tr><td>确认机制</td><td>灯侧回<b>短 ACK 帧</b>（不含业务载荷），由<b>父节点汇聚后回传</b>给本设备（这正是"由父节点确认灯是否收到"的落地方式）；超时 <code>T_ack</code> 默认 200 ms</td></tr>
+        <tr><td>重播策略</td><td>超时未确认 → 重播，最多 2 次，间隔<b>随机 20–50 ms</b>（打散碰撞）；3 次仍无确认 → 上报 E606</td></tr>
+        <tr><td>去重</td><td>灯侧按 <code>evtSeq</code> 去重，避免重播导致重复动作或重复计时</td></tr>
+        <tr><td>空口代价</td><td>单次约 35 ms 占空（发 15 ms + 收窗 20 ms）。按 60 次/日计，占用可忽略；但密集部署仍须限制 TTL 与群组规模（≤8 台/父节点）</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout">
+    <b>E606 与 E605 的分工要说清，否则现场会误判：</b><br>
+    · <b>E606 联动确认超时</b>：灯<b>没回 ACK</b> → 指令没送到、或灯离线、或群组 ID 配错 → <b>查通信</b>。<br>
+    · <b>E605 照明回路疑似故障</b>：灯<b>回了 ACK 但照度没升</b> → 指令到了、灯没亮 → <b>查灯具/驱动</b>。<br>
+    两者同时出现时优先查通信——因为通信不通时 E605 的判定本身也不可信。这个判断逻辑放在云端做，设备端不做。
+  </div>
+
+  <h3>7.4 云端上报四档</h3>
+  <p>云端上报（D3）的节奏只有四档，但<b>每一档的周期、条数、重传都可配</b>，不写死在固件里。</p>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:56px">标识</th><th style="width:130px">方式</th><th style="width:150px">时延</th><th style="width:180px">设备行为</th><th>适用</th></tr></thead>
+      <tbody>
+        <tr><td><span class="mode mI">I</span></td><td><strong>即时 Immediate</strong></td><td>≤1 s（P1）<br>≤300 ms（P0 场景）</td><td>事件发生立即组帧发出，按配置重传 0–2 次，不等唤醒窗口</td><td>安全类、故障类、必须实时可见的主事件</td></tr>
+        <tr><td><span class="mode mA">A</span></td><td><strong>聚合 Aggregate</strong></td><td>周期 <b>15 min / 30 min / 1 h / 2 h / 6 h / 12 h / 24 h 七档任选</b></td><td>写入环形缓存，到期打包上报；超条数上限则拆包或按优先级保留</td><td>统计类、诊断类、<b>业务主事件（靠本地广播保证即时）</b></td></tr>
+        <tr><td><span class="mode mH">H</span></td><td><strong>随心跳 Heartbeat</strong></td><td>跟随心跳周期 300–1800 s 可配</td><td>不单独发帧，挂在下次心跳帧中捎带，最省电</td><td>低频状态类</td></tr>
+        <tr><td><span class="mode mL">L</span></td><td><strong>仅本地 Local</strong></td><td>不主动上报</td><td>只记本地缓存，可由 <code>readDiagSnapshot</code> 读出</td><td>调试类、高频低价值类</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout ok">
+    <b>"有人进入"配 A 档会不会导致云端看着延迟？不会。</b>因为开灯由 D1 本地广播完成，与 D3 无关。云端配 15 min 聚合只影响"报表里这条记录晚 15 分钟出现"，不影响现场任何一秒钟的体验。<br>
+    这正是三通道拆分的价值：<b>把"实时"归本地、"可运营"归云端</b>。安防场景若确实需要云端实时告警，把 E101/E105 改回 I 档即可，代价是每个点位日均多耗约 10–20 µAh。
+  </div>
+
+  <h3>7.5 每条事件可配置的八个维度</h3>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:130px">维度</th><th style="width:250px">可选值</th><th style="width:96px">默认</th><th>约束</th></tr></thead>
+      <tbody>
+        <tr class="rn"><td><b>本地广播</b></td><td>关 / 广播 / 广播+灯侧确认</td><td>见矩阵</td><td>动作类事件（开灯、关灯、撤销）建议"广播+确认"；纯上报类事件关闭</td></tr>
+        <tr class="rn"><td><b>本地重播次数</b></td><td>0 / 1 / 2 次</td><td>2</td><td>仅"广播+确认"有效；重播间隔随机 20–50 ms</td></tr>
+        <tr class="rn"><td><b>父节点上行</b></td><td>不上行 / 送达 / 必须 ACK</td><td>见矩阵</td><td>P0 与不可禁用事件强制"必须 ACK"</td></tr>
+        <tr><td>云端上报方式</td><td>I / A / H / L</td><td>见矩阵</td><td>P0 类只能 I；安全类只能 I</td></tr>
+        <tr><td><b>聚合周期</b></td><td>15 min / 30 min / 1 h / 2 h / 6 h / 12 h / 24 h</td><td>见矩阵</td><td>仅对 A 档有效，<b>七档全部可配，无硬编码</b></td></tr>
+        <tr><td>单次条数上限</td><td>4 / 8 / 16 / 32 条/包</td><td>16</td><td>超限按优先级保留，其余延至下包</td></tr>
+        <tr><td>重传次数</td><td>0 / 1 / 2 次</td><td>P0=2、P1=1、P2=0</td><td>仅对 I 档有效；能量临界强制降为 1</td></tr>
+        <tr><td>启用状态</td><td>启用 / 禁用</td><td>启用</td><td><b>P0 与安全类不可禁用</b>，下发禁用将被拒绝并回 E505</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 id="s74">7.6 全量事件定义与三通道配置矩阵（54 条）</h3>
+  <p class="h2note" style="margin-left:0">"定义"列为研发可实现、测试可验收的触发条件与含义。<b>列值均为建议默认值，除硬约束外全部可配。</b>图例：<span class="tag lb1">灯确认</span> 本地广播且要求灯侧 ACK ／<span class="tag lb2">广播</span> 本地广播不要求确认 ／<span class="tag lbn">不广播</span> 仅走网络 ／<span class="tag pnA">ACK</span> 父节点须回确认 ／<span class="tag pnD">送达</span> 父节点收到即可。</p>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:50px">编号</th><th style="width:132px">事件名称</th><th>定义（触发条件与含义）</th><th style="width:40px">级别</th><th style="width:60px">本地广播</th><th style="width:44px">父节点</th><th style="width:36px">云端</th><th style="width:62px">建议周期</th><th style="width:44px">可禁用</th></tr></thead>
+      <tbody>
+        <tr><td colspan="9" class="grp">E1xx 存在检测（业务主干）</td></tr>
+        <tr><td class="id">E101</td><td>有人进入</td><td class="def">无人态下 PIR 触发，设备<b>立即</b>置"疑似有人"并<b>本地组播</b>通知灯具开灯（≤300 ms），同时启动雷达校验。<b>开灯快通道的唯一依赖事件</b>——它走本地广播，不等云端，所以云端可以配成聚合上报而不影响响应速度。</td><td><span class="tag t1">P1</span></td><td><span class="tag lb1">灯确认</span></td><td><span class="tag pnA">ACK</span></td><td><span class="mode mA">A</span></td><td class="per">15 min</td><td><span class="tag t0">否</span></td></tr>
+        <tr><td class="id">E102</td><td><b>设备心跳</b></td><td class="def">设备<b>存活证明 + 当前存在状态</b>的周期上报。用于区分"确实无人"与"设备失联"。</td><td><span class="tag t2">P2</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnD">送达</span></td><td><span class="mode mH">H</span></td><td class="per">随心跳</td><td>是</td></tr>
+        <tr><td class="id">E103</td><td>微动存在</td><td class="def">在已进入"疑似有人/确定有人"态后，雷达检出亚阈值微动（翻身、静坐肢体动作）。<b>不能独立发现人</b>，只在有人态下有效。</td><td><span class="tag t1">P1</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnD">送达</span></td><td><span class="mode mA">A</span></td><td class="per">1 h</td><td>是</td></tr>
+        <tr><td class="id">E104</td><td>活动强度升级</td><td class="def">活动等级由 1 静 → 2 微动 → 3 走动上跳，且新等级保持 ≥5 s 不回落。用于分级调光（人走灯暗、人回灯亮）。</td><td><span class="tag t1">P1</span></td><td><span class="tag lb2">广播</span></td><td><span class="tag pnD">送达</span></td><td><span class="mode mA">A</span></td><td class="per">1 h</td><td>是</td></tr>
+        <tr><td class="id">E105</td><td>有人离开</td><td class="def">连续 <code>N_leave</code> 次雷达判无目标后，状态由有人翻转为无人。<b>先本地组播下发关灯</b>并要求灯侧确认，再按云端策略聚合上报。载荷携带本次停留时长与活动占比。</td><td><span class="tag t1">P1</span></td><td><span class="tag lb1">灯确认</span></td><td><span class="tag pnA">ACK</span></td><td><span class="mode mA">A</span></td><td class="per">15 min</td><td><span class="tag t0">否</span></td></tr>
+        <tr class="r0"><td class="id">E109</td><td>滞留超时</td><td class="def">布防时段内，连续存在时长 ≥ <code>T_loiter</code>（默认 600 s）。安防场景唯一的业务级 P0。</td><td><span class="tag t0">P0</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnA">ACK</span></td><td><span class="mode mI">I</span></td><td class="per">—</td><td><span class="tag t0">否</span></td></tr>
+        <tr><td class="id">E110</td><td>状态抖动异常</td><td class="def"><b>1 min 窗口内有/无状态翻转 ≥3 次</b>。1 分钟内反复翻转物理上不可能对应真实进出，故指向安装位置不当（空调出风口、窗帘）或灵敏度设置过高。</td><td><span class="tag t1">P1</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnD">送达</span></td><td><span class="mode mA">A</span></td><td class="per">1 h</td><td>是</td></tr>
+        <tr><td class="id">E111</td><td>停留时长统计</td><td class="def">一个完整"有人"周期结束时，汇总本次停留总时长与活动占比。可随 E105 携带，也可按周期独立聚合，供人流分析使用。</td><td><span class="tag t1">P1</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnD">送达</span></td><td><span class="mode mA">A</span></td><td class="per">1 h</td><td>是</td></tr>
+        <tr><td class="id">E112</td><td><b>进入回滚</b></td><td class="def"><b>通俗说：设备"改口"。</b>PIR 触发后设备已报"有人"（灯已亮），但雷达在 <code>W_verify</code> 内未检出任何目标，于是设备撤销"有人"判定、<b>本地组播撤销指令</b>并回到无人态。用于统计 PIR 误触发（阳光、热源、气流）并被自动纠正的次数。<b>它不是故障，是正常的自我纠错。</b></td><td><span class="tag t1">P1</span></td><td><span class="tag lb2">广播</span></td><td><span class="tag pnA">ACK</span></td><td><span class="mode mA">A</span></td><td class="per">1 h</td><td>是</td></tr>
+        <tr><td class="id">E113</td><td>PIR 疑似失效</td><td class="def">采集正常 + 通信正常 + <b>连续 7 天零 PIR 触发</b>。因 PIR 是单点依赖，此事件是"产品可能已经失效但自己不知道"的唯一兜底信号。</td><td><span class="tag t1">P1</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnA">ACK</span></td><td><span class="mode mI">I</span></td><td class="per">—</td><td><span class="tag t0">否</span></td></tr>
+        <tr><td colspan="9" class="grp">E2xx 双鉴融合与降级</td></tr>
+        <tr><td class="id">E201</td><td>双鉴一致确认</td><td class="def">进入阶段 PIR 与雷达在 <code>W_verify</code> 内均命中，判定为高置信有人。默认仅本地记录，用于评估双鉴一致率。</td><td><span class="tag t2">P2</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnD">送达</span></td><td><span class="mode mL">L</span></td><td class="per">—</td><td>是</td></tr>
+        <tr><td class="id">E202</td><td>单鉴命中</td><td class="def">仅一路通道检出、另一路静默。默认仅本地，是 E203 冲突判定与误报归因的原始样本。</td><td><span class="tag t2">P2</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnD">送达</span></td><td><span class="mode mL">L</span></td><td class="per">—</td><td>是</td></tr>
+        <tr><td class="id">E203</td><td>双鉴冲突</td><td class="def">PIR 命中但雷达连续 ≥3 次无任何回波（或反之：雷达强命中而 PIR 长期零输出）。指向热源直射、穿墙检测、镜片被遮挡等物理问题。</td><td><span class="tag t1">P1</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnD">送达</span></td><td><span class="mode mA">A</span></td><td class="per">6 h</td><td>是</td></tr>
+        <tr class="r0"><td class="id">E204</td><td>雷达通道降级</td><td class="def">雷达自检异常，或连续多个确认周期无有效回波而 PIR 仍活跃。设备退化为纯 PIR 运行，失去静止维持能力。</td><td><span class="tag t0">P0</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnA">ACK</span></td><td><span class="mode mI">I</span></td><td class="per">—</td><td><span class="tag t0">否</span></td></tr>
+        <tr class="r0"><td class="id">E205</td><td>PIR 通道故障<br><small>（双鉴不可用）</small></td><td class="def">PIR 自检失败，或长期零输出而雷达持续活跃。因雷达被 PIR 门控，<b>PIR 失效 = 产品完全失去检测能力</b>，故不称"降级"而称"不可用"。</td><td><span class="tag t0">P0</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnA">ACK</span></td><td><span class="mode mI">I</span></td><td class="per">—</td><td><span class="tag t0">否</span></td></tr>
+        <tr class="r0"><td class="id">E206</td><td>双鉴失效</td><td class="def">PIR 与雷达两路同时不可用，设备彻底失去检测能力。云端应据此屏蔽该点位的联动输出，避免用坏数据驱动灯具。</td><td><span class="tag t0">P0</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnA">ACK</span></td><td><span class="mode mI">I</span></td><td class="per">—</td><td><span class="tag t0">否</span></td></tr>
+        <tr><td class="id">E207</td><td>通道恢复</td><td class="def">此前降级的通道自检通过并稳定 M 个周期（建议 M=10），置信度恢复满值。与 E204/E205 配对使用。</td><td><span class="tag t1">P1</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnD">送达</span></td><td><span class="mode mI">I</span></td><td class="per">—</td><td>是</td></tr>
+        <tr><td colspan="9" class="grp">E3xx 能量与电源</td></tr>
+        <tr><td class="id">E301</td><td>能量采集恢复</td><td class="def">采集功率由低于地板值回升至工作窗口并稳定 ≥ <code>T_ok</code>。与 E308 构成一对状态翻转。</td><td><span class="tag t1">P1</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnD">送达</span></td><td><span class="mode mH">H</span></td><td class="per">随心跳</td><td>是</td></tr>
+        <tr><td class="id">E302</td><td>能量不足预警</td><td class="def">SOC &lt;30%（可配，5% 滞回）。触发云端降级策略：拉长聚合周期、停 P2。</td><td><span class="tag t1">P1</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnA">ACK</span></td><td><span class="mode mI">I</span></td><td class="per">—</td><td><span class="tag t0">否</span></td></tr>
+        <tr class="r0"><td class="id">E303</td><td>能量临界</td><td class="def">SOC &lt;10%，切入极限占空比（雷达延迟拉长、P2 停发）。含义是"检测能力已开始退化"，需云端标记降级运行。</td><td><span class="tag t0">P0</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnA">ACK</span></td><td><span class="mode mI">I</span></td><td class="per">—</td><td><span class="tag t0">否</span></td></tr>
+        <tr class="r0"><td class="id">E304</td><td>临终上报 Last Gasp</td><td class="def">超容电压触及预留储备门限（非真正掉电点）时，强制发出末次状态 + 待补报条数 + 原因码。<b>不可被任何策略抑制</b>，有独立能量储备。</td><td><span class="tag t0">P0</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnA">ACK</span></td><td><span class="mode mI">I</span></td><td class="per">—</td><td><span class="tag t0">否</span></td></tr>
+        <tr class="r0"><td class="id">E305</td><td>上电启动</td><td class="def">设备冷启动，携带 <code>bootCause</code>（开关拨通/看门狗/能量恢复/软复位）与 <code>factoryId</code>。区分"人为拨开关"与"异常复位"的关键依据。</td><td><span class="tag t0">P0</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnA">ACK</span></td><td><span class="mode mI">I</span></td><td class="per">—</td><td><span class="tag t0">否</span></td></tr>
+        <tr><td class="id">E306</td><td>保护性深休眠</td><td class="def">能量保护策略强制停止检测（传感器全关，仅保留能量监测与唤醒）。形态 B 下不会触发。</td><td><span class="tag t1">P1</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnD">送达</span></td><td><span class="mode mI">I</span></td><td class="per">—</td><td>是</td></tr>
+        <tr><td class="id">E307</td><td>储能异常</td><td class="def">单位时间充电斜率异常，或自放电过快。指向超容老化、漏电增大，是零碳产品寿命预测的核心数据。</td><td><span class="tag t1">P1</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnD">送达</span></td><td><span class="mode mA">A</span></td><td class="per">6 h</td><td>是</td></tr>
+        <tr><td class="id">E308</td><td>采集源异常</td><td class="def">采集功率长期低于地板值（遮挡、污损、安装背光面）。直接对应现场安装质量问题。</td><td><span class="tag t1">P1</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnD">送达</span></td><td><span class="mode mA">A</span></td><td class="per">6 h</td><td>是</td></tr>
+        <tr><td class="id">E309</td><td>安装照度不足</td><td class="def">日均照度连续 48 h 低于场景门槛（默认 30 lux）。含义是"这个点位装错位置了"，建议调整朝向或改 USB 供电。</td><td><span class="tag t1">P1</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnD">送达</span></td><td><span class="mode mI">I</span></td><td class="per">—</td><td>是</td></tr>
+        <tr><td class="id">E310</td><td>采光面被遮挡</td><td class="def">照度骤降且持续 ≥24 h（新增海报、堆物、积尘）。与 E308 共用判据但独立上报：E310 讲现象，E308 讲后果。</td><td><span class="tag t1">P1</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnD">送达</span></td><td><span class="mode mA">A</span></td><td class="per">6 h</td><td>是</td></tr>
+        <tr class="r0"><td class="id">E311</td><td>超容欠压</td><td class="def">两档：<b>2.7 V 预警</b>（可运行时间开始受限）/ <b>2.5 V 保护</b>（输出关断）。欠压意味着检测能力与掉电风险同时上升。</td><td><span class="tag t0">P0</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnA">ACK</span></td><td><span class="mode mI">I</span></td><td class="per">—</td><td><span class="tag t0">否</span></td></tr>
+        <tr><td class="id">E312</td><td>备用电池低电</td><td class="def">电池端电压低于门限。提示"即将失去兜底能力"——此时若光照也差，设备将很快进入临界。</td><td><span class="tag t1">P1</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnA">ACK</span></td><td><span class="mode mI">I</span></td><td class="per">—</td><td><span class="tag t0">否</span></td></tr>
+        <tr class="r0"><td class="id">E313</td><td>备用电池耗尽/异常</td><td class="def">电池耗尽，或接触不良/内阻变大导致电压跳变。若同时无光照，设备即将离线，必须立即上报。</td><td><span class="tag t0">P0</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnA">ACK</span></td><td><span class="mode mI">I</span></td><td class="per">—</td><td><span class="tag t0">否</span></td></tr>
+        <tr><td class="id">E314</td><td>电池切入/退出</td><td class="def">记录电池切入与退出的次数及累计供电时长。用于评估电池消耗速度、判断是否需要改 USB 供电。</td><td><span class="tag t2">P2</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnD">送达</span></td><td><span class="mode mA">A</span></td><td class="per">1 h</td><td>是</td></tr>
+        <tr><td class="id">E315</td><td>超容健康度下降</td><td class="def">健康度（基于充放电斜率与内阻估算）跌破 70%。储能是整机寿命短板，此事件用于寿命预警与批量更换计划。</td><td><span class="tag t1">P1</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnD">送达</span></td><td><span class="mode mA">A</span></td><td class="per">24 h</td><td>是</td></tr>
+        <tr><td colspan="9" class="grp">E4xx 健康自检与安防</td></tr>
+        <tr><td class="id">E401</td><td>周期自检报告</td><td class="def">按周期汇总 PIR / 雷达 / 电源 / 存储各项自检结果，含明细码。24 h 默认，形态 B 可缩至 6 h。</td><td><span class="tag t2">P2</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnD">送达</span></td><td><span class="mode mA">A</span></td><td class="per">24 h</td><td>是</td></tr>
+        <tr class="r0"><td class="id">E402</td><td>雷达自检失败</td><td class="def">本振/PLL 失锁、回波底噪超窗、ADC 饱和。通常伴随 E204 降级。</td><td><span class="tag t0">P0</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnA">ACK</span></td><td><span class="mode mI">I</span></td><td class="per">—</td><td><span class="tag t0">否</span></td></tr>
+        <tr class="r0"><td class="id">E403</td><td>PIR 自检失败</td><td class="def">偏置电压超窗、信号链开路/短路。因 PIR 是单点依赖，此项升级为 P0。</td><td><span class="tag t0">P0</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnA">ACK</span></td><td><span class="mode mI">I</span></td><td class="per">—</td><td><span class="tag t0">否</span></td></tr>
+        <tr class="r0"><td class="id">E407</td><td>防拆 / 胶贴脱落</td><td class="def">壳体分离、离墙、胶贴脱落。安防核心事件，载荷带原因码区分"人为拆卸"与"粘贴失效"。</td><td><span class="tag t0">P0</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnA">ACK</span></td><td><span class="mode mI">I</span></td><td class="per">—</td><td><span class="tag t0">否</span></td></tr>
+        <tr><td class="id">E408</td><td>探测窗遮挡</td><td class="def">PIR 长期零输出但雷达持续有人，或回波强度持续异常偏高。指向镜片被贴、脏污、被遮挡。</td><td><span class="tag t1">P1</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnD">送达</span></td><td><span class="mode mI">I</span></td><td class="per">—</td><td>是</td></tr>
+        <tr><td colspan="9" class="grp">E5xx 生命周期与运维</td></tr>
+        <tr><td class="id">E501</td><td>设备上线</td><td class="def">入网成功，或断链后重连成功。携带父节点、信号质量、上电批次号。</td><td><span class="tag t1">P1</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnA">ACK</span></td><td><span class="mode mI">I</span></td><td class="per">—</td><td><span class="tag t0">否</span></td></tr>
+        <tr><td class="id">E502</td><td>链路恢复补报</td><td class="def">离线期间缓存的事件批量补报完成，携带丢失条数与补报条数。补报事件沿用设备相对时刻并附校时还原后的 UTC。</td><td><span class="tag t1">P1</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnA">ACK</span></td><td><span class="mode mI">I</span></td><td class="per">—</td><td><span class="tag t0">否</span></td></tr>
+        <tr><td class="id">E503</td><td>入网完成</td><td class="def">首次配网完成，携带网关标识与链路质量。</td><td><span class="tag t1">P1</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnA">ACK</span></td><td><span class="mode mI">I</span></td><td class="per">—</td><td><span class="tag t0">否</span></td></tr>
+        <tr><td class="id">E504</td><td>配置生效</td><td class="def">参数下发并通过校验。<b>载荷</b>：<code>src</code>（CLOUD/LOCAL）、<code>confirmState</code>（待确认/已确认/已回退）、变更明细（旧值/新值/操作人），并<b>同时返回"配置值"与"当前实际执行值"</b>。</td><td><span class="tag t2">P2</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnD">送达</span></td><td><span class="mode mA">A</span></td><td class="per">1 h</td><td>是</td></tr>
+        <tr><td class="id">E505</td><td>配置拒绝</td><td class="def">参数非法、越界，或触碰硬约束（如试图禁用不可禁用事件）。必须回具体原因码，<b>防"下发成功但实际未生效"的静默失败</b>。</td><td><span class="tag t1">P1</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnA">ACK</span></td><td><span class="mode mI">I</span></td><td class="per">—</td><td><span class="tag t0">否</span></td></tr>
+        <tr><td class="id">E506</td><td>OTA 状态</td><td class="def">下载中/校验/安装/成功/失败/回滚。失败与回滚强制上报；升级前须校验能量余额。</td><td><span class="tag t1">P1</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnD">送达</span></td><td><span class="mode mI">I</span></td><td class="per">—</td><td>是</td></tr>
+        <tr><td class="id">E507</td><td>时钟偏差</td><td class="def">按需校时的修正量（&lt;100 ms 不校，≥100 ms 触发，校后 &lt;20 ms）。随心跳上报 <code>clockSkew</code>。</td><td><span class="tag t1">P1</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnD">送达</span></td><td><span class="mode mH">H</span></td><td class="per">随心跳</td><td>是</td></tr>
+        <tr><td class="id">E508</td><td>缓存溢出</td><td class="def">本地环形队列满，按策略丢弃最旧事件，上报丢弃条数与最旧序号。<b>这是数据完整性的兜底信号</b>——报出"我丢了什么"远重于静默丢弃。</td><td><span class="tag t1">P1</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnA">ACK</span></td><td><span class="mode mI">I</span></td><td class="per">—</td><td><span class="tag t0">否</span></td></tr>
+        <tr><td class="id">E509</td><td>白名单校验失败</td><td class="def">设备不属于本项目、位置不在图纸范围、位置已被占用，或<b>镭雕码 MAC 与实际上报 MAC 不一致</b>（防"扫 A 装 B"）。</td><td><span class="tag t1">P1</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnA">ACK</span></td><td><span class="mode mI">I</span></td><td class="per">—</td><td><span class="tag t0">否</span></td></tr>
+        <tr><td class="id">E510</td><td>供能形态变更</td><td class="def">HARVEST ↔ USB 切换记录，含切换时刻与切换时的 SOC/电压。随心跳捎带。</td><td><span class="tag t2">P2</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnD">送达</span></td><td><span class="mode mH">H</span></td><td class="per">随心跳</td><td>是</td></tr>
+        <tr><td class="id">E511</td><td>位置绑定变更</td><td class="def">点位位置或设备替换的记录，含操作人、时间、旧值与新值。审计用途。</td><td><span class="tag t2">P2</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnD">送达</span></td><td><span class="mode mA">A</span></td><td class="per">24 h</td><td>是</td></tr>
+        <tr><td colspan="9" class="grp">E6xx 光照与联动</td></tr>
+        <tr><td class="id">E601</td><td>照度阈值穿越</td><td class="def">照度跨过设定阈值（带 20% 滞回）。三用途共用同一事件源，载荷带用途标识区分是联动、免开灯还是降频触发。</td><td><span class="tag t2">P2</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnD">送达</span></td><td><span class="mode mA">A</span></td><td class="per">6 h</td><td>是</td></tr>
+        <tr><td class="id">E602</td><td>本地联动执行反馈</td><td class="def">本地策略引擎（组 ID 槽位）执行结果。默认仅本地，排查联动问题时临时改为聚合上云。</td><td><span class="tag t2">P2</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnD">送达</span></td><td><span class="mode mL">L</span></td><td class="per">—</td><td>是</td></tr>
+        <tr><td class="id">E603</td><td>群组联动触发</td><td class="def">2.4G 泛洪组播的触发记录，含跳数与 TTL。用于评估泛洪风暴与跳数分布。</td><td><span class="tag t2">P2</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnD">送达</span></td><td><span class="mode mL">L</span></td><td class="per">—</td><td>是</td></tr>
+        <tr><td class="id">E604</td><td>免开灯判定生效</td><td class="def">照度高于免开灯阈值，故<b>不下发开灯指令</b>，但仍正常上报有人事件（供空调/人流统计）。节能统计用。</td><td><span class="tag t2">P2</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnD">送达</span></td><td><span class="mode mA">A</span></td><td class="per">6 h</td><td>是</td></tr>
+        <tr><td class="id">E605</td><td><b>照明回路疑似故障</b></td><td class="def">下发开灯指令后，在 <code>T_check</code>（默认 10 s）内照度<b>未按预期上升</b>。<b>生效条件（已放宽）</b>：开灯前照度 &lt;300 lux，且下发亮度 ≥70% 档；增量阈值自适应（取"预期增量 30%"与 20 lux 的较大值）；<b>连续 2 次开灯无效才上报</b>，避免单次抖动误报。<b>只能判断"开灯没效果"，无法区分灯具坏 / 驱动坏 / 通信没到</b>，故定位为"疑似故障、需人工复核"。</td><td><span class="tag t1">P1</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnD">送达</span></td><td><span class="mode mI">I</span></td><td class="per">—</td><td>是</td></tr>
+        <tr><td class="id">E606</td><td><b>联动确认超时</b></td><td class="def"><b>本地组播下发联动指令后，灯侧未在规定时间内回确认</b>（含重播 2 次仍无应答）。指向灯节点离线、群组 ID 配错、或空口拥塞。<b>注意它与 E605 是两件事</b>：E606 说明"指令没送到/没回执"，E605 说明"指令到了但灯没亮"。两者同时出现，优先查通信。</td><td><span class="tag t1">P1</span></td><td><span class="tag lbn">不广播</span></td><td><span class="tag pnD">送达</span></td><td><span class="mode mA">A</span></td><td class="per">1 h</td><td><span class="tag t0">否</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="h2note" style="margin-left:0">合计 54 条：<b>不可禁用 24 条</b>（安全、故障、能量底线、数据完整性），<b>可禁用 30 条</b>。</p>
+
+  <h3>7.7 配置通道：云端下发 与 本地蓝牙</h3>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:120px">维度</th><th style="width:270px">云端下发（主通道）</th><th>本地手机蓝牙（辅助通道）</th></tr></thead>
+      <tbody>
+        <tr><td>路径</td><td>云 → 网关 → L1 CCO → L2 CCO → 父节点暂存 → 唤醒窗口投递</td><td>手机 App → BLE 直连设备</td></tr>
+        <tr><td>前置条件</td><td>设备在线、父节点有暂存余量</td><td><b>需先触发维护模式</b>（长按按键 3 s 或扫码唤醒），进入长唤醒窗口</td></tr>
+        <tr><td>生效时延</td><td>1 个唤醒周期内（默认 ≤5 min）</td><td>即时（≤3 s）</td></tr>
+        <tr class="rn"><td><b>确认机制</b></td><td>直接生效并经回执确认，即为基线</td><td><b>生效后进入"待确认"态并上报云端，由人工确认后固化基线</b>；三态：待确认 / 已确认 / 已回退</td></tr>
+        <tr><td>有效期</td><td>长期有效</td><td>待确认期上限：<b>72 h 告警升级，7 天未确认自动回退基线</b></td></tr>
+        <tr><td>适用场景</td><td>批量配置、按群组/项目统一策略、远程运维</td><td>现场调试、离线点位、单点异常排查、安装期快速验证</td></tr>
+        <tr><td>权限</td><td>项目管理员及以上；留操作日志</td><td>现场技术人员；需输入设备鉴权码</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout new">
+    <b>为什么必须有本地蓝牙通道：</b>①<b>离线点位</b>——网络未覆盖或父节点故障时云端下不到；②<b>安装期调参</b>——装完想立刻验证灵敏度，等云端往返太慢；③<b>误报排查</b>——临时把某点位切成"仅本地记录"观察，不影响整层策略。<br>
+    但必须是"受控变更"而非"永久改写"，否则现场调完就忘，云端看到的策略与设备实际行为不一致——这是运维事故的经典来源。
+  </div>
+
+  <h3>7.8 配置优先级与冲突仲裁</h3>
+  <div class="diag">
+  <svg viewBox="0 0 1040 240" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,Microsoft YaHei,sans-serif">
+    <rect x="20" y="16" width="1000" height="44" rx="8" fill="#fdeeec" stroke="#c0392b" stroke-width="1.5"></rect>
+    <text x="36" y="36" font-size="12.4" font-weight="700" fill="#8f2b1f">① 能量底线（最高，不可被任何配置突破）</text>
+    <text x="36" y="52" font-size="11.2" fill="#4a5b6b">低电强制压缩：L3 起 P2 转 H；L4 起 P2 停发、仅 P0/P1；L5 仅 P0。此时配置的"A 档 15 min"会被改写为实际执行档，并回执告知。</text>
+
+    <rect x="20" y="70" width="1000" height="44" rx="8" fill="#fff4e6" stroke="#c47f0a" stroke-width="1.5"></rect>
+    <text x="36" y="90" font-size="12.4" font-weight="700" fill="#8a5a06">② 安全与完整性硬约束（不可关闭）</text>
+    <text x="36" y="106" font-size="11.2" fill="#4a5b6b">24 条不可禁用事件（防拆、滞留、双鉴失效、PIR 自检失败、超容欠压、电池耗尽、缓存溢出、白名单失败、联动确认超时等）强制 I 档，重传 ≥1 次。</text>
+
+    <rect x="20" y="124" width="1000" height="44" rx="8" fill="#eef4fb" stroke="#0b6bcb" stroke-width="1.5"></rect>
+    <text x="36" y="144" font-size="12.4" font-weight="700" fill="#1f4e79">③ 云端基线配置（长期有效）</text>
+    <text x="36" y="160" font-size="11.2" fill="#4a5b6b">按项目 / 楼栋 / 楼层 / 群组 / 单点五级下发，粒度最细覆盖最粗；支持模板化批量应用。</text>
+
+    <rect x="20" y="178" width="1000" height="44" rx="8" fill="#f4eefb" stroke="#7a4bb5" stroke-width="1.5"></rect>
+    <text x="36" y="198" font-size="12.4" font-weight="700" fill="#5b2f96">④ 本地蓝牙配置（需云端人工确认才固化；7 天未确认自动回退）</text>
+    <text x="36" y="214" font-size="11.2" fill="#4a5b6b">现场调试用；生效后进入"待确认"，不可突破①②；超时回退前 24 h 提前通知。</text>
+  </svg>
+  </div>
+  <div class="callout danger">
+    <b>最容易出的运维事故：低电时配置"看着生效、实际被强制改写"。</b>举例：云端把 E102 配成"聚合 15 min"，但设备在 L4 档 P2 已停发。若设备不回执实际执行档，运维会以为"配了 15 min 为什么没数据"。<br>
+    因此<b>每次下发必须在回执中同时返回"配置值"与"当前实际执行值"</b>，不一致时置告警标记。这条要写进 <code>setReportPolicy</code> 出参定义。
+  </div>
+
+  <h3>7.9 场景配置模板（六套）</h3>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:110px">模板</th><th style="width:130px">适用场景</th><th style="width:160px">核心差异</th><th>典型配置</th></tr></thead>
+      <tbody>
+        <tr><td><strong>T1 办公标准</strong></td><td>开放办公、会议室</td><td>平衡型</td><td>E101/E105 本地广播+灯确认、云端 15 min；E103 1 h；E112 1 h；自检 24 h；T_radar_delay 60 s</td></tr>
+        <tr><td><strong>T2 地库（形态 B）</strong></td><td>地下车库</td><td>能量充裕，可细化</td><td>P1 全部即时；聚合可缩至 15 min；自检 6 h；T_radar_delay 15–30 s</td></tr>
+        <tr><td><strong>T3 走廊节能</strong></td><td>走廊、楼梯间</td><td>重省电</td><td>E101/E105 本地广播+灯确认、云端 6 h；E103 关；E102 6 h；E601 6 h；T_radar_delay 120 s</td></tr>
+        <tr><td><strong>T4 安防加强</strong></td><td>布防区域、仓库</td><td>安全事件全即时+重传 2</td><td>E101/E105 云端改 <b>I</b> 档；E109 即时重传 2；E407/E408 即时；E110 1 h；关闭 E601/E604</td></tr>
+        <tr><td><strong>T5 极限省电</strong></td><td>弱光点位</td><td>仅保命</td><td>仅 P0/P1 放行；P2 全停；心跳 900–1800 s；T_radar_delay 300 s</td></tr>
+        <tr><td><strong>T6 诊断排查</strong></td><td>误报治理、现场调试</td><td>全量上云</td><td>E201/E202/E602/E603 由 L 改 A（15 min）；E112 15 min；E605/E606 即时；建议 7 天有效</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="h2note" style="margin-left:0">模板应用后可逐条微调；微调后标记"自定义"，便于统计偏离基线的点位。T6 建议设有效期，到期自动回归。</p>
+
+  <h3>7.10 配置生效、回读与回滚</h3>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:40px">步</th><th style="width:130px">动作</th><th style="width:250px">设备行为</th><th>失败处理</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>下发</td><td>接收配置帧，逐条校验（枚举合法、周期在范围、是否触碰硬约束）</td><td>校验不过 → 回 E505，带具体原因码</td></tr>
+        <tr><td>2</td><td>生效</td><td>写入配置区（掉电保持），刷新上报调度表</td><td>写入失败 → 保持原配置并回拒绝</td></tr>
+        <tr><td>3</td><td>回执</td><td>回 E504，<b>同时携带"配置值"与"当前实际执行值"</b></td><td>两者不一致 → 云端标记"能量强制降级"，不视为失败</td></tr>
+        <tr><td>4</td><td>回读核对</td><td>支持 <code>readDiagSnapshot</code> 读取当前完整策略摘要</td><td>云端每日自动核对，偏差告警</td></tr>
+        <tr><td>5</td><td>回滚</td><td>云端保留最近 5 版快照，可一键回滚</td><td>回滚同样走 1–3 步</td></tr>
+        <tr class="rn"><td>6</td><td><b>上报待确认</b></td><td>本地配置生效后立即上报 E504（来源 = LOCAL，状态 = PENDING_CONFIRM），携带变更明细</td><td>上报失败则短重试 ≤3 次，仍失败标记"未同步"并告警</td></tr>
+        <tr class="rn"><td>7</td><td><b>人工确认</b></td><td>云端展示"配置待确认"列表；确认 → 固化为基线（来源升级 CLOUD_APPROVED）；拒绝 → 设备回退原基线</td><td>确认人需项目管理员权限，全程留痕</td></tr>
+        <tr class="rn"><td>8</td><td><b>超时处置</b></td><td>72 h 未确认 → 告警升级并进待办；7 天未确认 → 自动回退基线并上报</td><td>回退前 24 h 提前通知，避免现场突发行为变化</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>7.11 上报能耗与配额</h3>
+  <p>两个口径分开算：<b>本地广播</b>是动作帧（短、频次随人流量），<b>云端上报</b>是数据帧（长、频次随策略）。</p>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:210px">单次动作</th><th style="width:200px">能耗构成</th><th style="width:120px">单次能耗</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td>本地广播一次（含灯侧确认收窗）</td><td>发 15 ms + 收窗 20 ms × 5 mA</td><td><b>约 0.05 µAh</b></td><td>最快的一类，几乎可忽略</td></tr>
+        <tr><td>父节点 ACK 等待窗</td><td>额外 50 ms 接收 × 5 mA</td><td>约 0.07 µAh</td><td>仅"必须 ACK"的事件产生</td></tr>
+        <tr><td>云端即时上报一次</td><td>200 ms × 5 mA（含唤醒/组帧/发射）</td><td><b>约 0.28 µAh</b></td><td>即时档的主成本</td></tr>
+        <tr><td>聚合打包（一包含 8 条）</td><td>约 260 ms × 5 mA</td><td>约 0.36 µAh／包<br>（折合 0.045 µAh／条）</td><td><b>聚合省电的本质就在这里</b></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:150px">配置组合</th><th style="width:150px">日均本地广播</th><th style="width:150px">日均云端上报</th><th style="width:140px">合计能耗/日</th><th>占整机预算</th></tr></thead>
+      <tbody>
+        <tr><td>T1 办公标准</td><td>约 60 次</td><td>约 40 次</td><td>约 14 µAh</td><td><b>约 6%</b> <span class="tag tok">占比很低</span></td></tr>
+        <tr><td>T3 走廊节能</td><td>约 20 次</td><td>约 12 次</td><td>约 4 µAh</td><td>约 3%</td></tr>
+        <tr><td>T5 极限省电</td><td>约 8 次</td><td>约 6 次</td><td>&lt;2 µAh</td><td>&lt;1%</td></tr>
+        <tr class="rn"><td><b>T6 诊断排查</b></td><td>约 60 次</td><td><b>约 300–800 次</b></td><td><b>约 87–227 µAh</b></td><td><b>36–95%</b> <span class="tag t1">占比显著升高</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout warn">
+    <b>结论：真正吃电的不是上报，而是 PIR 常开与雷达扫描。</b>按日均预算约 240 µAh 计：<br>
+    · PIR 常开约 120 µAh（占 50%）　· 雷达扫描约 60 µAh（占 25%）　· MCU 与射频约 40 µAh　· 漏电与静态约 20 µAh。<br>
+    所以省电的第一优先级永远是<b>减少雷达扫描次数</b>（拉长 T_radar_delay、PIR 活跃时重置计时器），而不是压缩上报。<b>T6 诊断模板仍建议限期使用（7 天），但理由不是"击穿预算"，而是"长期高占用会吃掉能量余量，导致低电降级把关键事件也压掉"。</b>
+  </div>
+</section>
+<!-- ============ 8 ============ -->
+<section>
+  <h2 id="s8">八、性能指标与验收方法（含定义）</h2>
+  <p class="h2note">每个指标都给出"定义 / 测试口径"，避免研发与测试对同一名词理解不一致。未标注测试条件的指标不可用于对外宣传。</p>
+
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:150px">指标</th><th style="width:120px">定义 / 测试口径</th><th style="width:120px">目标值</th><th style="width:210px">测试条件</th><th>验收方法</th></tr></thead>
+      <tbody>
+        <tr class="r0"><td>移动检出率</td><td class="def">目标在标准路径上径向穿越探测区 N 次，设备成功上报"有人进入"（E101）的次数占比</td><td>&gt;99%</td><td>3 m 高，25 ℃，0.5–1.5 m/s 径向，N=100</td><td>漏检 ≤1 次；每次穿越间隔 ≥30 s 确保回到无人态</td></tr>
+        <tr class="rn"><td><b>本地联动时延</b></td><td class="def">从 E101 判定成立，到同群组灯节点收到并执行开灯指令（本地广播路径，4 跳内）</td><td>&lt;300 ms</td><td>4 跳链路，含 1 次重播</td><td>200 次取 P95；链路丢包 30% 时由重播覆盖</td></tr>
+        <tr><td>进入响应时延</td><td class="def">从 PIR 输出有效触发信号，到设备完成 E101 组帧并发出空口的时长</td><td>≤300 ms</td><td>PIR 触发瞬间打点</td><td>100 次取 P95</td></tr>
+        <tr class="rn"><td><b>T_scan 单次扫描时长</b></td><td class="def">雷达从上电到输出首个有效检测结果的时长，是校验窗口的下限</td><td>≤5 s，典型 2 s</td><td>常温 3 m 目标；另测 -10 ℃ 的延长量</td><td>200 次取 P95；低温延长量纳入 W_verify 设计</td></tr>
+        <tr class="rn"><td><b>雷达扫描期平均电流</b></td><td class="def">在 T_scan 窗口内对雷达供电电流做积分平均，衡量模组是否适合微能量</td><td>≤150 µA</td><td>扫描窗口内积分测量</td><td>源表积分；<b>作为选型红线，一票否决</b></td></tr>
+        <tr class="rn"><td><b>校验窗口 W_verify</b></td><td class="def">从雷达启动到允许做出 AND 判决的最长等待时间，必须 ≥ T_scan</td><td>≥ T_scan（默认 +1 s）</td><td>注入雷达慢响应（4 s）</td><td>慢响应时不得误判回滚</td></tr>
+        <tr><td>回滚时延</td><td class="def">从"疑似有人"翻转，到雷达确认无目标并发出 E112 的时长</td><td>≤ T_scan + 1 s</td><td>PIR 触发但雷达无目标</td><td>P95 达标</td></tr>
+        <tr class="r0"><td>静止漏报率</td><td class="def">人在探测区内持续静坐期间，设备错误翻转回"无人"（发出 E105）的次数</td><td>&lt;1 次/72h</td><td>3 m 内持续静坐，72 h 分段轮换（含夜间）</td><td>统计误判离开次数，应为 0</td></tr>
+        <tr class="r0"><td>净空场误报率</td><td class="def">无人环境下，<b>经回滚纠正后仍保持"有人"</b>的错误次数（已回滚的不计入）</td><td>&lt;1 次/72h</td><td>类空场：无人 + 空调气流/窗帘/卷帘门/管道</td><td>净误报 0 次；同时统计回滚触发次数 ≤5 次/72h</td></tr>
+        <tr><td>有效触发角</td><td class="def">PIR 能可靠触发"有人进入"的水平角度范围，即产品对外承诺的探测角</td><td>120°</td><td>3 m 半径圆周，每 15° 一点</td><td>逐点实测，边界处检出率 ≥90%</td></tr>
+        <tr><td>有效保持角</td><td class="def">人已进入有人态后，雷达能继续维持"有人"的水平角度范围</td><td>≥150°</td><td>先在内圈触发，再移动至各角度保持</td><td>逐 15° 验证维持能力；<b>不作对外探测角承诺</b></td></tr>
+        <tr class="r0"><td>无人态平均电流</td><td class="def">无人、雷达全关、按默认策略上报心跳时的整机平均工作电流</td><td>≤11 µA</td><td>无人 72 h，常温，200 lux 8 h/日</td><td>源表长时记录取平均</td></tr>
+        <tr class="r0"><td>有人静止态平均电流</td><td class="def">有人且 PIR 无触发（静坐），雷达按 T_radar_delay=60 s 周期扫描时的平均电流</td><td>≤17 µA</td><td>持续静坐，雷达每 60 s 扫描 2 s</td><td>同上</td></tr>
+        <tr class="r0"><td>有人活跃态平均电流</td><td class="def">有人且 PIR 频繁触发（计时器不断重置），雷达全程不启动时的平均电流</td><td>≤12 µA</td><td>每分钟至少 1 次 PIR 触发</td><td>同上；验证雷达启动次数为 0</td></tr>
+        <tr><td>日均平均电流（办公）</td><td class="def">有人 12 h / 无人 12 h、其中一半时间静止的加权平均</td><td>≤12 µA</td><td>按实际使用剖面运行 72 h 以上</td><td>同上</td></tr>
+        <tr><td>形态 B 平均电流</td><td class="def">USB 5 V 供电、雷达延迟 15–30 s 时的输入端平均电流</td><td>≤120 µA @5 V</td><td>T_radar_delay=15 s（占空 13%）</td><td>源表 ≥72 h；不触发 USB 源过流</td></tr>
+        <tr><td>形态切换时延</td><td class="def">从 USB 插拔动作到 <code>powerSource</code> 更新并完成行为切换的时长</td><td>≤5 s</td><td>插/拔 USB</td><td>检测不中断、不重启</td></tr>
+        <tr><td>补电时长</td><td class="def">边充边检状态下，超容从 2.5 V 充至 3.5 V 的时间（检测持续运行，不做降频让流）</td><td>&lt;10 min</td><td>检测正常运行中充电，5 V 源</td><td>记录充电曲线；检测无中断</td></tr>
+        <tr class="rn"><td><b>运输模式待机电流</b></td><td class="def">开关拨至 OFF 后，整机剩余电流（含超容漏电与能量管理 IC 静态）</td><td>≤2.5 µA</td><td>超容预充 3.5 V，开关 OFF</td><td>源表记录 ≥72 h；拆分为超容 2 µA + IC 0.3 µA</td></tr>
+        <tr class="rn"><td><b>库存自放电</b></td><td class="def">运输模式下静置 6 个月，超容电压下降量（ΔV = I·t/C）</td><td>&lt;1 V（实测约 0.72 V）</td><td>3.5 V 起，常温暗置 6 个月</td><td>定期记录；推算 24 个月可用性</td></tr>
+        <tr><td>开关机械寿命</td><td class="def">开关在额定负载下可完成的通断操作次数，及老化后的接触电阻</td><td>≥5000 次，老化后 ≤300 mΩ</td><td>寿命试验后复测；振动中不得自行跳变</td><td>完成后量测接触电阻与通断可靠性</td></tr>
+        <tr><td>上报策略下发时延</td><td class="def">从云端/App 发出配置，到收到 E504 回执的时长</td><td>≤5 min（云端）<br>≤3 s（本地）</td><td>单条与 54 条批量两种规模</td><td>分别计时</td></tr>
+        <tr><td>配置回读一致率</td><td class="def">下发后通过 <code>readDiagSnapshot</code> 读回的配置与下发值一致的比例（含"实际执行值"字段）</td><td>100%</td><td>54 条逐条下发并回读</td><td>逐条比对，不含能量强制降级项</td></tr>
+        <tr class="rn"><td><b>开灯响应检出率</b></td><td class="def">在暗环境（&lt;100 lux）全亮场景下，人为制造"开灯无效"时 E605 能正确上报的比例</td><td>≥90%，误报 ≤10%</td><td>断开灯具 / 断通信两种故障各 20 次</td><td>统计检出与误报；记录 luxDelta 分布，用于定阈</td></tr>
+        <tr><td>校时精度</td><td class="def">校时完成后设备本地时间与父节点参考时钟的偏差</td><td>校后 &lt;20 ms；门限 100 ms</td><td>单跳 2.4G</td><td>90 ms 不触发、110 ms 触发；校后 100 次均 &lt;20 ms</td></tr>
+        <tr><td>唤醒窗口</td><td class="def">节点定时开窗接收下行的时长，与窗口内下行投递成功率</td><td>100–500 ms 可配；成功率 ≥98%</td><td>父节点在窗口内投递</td><td>窗口内接收统计</td></tr>
+        <tr><td>无光续航（仅超容）</td><td class="def">满电后无任何光照、无人状态，仅靠超容可运行的天数</td><td>≥30 天</td><td>满电 3.5 V，无人态</td><td>放电至 2.5 V 计时</td></tr>
+        <tr><td>纯电池续航</td><td class="def">完全无光、无人状态，仅靠 400 mAh 电池可运行的年数（按 50% 放电深度）</td><td>≥2 年</td><td>日均按 12 µA 计</td><td>加速放电 + 理论核算</td></tr>
+        <tr><td>照度精度</td><td class="def">照度读数与标准光源真实值的相对误差</td><td>±15%（0–2000 lux）</td><td>多点校准后逐档验证</td><td>逐档比对</td></tr>
+        <tr><td>安装照度告警有效性</td><td class="def">故意背光/遮挡安装的点位，能在 48 h 内触发 E309 的比例</td><td>≥95%，误报 ≤5%</td><td>20 个背光点位</td><td>统计触发率</td></tr>
+        <tr><td>3M 胶贴持粘力</td><td class="def">粘贴后承受的垂直拉力与设备重量的比值，及长期老化后的保持能力</td><td>≥3 倍重量，5 年不脱落</td><td>石膏板/乳胶漆/瓷砖/金属四基材</td><td>常温 90 天 + 高温高湿 30 天 + 剥离力测试</td></tr>
+        <tr><td>镭雕码扫码成功率</td><td class="def">单次扫码即可正确读出全部字段的比例</td><td>一次 ≥99.5%，两次内 ≥99.9%</td><td>手机摄像头 + 工业扫码枪；酒精擦拭 50 次后</td><td>各 500 次统计</td></tr>
+        <tr><td>位置录入时延</td><td class="def">从扫完码到提交完成的时长（位置记忆+序号递增模式）</td><td>≤10 s</td><td>同区域连续录入</td><td>100 点位取 P95</td></tr>
+        <tr><td>安装效率</td><td class="def">单人单日完成的完整交付点位数（含拨开关、扫码、位置录入、提交）</td><td>&gt;400 点位/人日</td><td>标准场景，3 人 × 3 天</td><td>取均值；同时记录异常点位与返工率</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============ 9 ============ -->
+<section>
+  <h2 id="s9">九、能量预算与续航模型</h2>
+  <p class="h2note">因雷达改为"延迟确认 + PIR 重置"机制，雷达占空从 13% 降至约 3.3%，且 PIR 活跃时完全为 0。整机功耗与平衡照度全面下修。</p>
+
+  <h3>9.1 三态功耗模型</h3>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:190px">耗能项</th><th style="width:110px">无人态</th><th style="width:120px">有人·活跃</th><th style="width:120px">有人·静止</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td>PIR 通道（常开）</td><td>2–5 µA</td><td>2–5 µA</td><td>2–5 µA</td><td>唯一 7×24 工作的传感器，也是最大单项耗电</td></tr>
+        <tr class="rn"><td>24G 雷达</td><td><b>0</b></td><td><b>0</b>（计时器不断重置）</td><td><b>约 5 µA</b></td><td>占空 2 s÷60 s≈3.3%，扫描期均值 ≤150 µA</td></tr>
+        <tr><td>MCU 休眠</td><td>1–3 µA</td><td>1–3 µA</td><td>1–3 µA</td><td>深度休眠</td></tr>
+        <tr><td>上报能耗（折算）</td><td>0.3 µA</td><td>0.8 µA</td><td>0.8 µA</td><td>按 0.28 µAh/次，日均 30–60 次</td></tr>
+        <tr><td>超容漏电</td><td>2 µA</td><td>2 µA</td><td>2 µA</td><td>器件固有</td></tr>
+        <tr><td>能量管理 IC + DC-DC 静态</td><td>2.3 µA</td><td>2.3 µA</td><td>2.3 µA</td><td>IC 300 nA + DC-DC 约 2 µA</td></tr>
+        <tr><td>光照通道</td><td>&lt;0.5 µA</td><td>&lt;0.5 µA</td><td>&lt;0.5 µA</td><td>间歇采样</td></tr>
+        <tr><td><strong>合计</strong></td><td><strong>约 8–11 µA</strong></td><td><strong>约 9–12 µA</strong></td><td><strong>约 14–17 µA</strong></td><td>目标：无人 ≤11、活跃 ≤12、静止 ≤17</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout ok">
+    <b>延迟确认机制带来的最大收益：PIR 活跃时雷达完全不启动。</b>人一直在动时，PIR 每次触发都把 60 s 计时器重置，雷达连上电的机会都没有——此时整机功耗与无人态几乎相同（约 9–12 µA）。只有人坐下不动、PIR 静默满 60 s，雷达才出马确认一次。<br>
+    这个设计同时满足了两个看似矛盾的目标：<b>有人时省电，且静止时不误判无人</b>。
+  </div>
+
+  <h3>9.2 日均消耗与能量平衡</h3>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:150px">场景</th><th style="width:130px">使用剖面</th><th style="width:120px">日均消耗</th><th style="width:130px">平衡所需照度</th><th>结论</th></tr></thead>
+      <tbody>
+        <tr><td>开放办公</td><td>有人 12 h（半静止）</td><td>约 288 µAh（≈12 µA）</td><td>约 <b>48 lux</b>（10 h 采集）</td><td><span class="tag tok">50 lux 可自持</span> 电池零消耗</td></tr>
+        <tr><td>会议室</td><td>有人 6 h</td><td>约 190 µAh（≈8 µA）</td><td>约 32 lux</td><td><span class="tag tok">低照度可自持</span></td></tr>
+        <tr><td>走廊（含白天降频）</td><td>累计 3 h 有人</td><td>约 110 µAh（≈4.6 µA）</td><td>约 <b>18 lux</b></td><td><span class="tag tok">自持能力很强</span></td></tr>
+        <tr><td>地库（形态 A 强上）</td><td>有人 14 h</td><td>约 330 µAh</td><td>无光不可平衡</td><td><span class="tag t0">应改用形态 B</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="h2note" style="margin-left:0">场景差异：办公场景日均约 12 µA，平衡照度约 48 lux。走廊场景从 23 lux 降至约 18 lux。</p>
+
+  <h3>9.3 超容可用能量与续航</h3>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:210px">项目</th><th style="width:170px">计算</th><th>结论</th></tr></thead>
+      <tbody>
+        <tr><td>可用能量（3.5→2.5 V）</td><td>½ × 50 × (3.5²−2.5²) = <strong>150 J</strong></td><td>出厂预充 3.5 V，保护下限 2.5 V</td></tr>
+        <tr><td>无光续航（仅超容，无人态）</td><td>137 J ÷ (10 µA×3.3 V×86400) ≈ <strong>48 天</strong></td><td>缓冲充裕</td></tr>
+        <tr><td>无光续航（仅超容，有人静止）</td><td>137 J ÷ (16 µA×3.3 V×86400) ≈ <strong>30 天</strong></td><td>缓冲充裕</td></tr>
+        <tr><td>电池切入后续航</td><td>400 mAh ÷ 288 µAh/日 ≈ 1388 天</td><td>按 50% DOD 约 <strong>1.9 年</strong></td></tr>
+        <tr><td>USB 补电（边充边检）</td><td>150 J 由 5 V 输入；检测负载几十 µA，占比 &lt;1%</td><td>&lt;10 min 达 3.5 V</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="h2note" style="margin-left:0"><b>运输模式（开关 OFF）：</b>待机电流约 2.3 µA（超容 2 µA + IC 0.3 µA）。按 ΔV = I·t/C 计算，月降约 120 mV，<b>6 个月降约 0.72 V（3.5 → 2.78 V）</b>，降到 2.5 V 保护点约需 <b>8.4 个月</b>。故：<b>库存 ≤8 个月可直接安装；超 8 个月必须 USB 补电（&lt;10 min）。</b></p>
+
+  <h3>9.4 五级能量策略（与延迟确认联动）</h3>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:46px">等级</th><th style="width:100px">超容电压</th><th style="width:110px">T_radar_delay</th><th style="width:100px">心跳/聚合</th><th style="width:150px">上报方式强制改写</th><th style="width:70px">发射功率</th><th>其他</th></tr></thead>
+      <tbody>
+        <tr><td><span class="tag tok">L1</span></td><td>≥3.35 V</td><td>30 s</td><td>300 s / 15 min</td><td>按配置执行</td><td>100%</td><td>全功能</td></tr>
+        <tr><td><span class="tag tok">L2</span></td><td>3.2–3.35 V</td><td><b>60 s（默认）</b></td><td>300 s / 1 h</td><td>按配置执行</td><td>100%</td><td>默认档</td></tr>
+        <tr><td><span class="tag t1">L3</span></td><td>3.0–3.2 V</td><td>120 s</td><td>600 s / 6 h</td><td>P2 由 A 转 H</td><td>75%</td><td>积分时间加长</td></tr>
+        <tr><td><span class="tag t1">L4</span></td><td>2.7–3.0 V</td><td>180 s</td><td>900 s / 24 h</td><td>P2 停发；仅 P0/P1</td><td>50%</td><td>N_leave 加至 5</td></tr>
+        <tr><td><span class="tag t0">L5</span></td><td>&lt;2.7 V（电池已切入）</td><td>300 s</td><td>1800 s / 24 h</td><td>仅 P0</td><td>25%</td><td>N_leave 加至 6</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout warn">
+    <b>低电档的取舍：延迟拉长到 300 s 是"用精度换生存"，这个交换是对的。</b>T_radar_delay 从 60 s 拉到 300 s，雷达鉴别次数随之降到 1/5，日均功耗可再降约 20–30 µAh；代价是静止维持分辨率下降到分钟级，因此 <code>N_leave</code> 必须同步加大（L4→5、L5→6），否则会出现"电量越低越容易误关灯"的反常体验。<br>
+    <b>两个必须接受的边界：</b>① 最坏判离时延可达 <code>N_leave × T_radar_delay</code>（L5 档 6×300 s = 30 min），灯可能白亮较久；② 这类点位应配"最大点亮时长"上限（灯具侧兜底，默认 30 min 强制关闭）避免长时间空亮。
+  </div>
+
+  <h3>9.5 电池寿命</h3>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:170px">部署场景</th><th style="width:130px">日均消耗</th><th style="width:140px">微能量贡献</th><th>电池预计寿命</th></tr></thead>
+      <tbody>
+        <tr><td>靠窗办公</td><td>约 288 µAh</td><td>完全覆盖</td><td><span class="tag tok">≥5 年（存储寿命）</span></td></tr>
+        <tr><td>内区办公（100 lux）</td><td>约 288 µAh</td><td>完全覆盖</td><td><span class="tag tok">≥5 年</span></td></tr>
+        <tr><td>50 lux 走廊（含降频）</td><td>约 110 µAh</td><td>完全覆盖</td><td><span class="tag tok">≥5 年</span></td></tr>
+        <tr><td>30 lux 场景</td><td>约 190 µAh</td><td>覆盖约 60%</td><td><span class="tag tok">约 4 年</span></td></tr>
+        <tr class="rn"><td>地库 / 完全无光</td><td>约 330–480 µAh</td><td>几乎无贡献</td><td><span class="tag t0">1.5–1.9 年</span><b> → 建议改用形态 B</b></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="h2note" style="margin-left:0">除地库外，其余场景电池基本不消耗，"免换电"在办公与走廊场景正式成立。地库仍需按 2 年周期维护或改 USB 供电。</p>
+</section>
+
+<!-- ============ 10 ============ -->
+<section>
+  <h2 id="s10">十、双鉴融合逻辑与雷达时序</h2>
+  <p class="h2note">三个时间参数必须分清：T_scan（单次扫描时长）、T_radar_delay（延迟确认时间）、W_verify（校验窗口）。保持阶段的雷达启动<b>由 PIR 活动动态推迟</b>，而非固定周期。</p>
+
+  <h3>10.1 三个时间参数</h3>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:130px">参数</th><th style="width:110px">符号</th><th style="width:160px">取值</th><th>定义与约束</th></tr></thead>
+      <tbody>
+        <tr class="rn"><td><b>单次扫描时长</b></td><td><code>T_scan</code></td><td><b>≤5 s，典型 2 s</b></td><td>雷达从上电到输出有效结果的时长，由模组实测标定写入固件（只读 <code>tScan</code>）。低温/远距会延长</td></tr>
+        <tr class="rn"><td><b>延迟确认时间</b></td><td><code>T_radar_delay</code></td><td>15/30/60/120/180/300 s</td><td>有人态下，<b>从"最后一次 PIR 触发"开始计时</b>；到期才启动雷达扫描。<b>PIR 每次触发即重置</b></td></tr>
+        <tr class="rn"><td><b>校验窗口</b></td><td><code>W_verify</code></td><td>默认 T_scan+1 s</td><td><b>硬约束：W_verify ≥ T_scan</b>。小于 T_scan 会导致雷达未出结果就判回滚</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>10.2 延迟确认机制</h3>
+  <p>这是本产品最省电也最贴合体验的一段逻辑，用一句话概括：<b>只要人还在动，雷达就不用出马；人不动了，雷达才去确认他还在不在。</b></p>
+  <div class="diag">
+  <svg viewBox="0 0 1040 250" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,Microsoft YaHei,sans-serif">
+    <defs>
+      <marker id="r1" markerWidth="8" markerHeight="8" refX="6" refY="2.8" orient="auto">
+        <path d="M0,0 L6,2.8 L0,5.6 Z" fill="#7d8b99"></path>
+      </marker>
+    </defs>
+    <!-- 时间轴 -->
+    <line x1="60" y1="200" x2="1000" y2="200" stroke="#c3d0dd" stroke-width="1.1" marker-end="url(#r1)"></line>
+    <text x="1006" y="204" font-size="10.5" fill="#7d8b99">t</text>
+
+    <!-- PIR 触发点 -->
+    <line x1="110" y1="70" x2="110" y2="200" stroke="#c47f0a" stroke-width="1.8"></line>
+    <text x="98" y="62" font-size="10.4" fill="#8a5a06" font-weight="600">PIR ①</text>
+
+    <line x1="260" y1="70" x2="260" y2="200" stroke="#c47f0a" stroke-width="1.8"></line>
+    <text x="248" y="62" font-size="10.4" fill="#8a5a06" font-weight="600">PIR ②</text>
+
+    <line x1="420" y1="70" x2="420" y2="200" stroke="#2e8b57" stroke-width="2"></line>
+    <text x="392" y="62" font-size="10.4" fill="#1f6b3f" font-weight="600">PIR ③</text>
+
+    <!-- 计时器重置示意 -->
+    <path d="M110,118 L260,118" stroke="#7a4bb5" stroke-width="1.3" stroke-dasharray="4,3"></path>
+    <path d="M260,118 L420,118" stroke="#7a4bb5" stroke-width="1.3" stroke-dasharray="4,3"></path>
+    <path d="M420,118 L600,118" stroke="#7a4bb5" stroke-width="1.8"></path>
+    <text x="150" y="112" font-size="10" fill="#5b2f96">计时重置</text>
+    <text x="300" y="112" font-size="10" fill="#5b2f96">计时重置</text>
+    <text x="470" y="112" font-size="10" fill="#5b2f96">60 s 倒计时（无 PIR 触发）</text>
+
+    <!-- 雷达扫描 -->
+    <rect x="600" y="130" width="90" height="26" rx="4" fill="#eef4fb" stroke="#3f8fc4" stroke-width="1.5"></rect>
+    <text x="645" y="147" text-anchor="middle" font-size="10.2" fill="#1f4e79">雷达扫描 2 s</text>
+
+    <line x1="600" y1="168" x2="600" y2="200" stroke="#3f8fc4" stroke-width="1.5"></line>
+    <text x="560" y="186" font-size="10" fill="#1f4e79">计时器到期</text>
+
+    <!-- 结果 -->
+    <rect x="730" y="80" width="180" height="34" rx="5" fill="#eaf6ee" stroke="#2e8b57" stroke-width="1.4"></rect>
+    <text x="820" y="102" text-anchor="middle" font-size="10.6" fill="#1f6b3f" font-weight="600">检出 → 重置计时器，维持有人</text>
+
+    <rect x="730" y="130" width="180" height="34" rx="5" fill="#fdeeec" stroke="#c0392b" stroke-width="1.4"></rect>
+    <text x="820" y="152" text-anchor="middle" font-size="10.6" fill="#8f2b1f" font-weight="600">未检出 → 计入 N_leave</text>
+
+    <path d="M690,136 C706,136 706,100 730,97" stroke="#2e8b57" stroke-width="1.3" marker-end="url(#r1)"></path>
+    <path d="M690,150 L730,150" stroke="#c0392b" stroke-width="1.3" marker-end="url(#r1)"></path>
+
+    <!-- 说明 -->
+    <text x="60" y="232" font-size="10.4" fill="#4a5b6b">关键：全程雷达只在 600 s 位置启动过 1 次。若期间 PIR 一直有触发，雷达将永不启动——这就是"有人活跃态≈无人态功耗"的原因。</text>
+  </svg>
+  </div>
+
+  <h3>10.3 三段式逻辑（最终版）</h3>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:110px">状态迁移</th><th style="width:130px">触发与通道</th><th style="width:310px">判决逻辑</th><th>设计意图</th></tr></thead>
+      <tbody>
+        <tr class="rn"><td><strong>无人 → 疑似有人</strong></td><td>仅 PIR 可触发</td><td>PIR 触发 → 立即置"疑似有人"并上报 E101（≤300 ms，灯已亮）→ <b>同时给雷达上电扫描</b>（进入阶段不等 60 s，必须立即校验）</td><td>开灯速度由 PIR 保证；进入阶段必须快校验，否则灯会白亮很久</td></tr>
+        <tr class="rn"><td><strong>疑似有人 → 确定有人</strong></td><td>AND 校验</td><td>雷达在 <code>W_verify</code> 内出结果：检出 → 确认，<b>启动 60 s 延迟确认计时器</b>；未检出 → 回滚并上报 E112</td><td>用事后校验滤掉 PIR 误触发</td></tr>
+        <tr class="r0"><td><strong>有人 → 有人</strong><br>（保持）</td><td><b>PIR 重置计时器</b><br>+ 到期雷达确认</td><td>① PIR 任意触发 → <b>重置 <code>T_radar_delay</code> 计时器</b>，雷达不启动<br>② 计时器到期 → 启动雷达扫描 <code>T_scan</code><br>③ 检出 → 维持有人并重置计时器；未检出 → 进入离开判决</td><td><b>PIR 活跃时雷达零启动</b>，这是省电核心；静止满 60 s 才让雷达确认</td></tr>
+        <tr class="r0"><td><strong>有人 → 无人</strong><br>（离开）</td><td>仅雷达 + 多次判决</td><td>连续 <code>N_leave</code> 次（2–8）判无目标才翻转，单次不翻转；PIR 不参与</td><td>关灯不可逆，必须最保守</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>10.4 门控状态机</h3>
+  <div class="diag">
+  <svg viewBox="0 0 1080 300" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,Microsoft YaHei,sans-serif">
+    <defs>
+      <marker id="s1" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto">
+        <path d="M0,0 L7,3.2 L0,6.4 Z" fill="#7d8b99"></path>
+      </marker>
+      <marker id="s2" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto">
+        <path d="M0,0 L7,3.2 L0,6.4 Z" fill="#c47f0a"></path>
+      </marker>
+      <marker id="s3" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto">
+        <path d="M0,0 L7,3.2 L0,6.4 Z" fill="#7a4bb5"></path>
+      </marker>
+    </defs>
+
+    <rect x="14" y="112" width="156" height="80" rx="10" fill="#eef4fb" stroke="#0b6bcb" stroke-width="1.5"></rect>
+    <text x="92" y="136" text-anchor="middle" font-size="12.6" font-weight="600" fill="#1f4e79">S0 无人</text>
+    <text x="92" y="154" text-anchor="middle" font-size="10.3" fill="#4a5b6b">PIR 常开监听</text>
+    <text x="92" y="170" text-anchor="middle" font-size="10.3" fill="#c0392b" font-weight="600">雷达电源关闭</text>
+    <text x="92" y="185" text-anchor="middle" font-size="10" fill="#7d8b99">≈8–11 µA</text>
+
+    <rect x="228" y="112" width="176" height="80" rx="10" fill="#fffbee" stroke="#c47f0a" stroke-width="1.6"></rect>
+    <text x="316" y="136" text-anchor="middle" font-size="12.6" font-weight="600" fill="#8a5a06">S1 疑似有人</text>
+    <text x="316" y="154" text-anchor="middle" font-size="10.3" fill="#4a5b6b">已翻转 · 已报 E101</text>
+    <text x="316" y="170" text-anchor="middle" font-size="10.3" fill="#7a4bb5">雷达立即扫描</text>
+    <text x="316" y="185" text-anchor="middle" font-size="10" fill="#7d8b99">W_verify ≥ T_scan</text>
+
+    <rect x="464" y="30" width="190" height="76" rx="10" fill="#eaf6ee" stroke="#2e8b57" stroke-width="1.6"></rect>
+    <text x="559" y="54" text-anchor="middle" font-size="12.6" font-weight="600" fill="#1f6b3f">S2 有人·计时中</text>
+    <text x="559" y="72" text-anchor="middle" font-size="10.3" fill="#4a5b6b">PIR 触发即重置计时器</text>
+    <text x="559" y="88" text-anchor="middle" font-size="10.3" fill="#c0392b" font-weight="600">雷达全程不启动</text>
+    <text x="559" y="101" text-anchor="middle" font-size="10" fill="#7d8b99">≈9–12 µA</text>
+
+    <rect x="464" y="188" width="190" height="72" rx="10" fill="#f9f5fe" stroke="#7a4bb5" stroke-width="1.5"></rect>
+    <text x="559" y="212" text-anchor="middle" font-size="12.6" font-weight="600" fill="#5b2f96">S1' 回滚</text>
+    <text x="559" y="230" text-anchor="middle" font-size="10.3" fill="#4a5b6b">进入阶段雷达无目标</text>
+    <text x="559" y="246" text-anchor="middle" font-size="10" fill="#7d8b99">回滚为无人 · 报 E112</text>
+
+    <rect x="710" y="30" width="180" height="76" rx="10" fill="#eef4fb" stroke="#3f8fc4" stroke-width="1.5"></rect>
+    <text x="800" y="54" text-anchor="middle" font-size="12.6" font-weight="600" fill="#1f4e79">S2' 雷达确认</text>
+    <text x="800" y="72" text-anchor="middle" font-size="10.3" fill="#4a5b6b">计时器到期 · 扫描 T_scan</text>
+    <text x="800" y="88" text-anchor="middle" font-size="10" fill="#7d8b99">≈14–17 µA</text>
+
+    <rect x="710" y="150" width="180" height="72" rx="10" fill="#fdeeec" stroke="#c0392b" stroke-width="1.5"></rect>
+    <text x="800" y="174" text-anchor="middle" font-size="12.6" font-weight="600" fill="#8f2b1f">S3 离开判决</text>
+    <text x="800" y="192" text-anchor="middle" font-size="10.3" fill="#4a5b6b">累计 N_leave 次无目标</text>
+    <text x="800" y="208" text-anchor="middle" font-size="10" fill="#7d8b99">单次不翻转</text>
+
+    <rect x="944" y="130" width="118" height="60" rx="9" fill="#f7f8fa" stroke="#8a97a3" stroke-width="1.2" stroke-dasharray="5,4"></rect>
+    <text x="1003" y="154" text-anchor="middle" font-size="11" font-weight="600" fill="#4a5b6b">灯具侧</text>
+    <text x="1003" y="171" text-anchor="middle" font-size="9.6" fill="#7d8b99">最短点亮 ≥10 s</text>
+
+    <path d="M170,146 L228,146" stroke="#c47f0a" stroke-width="1.8" marker-end="url(#s2)"></path>
+    <text x="172" y="138" font-size="10" fill="#8a5a06">PIR 触发</text>
+
+    <path d="M404,136 C432,120 436,90 464,76" stroke="#2e8b57" stroke-width="1.8" marker-end="url(#s1)"></path>
+    <text x="406" y="102" font-size="10" fill="#1f6b3f">AND 成立</text>
+
+    <path d="M404,170 C432,188 436,214 464,222" stroke="#7a4bb5" stroke-width="1.6" marker-end="url(#s3)"></path>
+    <text x="406" y="206" font-size="10" fill="#5b2f96">雷达无目标</text>
+
+    <path d="M464,244 C350,272 130,268 84,194" stroke="#7a4bb5" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#s3)"></path>
+    <text x="150" y="286" font-size="10" fill="#5b2f96">回滚回 S0：雷达断电</text>
+
+    <path d="M654,68 L710,68" stroke="#7d8b99" stroke-width="1.5" marker-end="url(#s1)"></path>
+    <text x="656" y="60" font-size="9.8" fill="#4a5b6b">60 s 无 PIR</text>
+
+    <path d="M654,186 C672,180 680,150 700,120" stroke="#7d8b99" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#s1)"></path>
+    <text x="660" y="168" font-size="9.4" fill="#4a5b6b">未检出</text>
+
+    <path d="M800,106 L800,150" stroke="#7d8b99" stroke-width="1.4" marker-end="url(#s1)"></path>
+
+    <path d="M710,60 C690,50 680,52 654,58" stroke="#2e8b57" stroke-width="1.4" marker-end="url(#s1)"></path>
+    <text x="660" y="44" font-size="9.6" fill="#1f6b3f">检出→重置</text>
+
+    <path d="M890,186 C910,186 910,160 944,155" stroke="#8a97a3" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#s1)"></path>
+    <text x="884" y="230" font-size="9.8" fill="#8f2b1f">N_leave 达标 → E105 离开</text>
+  </svg>
+  </div>
+
+  <h3>10.5 三个残留风险的处置（不做保底扫描）</h3>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:40px">#</th><th style="width:180px">残余风险</th><th style="width:290px">表现</th><th>已收敛的缓解手段</th></tr></thead>
+      <tbody>
+        <tr class="rn"><td>1</td><td>PIR 失效 → 产品静默失效</td><td>镜片被贴、信号链开路时雷达永不启动，<b>彻底失效且不自知</b></td><td>① PIR 自检提至 6 h ② "采集正常+通信正常+连续 7 天零触发"→E113 ③ 后台批量自检 ④ 安装期遮蔽即被发现（E408）</td></tr>
+        <tr class="rn"><td>2</td><td>极限静止检出盲区</td><td>人被判无人后完全不动且 PIR 无触发，系统停在 S0、雷达关闭，无法重新发现</td><td>① <code>N_leave</code> 4–6 次 ② <code>T_leave</code> ≥3 min ③ 保持态 <code>T_radar_delay</code> ≤60 s ④ 布点冗余 ⑤ 规格书明示适用边界</td></tr>
+        <tr class="rn"><td>3</td><td>外环 60°–75° 不可触发</td><td>人只在该环带从静止开始，永远不会被发现</td><td>① 规格书标"触发角 120°" ② 布点按 120° 计算 ③ 外环作容错余量而非设计余量</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout danger">
+    <b>请在投标与方案文档中主动写明：</b>本产品<b>不承诺"在完全无人活动的封闭空间中长期检测人的存在"</b>，且<b>外环 60°–75° 区域不能作为设计覆盖使用</b>。此类场景（单独值班室、ICU 陪护、大进深侧向区域）应改用常供电 + 常开雷达方案。事前说明成本远低于事后解释。
+  </div>
+
+  <h3>10.6 雷达模组：已定型，能力边界如下</h3>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:180px">约束项</th><th style="width:170px">红线值</th><th>理由与不满足的后果</th></tr></thead>
+      <tbody>
+        <tr class="r0"><td><b>扫描期平均电流</b></td><td><b>≤150 µA</b><br><span class="tag tok">已验证</span></td><td>若只能满功率 25 mA 扫描，微能量下每天只能扫几十次，PIR 门控方案不成立</td></tr>
+        <tr><td>单次扫描时长</td><td>≤5 s（典型 2 s）<br><span class="tag tok">已验证</span></td><td>决定校验窗口长度与用户感知的"回滚延迟"</td></tr>
+        <tr class="rn"><td><b>数据就绪信号</b></td><td><b>有 DRDY</b><br><span class="tag tok">已具备</span></td><td>有就绪信号可避免"雷达慢响应导致误回滚"，是最低成本的加分项</td></tr>
+        <tr><td>保持角（器件）</td><td>≥150°</td><td>支撑外环维持能力；与 PIR 120° 触发角形成互补</td></tr>
+        <tr><td>微动灵敏度</td><td>可检出 ≤0.05 m/s</td><td>决定静止漏报指标能否达标</td></tr>
+        <tr><td>抗干扰能力</td><td>金属摆动/管道/穿墙抑制</td><td>决定空场净误报率</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="h2note" style="margin-left:0"><b>模组已选定并验证通过，以下为定型后的能力边界与不可突破的约束。</b>后续若因供货或成本变更型号，须重新验证本表全部项，尤其"扫描期平均电流"与"T_scan"两项——它们是 PIR 门控架构能否成立的前提。</p>
+
+  <h3>10.7 关键参数汇总</h3>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:155px">参数</th><th style="width:105px">符号</th><th style="width:130px">形态 A</th><th style="width:120px">形态 B</th><th>调优方向</th></tr></thead>
+      <tbody>
+        <tr><td>雷达单次扫描</td><td><code>T_scan</code></td><td colspan="2">≤5 s，典型 2 s（模组标定，只读）</td></tr>
+        <tr><td>校验窗口</td><td><code>W_verify</code></td><td colspan="2"><code>T_scan</code>+1 s，硬约束 ≥T_scan</td></tr>
+        <tr class="rn"><td><b>延迟确认时间</b></td><td><code>T_radar_delay</code></td><td><b>60 s</b>（低电延长至 300 s）</td><td>15–30 s</td></tr>
+        <tr><td>离开判决次数</td><td><code>N_leave</code></td><td>3（低电 5–6）</td><td>3</td></tr>
+        <tr><td>无人确认延时</td><td><code>T_leave</code></td><td>按场景 30 s–15 min</td><td>同左</td></tr>
+        <tr><td>开灯校验窗口</td><td><code>T_check</code></td><td>10 s</td><td>同左</td></tr>
+        <tr><td>开灯判定阈值</td><td><code>TH_lux_up</code></td><td>20 lux（且前置照度 &lt;100 lux）</td><td>同左</td></tr>
+        <tr><td>免开灯阈值</td><td><code>TH_day</code></td><td>150–300 lux 可配</td><td>同左</td></tr>
+        <tr><td>校时门限</td><td><code>TH_sync</code></td><td>100 ms</td><td>100 ms</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============ 11 ============ -->
+<section>
+  <h2 id="s11">十一、安装工艺、扫码录入与效率</h2>
+
+  <h3>11.1 四种安装姿态</h3>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:90px">姿态</th><th style="width:150px">推荐高度/角度</th><th style="width:170px">适用场景</th><th>探测特性</th></tr></thead>
+      <tbody>
+        <tr><td><strong>顶装</strong></td><td>吊顶 2.6–3.2 m，垂直向下</td><td>办公大开间、会议室、地库</td><td>对称覆盖；静坐检出好</td></tr>
+        <tr><td><strong>斜装</strong></td><td>墙面 2.0–2.4 m，下倾 20–45°</td><td>走廊、门框内侧、楼梯口、立柱</td><td><b>对人流方向检出率最高</b></td></tr>
+        <tr><td><strong>侧装</strong></td><td>墙面/立柱 1.2–2.0 m</td><td>货架侧板、管井旁、隔断上沿</td><td>水平扇形，适合横向动线</td></tr>
+        <tr><td><strong>倒装</strong></td><td>梁下/桥架下</td><td>地库、厂房</td><td>同顶装，注意金属梁反射</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="h2note" style="margin-left:0">姿态必须写入配置（<code>mountMode</code>）。顶装是"俯视锥"、侧装是"水平扇"，距离-能量映射与微动阈值完全不同；用同一套参数会让侧装/斜装点位的误报与漏检显著恶化。</p>
+
+  <h3>11.2 3M 胶贴附着面清单</h3>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:150px">基材</th><th style="width:110px">适用性</th><th style="width:200px">处理要求</th><th>风险提示</th></tr></thead>
+      <tbody>
+        <tr><td>乳胶漆墙面/吊顶</td><td><span class="tag t1">可用（有条件）</span></td><td>确认漆面牢固；酒精擦净除尘干透</td><td><b>劣质乳胶漆会整片脱落</b>，连带撕下设备；现场做胶带拉拔试验</td></tr>
+        <tr><td>瓷砖/玻璃/金属</td><td><span class="tag tok">优</span></td><td>酒精除油、干透</td><td>金属低温易结露影响初粘</td></tr>
+        <tr><td>矿棉板/石膏板</td><td><span class="tag t0">需评估</span></td><td>加装背板或改卡扣固定</td><td>表层疏松，胶贴可能带走表层</td></tr>
+        <tr><td>木饰面/三聚氰胺板</td><td><span class="tag tok">优</span></td><td>除尘即可</td><td>—</td></tr>
+        <tr><td>粗糙水泥/砖墙</td><td><span class="tag t0">不可用</span></td><td>—</td><td>接触面积不足</td></tr>
+        <tr><td>粉化/起皮/潮湿墙</td><td><span class="tag t0">不可用</span></td><td>—</td><td>必须改卡扣或打孔</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>11.3 镭雕设备码与位置录入</h3>
+  <h4>11.3.1 镭雕码内容与工艺</h4>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:130px">要素</th><th style="width:290px">要求</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr class="rn"><td><b>承载内容</b></td><td><code>modelCode</code> + <code>MAC</code>(12 位) + <code>batch</code> + <code>mfgDate</code> + <code>hwVer</code></td><td>一扫带出全部出厂信息，消除手输 MAC 的错录风险</td></tr>
+        <tr><td>码制</td><td>QR 或 DataMatrix（推荐后者：同面积信息密度更高、低对比度更易识读）</td><td>需兼容手机摄像头与工业扫码枪</td></tr>
+        <tr><td>尺寸与位置</td><td>≥8×8 mm；底面或侧面凹槽，避开探测窗与 USB 口</td><td>与开关、USB 口同区，用同色盖片遮蔽</td></tr>
+        <tr class="rn"><td><b>对比度</b></td><td>PCS ≥0.3；深色壳用浅色打标，浅色壳用深色打标</td><td>深色壳对比度是最大风险，打样阶段必须实测</td></tr>
+        <tr><td>耐磨耐污</td><td>酒精擦拭 50 次后仍可识读</td><td>设备装在高处，后期难清洁</td></tr>
+        <tr class="rn"><td><b>扫码成功率</b></td><td>一次 ≥99.5%；两次内 ≥99.9%</td><td>列入来料与出货检验项</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>11.3.2 产线写入与三重一致性校验</h4>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:40px">#</th><th style="width:160px">工序</th><th style="width:270px">动作</th><th>合格判定</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>镭雕</td><td>激光打标机在外壳底面刻码（型号+MAC+批次+日期+hwVer）</td><td>可读、对比度达标</td></tr>
+        <tr class="rn"><td>2</td><td><b>扫码读码</b></td><td>产线扫码枪读取镭雕内容，自动录入产线系统</td><td>一次读取成功；失败则重刻或判废</td></tr>
+        <tr class="rn"><td>3</td><td><b>写入内部存储</b></td><td>经测试工装（USB，<b>开关可保持 OFF</b>）写入设备非易失存储专用区</td><td>写入成功回读校验值</td></tr>
+        <tr class="rn"><td>4</td><td><b>回读比对</b></td><td>从设备读回内部存储，与扫码结果逐字段比对</td><td><b>完全一致；不一致不得出厂</b></td></tr>
+        <tr class="rn"><td>5</td><td>MAC 一致性</td><td>核对内部存储 MAC 与芯片实际广播 MAC</td><td>一致；否则判为标错/改装</td></tr>
+        <tr><td>6</td><td>预充与运输模式</td><td>超容预充至 3.5 V → 拨开关至 OFF → 包装</td><td>待机电流 ≤2.5 µA（抽检）</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout new">
+    <b>三重一致性校验的价值：</b>镭雕码（物理铭牌）、内部存储（产线写入）、实际 MAC（芯片固有）三者必须一致。任一层被篡改或错标都会暴露：<br>
+    · <b>换壳/改标</b> → 镭雕码与实际 MAC 不匹配；<br>
+    · <b>写入失败或错写</b> → 内部存储与镭雕码不匹配；<br>
+    · <b>扫 A 装 B</b> → App 扫码得到的 MAC 与设备上报 MAC 不匹配。<br>
+    三道校验成本极低（都是软件比对），但能堵住产品全生命周期的身份类事故。建议写入后<b>内部存储区设为只读</b>。
+  </div>
+
+  <h4>11.3.3 App 位置录入要求（决定 400 点位能否达成）</h4>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:40px">#</th><th style="width:180px">功能</th><th style="width:280px">要求</th><th>省下的时间</th></tr></thead>
+      <tbody>
+        <tr class="r0"><td>1</td><td><b>位置四级结构</b></td><td>楼栋 / 楼层 / 区域 / 点位号，与云端图纸范围对应</td><td>基础结构</td></tr>
+        <tr class="r0"><td>2</td><td><b>位置记忆</b></td><td>记住上一次录入的位置，同区域连续安装自动预填</td><td>每点位省 12–18 s</td></tr>
+        <tr class="r0"><td>3</td><td><b>点位号自动递增</b></td><td>扫下一个码时序号自动 +1（A01→A02），支持手动跳号</td><td>每点位省 5–8 s</td></tr>
+        <tr><td>4</td><td>平面图选点（可选）</td><td>有楼层图纸时直接点选，自动填充四级位置</td><td>适用有 CAD 图纸项目</td></tr>
+        <tr><td>5</td><td>重复校验</td><td>同位置重复绑定、同设备重复登记即时拦截</td><td>防错绑</td></tr>
+        <tr><td>6</td><td>离线暂存</td><td>无网时本地暂存，恢复后批量提交</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>11.3.4 节拍重算</h4>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:40px">#</th><th style="width:200px">位置录入方式</th><th style="width:100px">录入耗时</th><th style="width:100px">单点位节拍</th><th>400 点位所需工时</th></tr></thead>
+      <tbody>
+        <tr class="rn"><td>A</td><td><b>位置记忆 + 序号自动递增</b></td><td><b>约 10 s</b></td><td><b>约 57 s</b></td><td><span class="tag tok">6.3 h（可行）</span></td></tr>
+        <tr><td>B</td><td>每次完整选四级位置</td><td>约 25 s</td><td>约 72 s</td><td><span class="tag t0">8.0 h（实际约 325 点位）</span></td></tr>
+        <tr><td>C</td><td>现场只扫码，位置事后补录</td><td>约 6 s</td><td>约 53 s</td><td><span class="tag tok">5.9 h</span>，但有时序错配风险</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><b>方案 A 动作拆解（57 s）：</b>移动定位 15 s + 撕膜贴附 10 s + 压合 6 s + <b>拨开关 4 s</b> + 扫镭雕码 5 s + 位置确认 5 s + 姿态选择 4 s + 转场 8 s。</p>
+  <div class="callout danger">
+    <b>400 点位/人日成立的前提是 App 必须实现"位置记忆 + 点位号自动递增"。</b>若每次从头选四级位置，单点位多 15 s，日产能降到约 325——<b>400 指标就不成立</b>。这两项软件工作量很小，但对交付速度影响是决定性的，建议列为 App 的 P0，与固件同步开发。
+  </div>
+
+  <h3>11.4 白名单机制</h3>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:120px">环节</th><th style="width:250px">动作</th><th>失败处理</th></tr></thead>
+      <tbody>
+        <tr class="rn"><td>绑定提交</td><td>扫镭雕码自动带入设备信息，叠加现场录入的四级位置与姿态，提交云端</td><td>重复绑定/位置冲突 → 拒绝并提示</td></tr>
+        <tr class="rn"><td><b>设备身份校验</b></td><td>镭雕码中的 MAC 与设备实际上报的 MAC 必须一致，防"扫 A 装 B"</td><td>不一致 → 拒绝绑定并告警（E509）</td></tr>
+        <tr><td>白名单校验</td><td>核对设备是否属本项目、位置是否在图纸内、是否被占用</td><td>未通过 → 可入网但<b>不得输出联动指令</b>，标"待核"并告警</td></tr>
+        <tr><td>放行</td><td>通过后写入白名单，设备获得业务授权与 <code>locCode</code></td><td>—</td></tr>
+        <tr><td>变更留痕</td><td>位置变更、设备替换记录操作人、时间、旧值新值</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>11.5 安装流程（顺序不可颠倒）</h3>
+  <ol>
+    <li><strong>取件</strong>：按箱取件。</li>
+    <li><strong>能量核查</strong>：检查超容电压；&lt;3 V 则 USB 补电至 3.5 V 再装（&lt;10 min，边充边检不影响速度）。</li>
+    <li><strong>基材判定</strong>：对照 11.2；乳胶漆面做拉拔试验。</li>
+    <li><strong>粘贴</strong>：酒精擦拭 → 干透 → 撕膜 → 压合 ≥10 s。</li>
+    <li class="rn"><strong>拨开关至通电</strong>：将底部单刀开关从 OFF 拨到 ON（指甲或小工具，力度 3–5 N）。<b>必须先通电再扫码</b>——设备通电才能入网，扫码登记时才能即时校验在线状态。</li>
+    <li><strong>扫码绑定</strong>：扫镭雕码（自动带出型号/MAC/批次）→ App 录入位置（默认沿用上次+序号递增）→ 选姿态与倾角 → 提交。</li>
+    <li><strong>白名单校验</strong>：等待云端返回；未通过现场处理。</li>
+    <li><strong>入网确认</strong>：App 显示上线即完成。</li>
+    <li><strong>分批自检</strong>：2 h 后平台出报告与返工清单（含照度评估与策略核对）。</li>
+  </ol>
+  <div class="callout warn">
+    <b>现场自纠正机制：</b>若安装工忘记拨 ON，设备不通电、扫码后无法入网，App 会提示"设备未上线"。文案中必须明确写"<b>请确认底部开关已拨至 ON</b>"，把提示变成纠正动作。
+  </div>
+
+  <h3>11.6 安装位置要求</h3>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:150px">要素</th><th style="width:240px">要求</th><th>违反后果</th></tr></thead>
+      <tbody>
+        <tr><td>安装高度</td><td>顶装 2.6–3.2 m；斜装 2.0–2.4 m；侧装 1.2–2.0 m</td><td>微动检测失效或覆盖不足</td></tr>
+        <tr><td>采光面朝向</td><td>朝向室内光源或窗户，不得朝暗角</td><td>照度不足 → E309 告警 + 电池加速消耗</td></tr>
+        <tr><td>远离气流源</td><td>距空调出风口 ≥1.5 m、新风 ≥1 m</td><td>PIR 温度扰动 → 回滚率升高</td></tr>
+        <tr><td>远离金属摆动体</td><td>距卷帘门/吊扇/管道 ≥2 m</td><td>雷达虚警率抬升</td></tr>
+        <tr><td>避开玻璃正对</td><td>不得正对玻璃，水平偏移 ≥30°</td><td>穿墙检测致邻室误触发</td></tr>
+        <tr><td>布点密度</td><td>办公 25–35 m²/台；走廊 8–12 m/台；地库 2–3 车位/台（按 120° 触发角核算）</td><td>过疏漏检，过密互相干扰</td></tr>
+        <tr><td>父节点容量</td><td>单父节点下挂 ≤8 台</td><td>超限需增加父节点或迁移</td></tr>
+        <tr><td>USB 取电位（形态 B）</td><td>就近 5 V 源，线长 ≤3 m，走线隐蔽</td><td>线缆外露影响观感、易被拉扯</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============ 12 ============ -->
+<section>
+  <h2 id="s12">十二、可靠性、合规与隐私</h2>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:160px">类别</th><th style="width:180px">要求</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td>工作温度</td><td>-10 ~ 55 ℃</td><td>本产品<b>无温度检测功能</b>，超窗不产生事件；但<b>低温会使 T_scan 延长</b>，需在 -10 ℃ 验证校验窗口仍足够</td></tr>
+        <tr><td>存储温度</td><td>-20 ~ 70 ℃</td><td>超容低温容量衰减、电池高温自放电需评估</td></tr>
+        <tr><td>工作湿度</td><td>10% ~ 90% RH（非凝露）</td><td>凝露环境需三防处理</td></tr>
+        <tr><td>防护等级</td><td>IP30（室内）</td><td>USB 口与开关凹槽开盖状态不计入 IP 等级，需明示</td></tr>
+        <tr><td>胶贴可靠性</td><td>常温 5 年不脱落；持粘力 ≥3 倍重量</td><td>四基材分别验证；高温高湿 30 天 + 冷热冲击后复测</td></tr>
+        <tr class="rn"><td><b>开关可靠性</b></td><td>寿命 ≥5000 次；镀金触点；振动中不跳变</td><td>微电流工况下未镀金会氧化，表现为"偶发不上电"</td></tr>
+        <tr><td>USB 长期插电可靠性</td><td>连续插电 ≥2 年无异常</td><td>验证超容浮充寿命、发热与接口氧化；建议每周一次浅充放</td></tr>
+        <tr><td>外观隐私合规</td><td>整机无开孔、无音频元件、无镜头形态</td><td>须有自证声明或第三方检测；随箱附隐私声明卡</td></tr>
+        <tr><td>无线合规</td><td>2.4G BLE 符合 SRRC</td><td>出口按目标市场重认证</td></tr>
+        <tr><td>雷达合规</td><td>24.0–24.25 GHz ISM，功率符合当地限值</td><td>逐国核对</td></tr>
+        <tr><td>电池合规</td><td>锂锰纽扣电池，符合运输与环保要求</td><td>UN38.3（若适用）与 MSDS</td></tr>
+        <tr><td>USB 安全</td><td>防反灌、限流 ≤300 mA、ESD 保护</td><td>防劣质充电器损坏电路</td></tr>
+        <tr><td>配置安全</td><td>本地蓝牙需鉴权码；配置变更全留痕；需云端确认</td><td>防未授权修改上报策略掩盖故障</td></tr>
+        <tr><td>环保</td><td>RoHS / 无卤；储能与电池可回收</td><td>电池属受控废弃物</td></tr>
+        <tr><td>隐私</td><td>无摄像、无音频、无身份识别；雷达不上传原始中频</td><td>写入宣传口径与隐私声明卡</td></tr>
+        <tr><td>寿命</td><td>整机 ≥5 年（地库场景电池 1.5–1.9 年）</td><td>电池短板须在规格书明示</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============ 13 ============ -->
+<section>
+  <h2 id="s13">十三、测试与验收计划</h2>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:100px">层级</th><th style="width:250px">测试内容</th><th style="width:100px">执行方</th><th>通过标准</th></tr></thead>
+      <tbody>
+        <tr><td>单元测试</td><td>门控状态机、延迟确认计时器、回滚、上报调度表、SOC、锁时</td><td>研发</td><td>语句覆盖 ≥80%，分支覆盖 ≥70%</td></tr>
+        <tr><td>算法离线验证</td><td>样本集回归；四姿态分别回归</td><td>算法 + 测试</td><td>移动 &gt;99%；静止与净误报 &lt;1次/72h</td></tr>
+        <tr><td>EVT 验证</td><td>三态功耗、雷达扫描电流、形态切换、边充边检、开关待机</td><td>硬件 + 测试</td><td>无人 ≤11 µA、静止 ≤17 µA、活跃 ≤12 µA、扫描期 ≤150 µA</td></tr>
+        <tr class="rn"><td><b>事件定义验证</b></td><td>54 条事件逐条构造触发条件，验证是否按定义产生</td><td>研发 + 测试</td><td>每条事件均可稳定复现；无误触发</td></tr>
+        <tr><td>配置体系验证</td><td>54 条逐条下发；硬约束拒绝；本地待确认流程</td><td>研发 + 云端</td><td>回读一致率 100%；不可禁用事件拒绝率 100%</td></tr>
+        <tr><td>DVT 场景验证</td><td>暗室标准路径、类空场 7×24 h、六场景实景</td><td>测试</td><td>第八章达标或书面让步</td></tr>
+        <tr class="rn"><td><b>光照四用途验证</b></td><td>联动 / 安装质检 / 免开灯 / 灯具故障判断分别验证</td><td>测试 + 云端</td><td>E605 检出率 ≥90%、误报 ≤10%</td></tr>
+        <tr><td>外观隐私评审</td><td>无孔、无镜头感、无可见 LED 的实物评审</td><td>结构 + 产品</td><td>盲测 10 人，≥9 人不认为是摄像设备</td></tr>
+        <tr><td>胶贴与开关可靠性</td><td>四基材胶贴老化；开关 5000 次寿命与振动</td><td>结构 + 测试</td><td>无脱落；开关不跳变、接触电阻达标</td></tr>
+        <tr><td>安装效率</td><td>3 人 × 3 天实测（含拨开关与扫码全流程）</td><td>工艺 + 测试</td><td>均值 &gt;400 点位/人日</td></tr>
+        <tr><td>现场小批试点</td><td>≥200 点位，≥30 天，含形态 A/B 混合</td><td>FAE + 测试</td><td>误报工单 ≤1 次/点位/月；离线率 ≤1%</td></tr>
+        <tr><td>系统联调</td><td>L2 网络、CCO、云平台、白名单、配置下发、能耗大屏</td><td>系统 + 云端</td><td>端到端 ≤3 s；拓扑无该设备作父节点</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>13.1 关键专项测试</h3>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:40px">#</th><th style="width:230px">专项</th><th style="width:290px">方法</th><th>判定</th></tr></thead>
+      <tbody>
+        <tr class="rn"><td>1</td><td><b>延迟确认计时器重置</b></td><td>有人态下每 58 s 注入一次 PIR 触发，持续 30 min</td><td>雷达启动次数为 0；状态始终维持有人</td></tr>
+        <tr class="rn"><td>2</td><td><b>静止确认与离开判决</b></td><td>PIR 静默 60 s 后雷达扫描；再静默多个周期</td><td>按 N_leave 次数准确翻转；单次不翻转</td></tr>
+        <tr class="rn"><td>3</td><td><b>T_scan 与 W_verify 关系</b></td><td>常温与 -10 ℃ 各测 200 次；注入慢响应 4 s</td><td>T_scan P95 ≤5 s；慢响应不得误回滚</td></tr>
+        <tr><td>4</td><td>54 条事件定义复现</td><td>逐条构造触发条件</td><td>全部可稳定复现，无误触发</td></tr>
+        <tr><td>5</td><td>硬约束不可突破</td><td>尝试禁用 24 条、把 P0 改 A 档</td><td>全部拒绝并回 E505</td></tr>
+        <tr><td>6</td><td>本地配置待确认三态</td><td>本地改 10 条 → 确认/拒绝/超时三分支</td><td>三态正确；7 天自动回退并告警</td></tr>
+        <tr><td>7</td><td>能量底线强制改写</td><td>配置 P2 为 15 min 后再拉低到 L4</td><td>P2 停发；回执"实际执行值"正确</td></tr>
+        <tr><td>8</td><td><b>开灯响应校验</b></td><td>断开灯具 20 次 / 断通信 20 次 / 正常 20 次</td><td>故障检出 ≥90%；正常不误报 ≤10%</td></tr>
+        <tr><td>9</td><td>形态 A/B 切换</td><td>运行中反复插拔 USB 100 次</td><td>≤5 s 切换；检测不中断；无重启</td></tr>
+        <tr><td>10</td><td><b>运输模式与开关</b></td><td>开关 OFF 待机电流；振动后状态；5000 次寿命；开关 OFF 下 USB 写入</td><td>待机 ≤2.5 µA；不跳变；USB 旁路可用</td></tr>
+        <tr><td>11</td><td>上电原因识别</td><td>分别模拟开关拨通/看门狗/能量恢复/软复位</td><td>四种 <code>bootCause</code> 均正确</td></tr>
+        <tr><td>12</td><td><b>三重一致性校验</b></td><td>篡改镭雕码 / 错写内部存储 / MAC 不一致</td><td>均在对应环节拦截；不一致不得出厂</td></tr>
+        <tr><td>13</td><td>镭雕码与位置绑定</td><td>正常/重复/跨项目/扫A装B/位置越界</td><td>MAC 不一致必须拦截</td></tr>
+        <tr><td>14</td><td>App 位置记忆与递增</td><td>同区域连续录入 50 个点位</td><td>单点位 ≤10 s；序号无跳号重号</td></tr>
+        <tr><td>15</td><td>回滚时序与灯具无闪</td><td>PIR 触发但雷达无目标</td><td>翻转 ≤300 ms；回滚 ≤T_scan+1 s；无可见闪灯</td></tr>
+        <tr><td>16</td><td>静止漏报 72 h</td><td>真人静坐分段轮换</td><td>0 次</td></tr>
+        <tr><td>17</td><td>类空场净误报 72 h</td><td>无人 + 空调/窗帘/卷帘干扰</td><td>净误报 0 次；回滚 ≤5 次</td></tr>
+        <tr><td>18</td><td>≤8 台/父节点满载</td><td>满载 + 尝试挂第 9 台</td><td>无碰撞；第 9 台被拒或迁移</td></tr>
+        <tr><td>19</td><td>上行可靠投递</td><td>ACK 丢失 500 次、父节点离线、暂存溢出</td><td>事件零丢失</td></tr>
+        <tr><td>20</td><td>随机断电鲁棒性</td><td>断电 500 次</td><td>变砖 0 次；配置与缓存不丢</td></tr>
+        <tr class="rn"><td>21</td><td><b>本地广播与灯侧确认</b></td><td>4 跳链路下 200 次开灯；注入 30% 丢包；灯拒回 ACK</td><td>4 跳内 ≤300 ms；丢包由重播覆盖；3 次无确认正确上报 E606</td></tr>
+        <tr class="rn"><td>22</td><td><b>三通道互不阻塞</b></td><td>父节点离线 / 广播全丢 / 云端断链 三组故障交叉注入</td><td>任一通道故障时其余两通道功能与记录不受影响</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============ 14 ============ -->
+<section>
+  <h2 id="s14">十四、项目计划、风险与待决事项</h2>
+
+  <h3>14.1 阶段计划</h3>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:88px">阶段</th><th style="width:100px">周期</th><th style="width:295px">关键交付物</th><th>出口条件</th></tr></thead>
+      <tbody>
+        <tr><td>M0 需求冻结</td><td>T0 – T+2W</td><td>PRD v2.0 定稿、事件清单同步、物模型初稿、<b>雷达模组定型确认</b></td><td>三方会签；扫描电流 ≤150 µA 已验证</td></tr>
+        <tr><td>M1 EVT</td><td>T+3 – T+10W</td><td>功能样机、三态功耗、延迟确认链路、开关与运输模式、配置体系原型</td><td>无人 ≤12 µA；开关待机 ≤2.5 µA；配置回读打通</td></tr>
+        <tr><td>M2 DVT</td><td>T+11 – T+20W</td><td>四姿态算法回归、指标实测、胶贴老化、光照四用途、白名单与配置联调</td><td>指标达标；E605 检出率达标；配置回读 100%</td></tr>
+        <tr><td>M3 PVT</td><td>T+21 – T+26W</td><td>小批试产、安装工艺（含 App 位置录入）、后台自检平台、认证送测</td><td>直通率 ≥95%；安装实测 &gt;400</td></tr>
+        <tr><td>M4 MP</td><td>T+27 – T+30W</td><td>量产固件、施工手册、隐私声明卡、FAE 培训包</td><td>试点 30 天达标；认证到位</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>14.2 风险登记</h3>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:40px">#</th><th style="width:200px">风险</th><th style="width:56px">等级</th><th style="width:190px">影响</th><th>缓解措施</th></tr></thead>
+      <tbody>
+        <tr class="rn"><td>R1</td><td><b>雷达模组扫描电流超标</b></td><td><span class="tag t0">高</span></td><td>若只能满功率 25 mA 扫描，PIR 门控在微能量下不成立</td><td>M0 一票否决式实测；备选低功耗模组 2–3 家</td></tr>
+        <tr class="rn"><td>R2</td><td><b>T_scan 低温延长导致误回滚</b></td><td><span class="tag t0">高</span></td><td>冬季"开灯后又灭"集中爆发</td><td>优先选带 DRDY 模组；否则 W_verify 按最坏 5.5 s 固定；-10 ℃ 专项</td></tr>
+        <tr class="rn"><td>R3</td><td><b>延迟确认过长导致"人坐下后很久才发现走了"</b></td><td><span class="tag t1">中高</span></td><td>低电档 T_radar_delay=300 s、N_leave=6 时，最坏 25 min 才判离开，灯长亮</td><td>限制低电档仅用于能量确紧张的少数点位；N_leave 与延迟联动；云端标记降级点位</td></tr>
+        <tr class="rn"><td>R4</td><td>开灯响应校验误判</td><td><span class="tag t1">中高</span></td><td>白天高照度、调光场景、多灯共用一传感器时误报 E605</td><td>严格限定生效条件（&lt;100 lux + 全亮）；云端结合灯具回执二次判定；出厂前用实测分布定阈</td></tr>
+        <tr><td>R5</td><td>位置录入拖累安装效率</td><td><span class="tag t0">高</span></td><td>400 点位/人日不达标</td><td>App 位置记忆+序号递增列 P0；M2 完成、M3 实测；未落实则下调至 325</td></tr>
+        <tr><td>R6</td><td>镭雕码对比度不足</td><td><span class="tag t1">中高</span></td><td>深色壳体扫不上或误识</td><td>打样四色实测 PCS；必要时浅底打标；来料 100% 扫码检验</td></tr>
+        <tr><td>R7</td><td>开关漏拨/误拨/氧化</td><td><span class="tag t0">高</span></td><td>漏拨则不上电；氧化则"偶发不上电"，最难排查</td><td>产线 100% 记录 + 抽检电流；镀金触点；App 提示；振动测试</td></tr>
+        <tr><td>R8</td><td>PIR 失效导致静默失效</td><td><span class="tag t0">高</span></td><td>用户以为正常，实际无检测能力</td><td>PIR 自检 6 h + 7 天零触发判据 + 后台批量自检</td></tr>
+        <tr><td>R9</td><td>3M 胶贴在劣质墙面脱落</td><td><span class="tag t0">高</span></td><td>吊顶掉落砸人；整批返工</td><td>禁用基材清单；现场拉拔试验；卡扣备选；脱落可上报</td></tr>
+        <tr><td>R10</td><td>外观被误认为摄像头</td><td><span class="tag t0">高</span></td><td>员工投诉导致整层推进受阻</td><td>无孔化设计；盲测评审；隐私声明卡</td></tr>
+        <tr><td>R11</td><td>移动 &gt;99% 与静止漏报 &lt;1次/72h 不可同时达成</td><td><span class="tag t0">高</span></td><td>DVT 可能卡关</td><td>M0 确认让步优先级（建议优先保静止漏报）</td></tr>
+        <tr><td>R12</td><td>父节点未实现时隙编排与双向暂存</td><td><span class="tag t0">高</span></td><td>短窗口下大面积丢包</td><td>写入 L2 协议强制项；8 台限容；专项测试 18、19</td></tr>
+        <tr><td>R13</td><td>54 条事件配置的运维复杂度</td><td><span class="tag t1">中高</span></td><td>现场不知该配什么，配置错乱</td><td>以模板为主、逐条微调为辅；默认即推荐值；偏离基线点位单独标记</td></tr>
+        <tr class="rn"><td>R14</td><td><b>灯具侧不支持短 ACK 回执</b></td><td><span class="tag t0">高</span></td><td>本地广播无法确认送达，关灯成功率无从保证；E606 失效</td><td>M0 前与灯具团队确认协议；若不支持，退化为"广播不确认 + 灯具侧自觉重试"，并在验收口径中删去"关灯成功率"承诺</td></tr>
+        <tr class="rn"><td>R15</td><td><b>三通道配置项过多，现场配错</b></td><td><span class="tag t1">中高</span></td><td>误关本地广播导致开灯变慢，或误把 P0 配成 L 档导致事件不上云</td><td>硬约束兜底 + 六套模板 + 偏离基线标记；App 侧对"关闭关键事件本地广播"二次确认</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>14.3 待决事项（M0 前关闭）</h3>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:40px">#</th><th style="width:290px">事项</th><th style="width:100px">决策方</th><th>结论 / 待定内容</th></tr></thead>
+      <tbody>
+        <tr><td colspan="4" style="background:#eaf6ee;font-weight:700;color:#1f6b3f">已定案</td></tr>
+        <tr><td>1</td><td>雷达模组型号</td><td>硬件 + 算法</td><td><span class="tag tok">已定型</span> 所选模组实测满足扫描期 ≤150 µA、T_scan ≤5 s、具备 DRDY；变更型号须重新验证</td></tr>
+        <tr><td>2</td><td>扫码方案</td><td>产品线</td><td><span class="tag tok">关闭</span> 镭雕设备码 + App 位置录入；镭雕位置与对比度方案已确认</td></tr>
+        <tr><td>3</td><td>光照通道</td><td>产品线</td><td><span class="tag tok">关闭</span> 全型号标配，四用途</td></tr>
+        <tr><td>4</td><td>本地配置确认机制</td><td>产品线</td><td><span class="tag tok">关闭</span> 云端人工确认；72 h 告警、7 天回退</td></tr>
+        <tr><td>5</td><td>能量拓扑与开关位置</td><td>硬件</td><td><span class="tag tok">关闭</span> IC 管理三源，开关切 IC 输出；USB 旁路</td></tr>
+        <tr><td>6</td><td>低电档 T_radar_delay 上限</td><td>产品线 + 算法</td><td><span class="tag tok">关闭</span> <b>300 s</b>，同时减少鉴别次数；N_leave 同步加大到 6</td></tr>
+        <tr><td>7</td><td>E605 生效条件是否放宽</td><td>产品线 + 云端</td><td><span class="tag tok">关闭</span> <b>放宽</b>：&lt;300 lux 且亮度 ≥70% 档；阈值自适应；连续 2 次无效才报</td></tr>
+        <tr><td>8</td><td>事件上报是否区分出口</td><td>产品线 + 云端</td><td><span class="tag tok">关闭</span> 拆为本地广播 / 父节点上行 / 云端上报三通道，周期全可配</td></tr>
+        <tr><td colspan="4" style="background:#f4f7fa;font-weight:700;color:#1f4e79">仍待决</td></tr>
+        <tr class="rn"><td>9</td><td><b>灯侧确认协议能否作为灯具侧强制项</b></td><td>灯具团队 + 产品</td><td>E101/E105 的"广播+灯确认"依赖灯具固件回 ACK；若灯具侧不支持，只能退化为"广播不确认"，关灯成功率无法保证</td></tr>
+        <tr class="rn"><td>10</td><td><b>最大点亮时长兜底是否由灯具侧实现</b></td><td>灯具团队</td><td>低电档最坏判离可达 30 min；建议灯具侧强制上限（默认 30 min），避免长时间空亮</td></tr>
+        <tr><td>11</td><td>App 位置记忆与序号递增能否按期交付</td><td>产品线 + App 团队</td><td>列 P0，与固件同步开发；缺此项日安装量降至约 340</td></tr>
+        <tr><td>12</td><td>是否需要"按群组批量配置"粒度</td><td>云端 + 产品</td><td>建议支持项目/楼栋/楼层/群组/单点五级</td></tr>
+        <tr><td>13</td><td>事件清单与物模型 JSON 交付时点</td><td>产品线</td><td>PRD 定稿后 1 周内</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ============ 15 ============ -->
+<section>
+  <h2 id="s15">十五、附录</h2>
+
+  <h3>15.1 事件清单与物模型交付要求</h3>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:150px">交付物</th><th style="width:260px">内容要求</th><th>验收口径</th></tr></thead>
+      <tbody>
+        <tr class="rn"><td><b>事件清单</b></td><td>54 条事件逐条含：编号、名称、<b>定义（触发条件与含义）</b>、级别、三通道默认值（本地广播 / 父节点 / 云端方式）、建议周期、可禁用性</td><td>与第七章 7.6 矩阵逐字段一致；不可禁用 24 条不得被配置关闭</td></tr>
+        <tr class="rn"><td><b>属性清单</b></td><td>40 项属性的数据类型、读写权限、上报时机、取值范围与单位</td><td>可读写属性仅 <code>tRadarDelay</code>、<code>daylightMode</code>、<code>wWake</code></td></tr>
+        <tr><td><b>服务清单</b></td><td>11 项服务的入参、出参、错误码</td><td><code>setReportPolicy</code> 出参须含"配置值"与"实际执行值"两套字段</td></tr>
+        <tr><td><b>物模型 JSON</b></td><td>按平台物模型规范生成，可直接导入</td><td>导入后事件与属性数量与文档一致，无告警</td></tr>
+        <tr><td><b>配置字段字典</b></td><td>三通道配置项的键名、枚举、默认值、取值范围</td><td>与 7.5 配置维度表一一对应</td></tr>
+        <tr><td><b>参数默认值表</b></td><td>六个模板（T1–T6）的完整参数取值</td><td>模板可一键下发并回读一致</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="h2note" style="margin-left:0">上表为研发输入的最小集。缺任一交付物，均视为文档不完整、不具备开发启动条件。</p>
+
+  <h3>15.2 术语</h3>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th style="width:180px">术语</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr class="rn"><td><b>有效触发角</b></td><td>PIR 能可靠触发"有人进入"的水平角度（120°），即产品对外承诺的探测角</td></tr>
+        <tr class="rn"><td><b>有效保持角</b></td><td>人已进入有人态后，雷达能继续维持"有人"的角度（150°）；外环不可触发</td></tr>
+        <tr class="rn"><td><b>T_radar_delay</b></td><td>雷达延迟确认时间：从最后一次 PIR 触发开始计时，到期才启动雷达；PIR 每次触发即重置</td></tr>
+        <tr><td>T_scan</td><td>雷达单次扫描时长，≤5 s，典型 2 s</td></tr>
+        <tr><td>W_verify</td><td>校验窗口，必须 ≥ T_scan</td></tr>
+        <tr><td>PIR 门控</td><td>雷达仅在 PIR 触发后才启动，无人态完全断电</td></tr>
+        <tr><td>乐观翻转 + 校验回滚</td><td>PIR 触发即翻转并上报，雷达校验失败则回滚并报 E112</td></tr>
+        <tr><td>进入回滚（E112）</td><td>通俗说即设备"改口"：先说有人（灯亮），雷达发现没人，再撤销</td></tr>
+        <tr><td>设备心跳（E102）</td><td>设备存活 + 存在状态的周期上报，用于区分"无人"与"失联"</td></tr>
+        <tr><td>上报方式 I/A/H/L</td><td>即时 / 聚合 / 随心跳 / 仅本地</td></tr>
+        <tr><td>四层配置仲裁</td><td>能量底线 &gt; 安全硬约束 &gt; 云端基线 &gt; 本地配置（需人工确认）</td></tr>
+        <tr><td>运输模式</td><td>开关 OFF 状态：系统断电、超容保留；待机约 2.3 µA</td></tr>
+        <tr><td>三重一致性校验</td><td>镭雕码 / 内部存储 / 实际 MAC 三者逐字段比对</td></tr>
+        <tr><td>扫 A 装 B</td><td>扫了 A 的码却装了 B 设备，靠"镭雕 MAC = 上报 MAC"拦截</td></tr>
+        <tr><td>形态 A / 形态 B</td><td>微能量供能 / USB 长期供电</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout ok">
+    <b>核心结论：</b>本产品的所有设计取舍都指向同一组矛盾——<b>要快、要省、要不漏</b>，三者在单一通道上无法同时满足。<br><br>
+    <b>① 拆通道是这套架构的根。</b>开灯必须 ≤300 ms，云端往返最短也是一个唤醒窗口；上报必须省电，所以不能每条都即时。把"动作"归本地广播、"不丢"归父节点 ACK、"可运营"归云端聚合，三个目标才能同时成立。这也解释了为什么"有人进入"可以配聚合上报却毫不影响体验。<br><br>
+    <b>② 雷达延迟确认是省电的核心。</b>只要 PIR 还在触发，计时器就重置，雷达永不启动；人坐下不动满 60 s，雷达才出马确认一次。有人活跃态功耗接近无人态（12 µA vs 11 µA），日均约 12 µA，平衡照度约 48 lux。<br><br>
+    <b>③ 上报根本不是耗电大头。</b>单次云端上报约 0.28 µAh、本地广播约 0.05 µAh，办公场景一天合计约 14 µAh，占预算 6%。真正吃电的是 PIR 常开（约 50%）与雷达扫描（约 25%），所以省电第一优先级永远是减少雷达扫描次数。<br><br>
+    最后三条边界必须写进投标文档与规格书：<b>外环 60°–75° 不能作为设计覆盖使用；本产品不承诺在完全无人活动的封闭空间中长期检测人的存在；"免换电"只对办公与走廊类场景成立，地库请用 USB 形态。</b>
+  </div>
+</section>
+
+<footer>
+  澜潮科技 · 能源物联网产品线 ｜ 微能量 PIR+24G 双鉴存在传感器 PRD v2.0 ｜ 2026-11-18 ｜ 内部评审稿
+</footer>
+
+</div>
+
+
+</body></html>
