@@ -1,0 +1,8 @@
+1，GPIO1 输出高低电平  高电平代表主电池供电 低电平代表备用电池供电，Shipping mode 下GPIO1 输出低电平
+2，GPIO2 输入口 拉低电平 5s   低有效  进入shipping mode  手动进手动出
+3，MPPT 设置80%
+4，OV 3.58V  回差 100mv
+5，UV 2.6V   回差 100mv
+6，保留双电源供电
+
+

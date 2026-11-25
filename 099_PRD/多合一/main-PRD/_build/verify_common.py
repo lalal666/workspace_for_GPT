@@ -10,10 +10,11 @@ SRC = os.path.join(BASE, "SKU2-双鉴存在传感器-PRD_V4.3.md")
 OUT_DIR = os.path.abspath(os.path.join(BASE, "..", "main"))
 
 COMMON = ["1.4.2", "3.1.1", "3.1.3", "4.1.1", "4.2", "4.3", "4.4.1", "4.4.3", "4.4.4",
-          "4.5", "4.6", "4.7", "4.12", "5.1", "5.4", "5.7"]
+          "4.5", "4.6", "4.7", "5.1", "5.4", "5.7"]
 
 FILES = {
     "sku1": ("SKU1-PIR人体移动传感器-PRD_V3.0.md", "SKU1 红外移动传感器"),
+    "sku2": ("SKU2-双鉴存在传感器-PRD_V4.4.md", "SKU2 双鉴存在传感器"),
     "sku3": ("SKU3-温照度传感器-PRD_V2.0.md", "SKU3 温照度传感器"),
     "sku4": ("SKU4-温感红外空调控制器-PRD_V2.0.md", "SKU4 温感红外空调控制器"),
 }
@@ -48,12 +49,14 @@ def norm(t, name):
 def main():
     src = sections(SRC)
     rc = 0
+    tamper = {}
     for k, (fn, name) in FILES.items():
         p = os.path.join(OUT_DIR, fn)
         if not os.path.exists(p):
             print("[SKIP] %s 不存在" % fn)
             continue
         out = sections(p)
+        tamper[fn] = out.get("4.12", "")
         print("=" * 20, fn)
         for key in COMMON:
             a = norm(src.get(key, ""), name)
@@ -68,6 +71,16 @@ def main():
                 print("  [DIFF] %-6s" % key)
                 for ln in list(difflib.unified_diff(a.split("\n"), b.split("\n"), lineterm="", n=1))[:24]:
                     print("        " + ln)
+                rc = 1
+    vals = [v for v in tamper.values() if v]
+    if len(vals) >= 2:
+        base = vals[0]
+        print("=" * 20, "4.12 修正版跨 SKU 一致性")
+        for fn, v in tamper.items():
+            if v == base:
+                print("  [SAME] %s" % fn)
+            else:
+                print("  [DIFF] %s" % fn)
                 rc = 1
     sys.exit(rc)
 

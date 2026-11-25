@@ -15,6 +15,7 @@ import os
 BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(BASE, "SKU2-双鉴存在传感器-PRD_V4.3.md")
 SRC_DIR = os.path.join(BASE, "_build", "src")
+FRAG_DIR = os.path.join(BASE, "_build", "frag")
 OUT_DIR = os.path.abspath(os.path.join(BASE, "..", "main"))
 
 TARGETS = {
@@ -112,15 +113,18 @@ def assemble(tkey):
         tpl = f.read()
 
     def repl(m):
-        key = m.group(1)
+        kind, key = m.group(1), m.group(2)
+        if kind == "F":
+            with open(os.path.join(FRAG_DIR, key + ".md"), encoding="utf-8") as f:
+                return f.read().rstrip("\n")
         if key == "4.8a":
             return build_partial(lines, secs, "4.8", end_pat=r"^\| FR-805 \|", name=name)
         if key == "4.8b":
             return build_partial(lines, secs, "4.8", start_pat=r"^\| FR-807 \|", name=name)
         return build_section(lines, secs, key, name)
 
-    out = re.sub(r"\{\{C:([0-9.]+|4\.8[ab])\}\}", repl, tpl)
-    left = re.findall(r"\{\{C:[^}]+\}\}", out)
+    out = re.sub(r"\{\{([CF]):([0-9.]+|4\.8[ab])\}\}", repl, tpl)
+    left = re.findall(r"\{\{[CF]:[^}]+\}\}", out)
     if left:
         raise SystemExit("未替换的占位符: %s" % left)
 
